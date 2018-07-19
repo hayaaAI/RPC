@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hayaa.BaseModel" Version="1.0.0.16" />
+    <PackageReference Include="Hayaa.ConfigSeed.Netcore" Version="1.0.0.15" />
+  </ItemGroup>
+
+</Project>

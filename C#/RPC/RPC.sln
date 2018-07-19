@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hayaa.RPCServer", "Hayaa.RPCServer\Hayaa.RPCServer.csproj", "{B43FFE0C-025A-42B2-A9B5-76781F57B6A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hayaa.RPCServer", "Hayaa.RPCServer\Hayaa.RPCServer.csproj", "{B43FFE0C-025A-42B2-A9B5-76781F57B6A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hayaa.RPCClient", "Hayaa.RPCClient\Hayaa.RPCClient.csproj", "{7B6CC8E3-3301-41AA-87DF-1AEBFB5A3F4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hayaa.RPCClient", "Hayaa.RPCClient\Hayaa.RPCClient.csproj", "{7B6CC8E3-3301-41AA-87DF-1AEBFB5A3F4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{42464F2B-047E-47DD-A1B5-F4709A98F3F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hayaa.RPC.Common", "Hayaa.RPC.Common\Hayaa.RPC.Common.csproj", "{C5158B79-0D14-4DD8-9CE0-37CA1528C234}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hayaa.RPC", "Hayaa.RPC\Hayaa.RPC.csproj", "{4068E482-F20C-496F-8A6F-EE6C5C2084E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +29,14 @@ Global
 		{7B6CC8E3-3301-41AA-87DF-1AEBFB5A3F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B6CC8E3-3301-41AA-87DF-1AEBFB5A3F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B6CC8E3-3301-41AA-87DF-1AEBFB5A3F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5158B79-0D14-4DD8-9CE0-37CA1528C234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5158B79-0D14-4DD8-9CE0-37CA1528C234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5158B79-0D14-4DD8-9CE0-37CA1528C234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5158B79-0D14-4DD8-9CE0-37CA1528C234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4068E482-F20C-496F-8A6F-EE6C5C2084E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4068E482-F20C-496F-8A6F-EE6C5C2084E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4068E482-F20C-496F-8A6F-EE6C5C2084E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4068E482-F20C-496F-8A6F-EE6C5C2084E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +44,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B43FFE0C-025A-42B2-A9B5-76781F57B6A9} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 		{7B6CC8E3-3301-41AA-87DF-1AEBFB5A3F4E} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
+		{C5158B79-0D14-4DD8-9CE0-37CA1528C234} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
+		{4068E482-F20C-496F-8A6F-EE6C5C2084E8} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADCE1FB6-60F1-45C6-A4B6-5D9B21500933}
