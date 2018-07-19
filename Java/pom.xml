@@ -11,6 +11,7 @@
     <modules>
         <module>hayaa.rpcserver</module>
         <module>hayaa.rpcclient</module>
+        <module>hayaa.rpccommon</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
