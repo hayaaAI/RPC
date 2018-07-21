@@ -1,10 +1,21 @@
 package hayaa.rpc.common.protocol;
 
-public class ResultMessage {
+import java.io.Serializable;
+
+public class ResultMessage implements Serializable {
     private String interfaceName;
     private String method;
     private String result;
-    private String errmsg;
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
+
+    private String errMsg;
     public String getInterfaceName() {
         return interfaceName;
     }
@@ -29,13 +40,7 @@ public class ResultMessage {
         this.result = result;
     }
 
-    public String getErrmsg() {
-        return errmsg;
-    }
 
-    public void setErrmsg(String errmsg) {
-        this.errmsg = errmsg;
-    }
 
 
 }

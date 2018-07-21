@@ -4,7 +4,8 @@ public class ExecuteResult {
     //执行完成与否
     private Boolean action;
     private String interfaceName;
-
+    private String methodName;
+    private String result;
     public Boolean getAction() {
         return action;
     }
@@ -37,6 +38,5 @@ public class ExecuteResult {
         this.result = result;
     }
 
-    private String methodName;
-    private String result;
+
 }

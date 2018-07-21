@@ -23,7 +23,11 @@ namespace Hayaa.RPC.Common.Config
         internal class ProviderConfig
         {
             public String Name { set; get; }
-            public List<ServiceConfig> Services { set; get; }
+            /// <summary>
+            /// 服务组
+            /// </summary>
+            public String Group { set; get; }
+          
         }
         internal class ConsumerConfig
         {
@@ -35,6 +39,10 @@ namespace Hayaa.RPC.Common.Config
             public String Name { set; get; }
             public String Group { set; get; }
             public String InterfaceName { set; get; }
+            /// <summary>
+            /// 此字段仅对net有效
+            /// </summary>
+            public String AssemblyName { set; get; }
         }
     }
 }

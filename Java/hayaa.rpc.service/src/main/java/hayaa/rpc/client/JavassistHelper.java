@@ -28,7 +28,7 @@ class JavassistHelper {
         Method[] methods = interfaceClass.getMethods();
         for(int i = 0; i < methods.length; i++) {
             Method method = methods[i];
-            CtMethod ctMethod=createMethod(proxyClass,method,i);
+            CtMethod ctMethod=createMethod(interfaceName,proxyClass,method,i);
             if(ctMethod!=null) {
                 try {
                     proxyClass.addMethod(ctMethod);
@@ -46,9 +46,9 @@ class JavassistHelper {
         return serviceResult;
     }
 
-    private static CtMethod createMethod(CtClass proxyClass,Method method, int i) {
+    private static CtMethod createMethod(String interfaceName,CtClass proxyClass,Method method, int i) {
         CtMethod ctMethod=null;
-        String methodCode=createMethodCode(method);
+        String methodCode=createMethodCode(interfaceName,method);
         try {
             ctMethod=CtNewMethod.make(methodCode,proxyClass);
         } catch (CannotCompileException e) {
@@ -57,7 +57,7 @@ class JavassistHelper {
         return ctMethod;
     }
 
-    private static String createMethodCode(Method method) {
+    private static String createMethodCode(String interfaceName,Method method) {
         StringBuilder stringBuilder=new StringBuilder();
         Class[] exceptionTypes = method.getExceptionTypes();
         StringBuilder exceptionBuilder = new StringBuilder();
@@ -95,17 +95,12 @@ class JavassistHelper {
         methodDeclare.append("{");
         methodDeclare.append("HashMap<String, Object> paramater=new HashMap<>();");
         methodDeclare.append(parameterHashMap);
-        methodDeclare.append("String resultJson= ServiceMethdoProxy.invoke(interfaceName,methodName,paramater);");
+        methodDeclare.append("String resultJson= ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
         methodDeclare.append(methodReturnType+" result =null;");
         methodDeclare.append("if(resultJson==null) return result;");
         methodDeclare.append("result =JsonHelper.DeserializeComplexObject(str,new TypeReference<"+methodReturnType+">(){});");
         methodDeclare.append("return result");
         methodDeclare.append("}");
         return stringBuilder.toString();
-    }
-    public void t(String interfaceName, String methodName, HashMap<String, Object> paramater){
-       String resultJson= ServiceMethdoProxy.invoke(interfaceName,methodName,paramater);
-
-
     }
 }

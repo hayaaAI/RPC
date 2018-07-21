@@ -3,7 +3,7 @@ package hayaa.rpc.common.protocol;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class MehtodMessage  implements Serializable {
+public class MethodMessage  implements Serializable {
     private String interfaceName;
     private String method;
     private HashMap<String,Object> paramater;

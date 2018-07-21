@@ -118,6 +118,17 @@ public class RPCConfig extends ConfigContent {
         private String name;
         private String group;
         private String interfaceName;
+        //此字段对java无用
+        private String assemblyName;
+        public String getAssemblyName() {
+            return assemblyName;
+        }
+
+        public void setAssemblyName(String assemblyName) {
+            this.assemblyName = assemblyName;
+        }
+
+
         public String getName() {
             return name;
         }

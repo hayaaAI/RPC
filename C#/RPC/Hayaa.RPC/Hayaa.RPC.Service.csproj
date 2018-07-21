@@ -6,6 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="Hayaa.ConfigSeed.Netcore" Version="1.0.0.15" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Server\" />
+    <Folder Include="Util\" />
   </ItemGroup>
 
 </Project>
