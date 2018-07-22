@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using System.Reflection.Emit;
+using Newtonsoft.Json;
 
 namespace Hayaa.RPC.Service.Client
 {
@@ -74,13 +75,54 @@ namespace Hayaa.RPC.Service.Client
                 MethodBuilder methodBuilder = typeBuilder.DefineMethod(targetMethod.Name, MethodAttributes.Public | MethodAttributes.Virtual, targetMethod.ReturnType, paramType);
                 //由于要生成的是具体类，所以方法的实现是必不可少的。而方法的实现是通过Emit IL代码来产生的
                 //得到IL生成器
-                ILGenerator ilGen = methodBuilder.GetILGenerator();             
-                
-                //ilGen.Emit(OpCodes.Newobj, typeof(Dictionary<string, object>));
-                //ilGen.Emit(OpCodes.Call, typeof(Console).GetMethod("WriteLine", new Type[] { typeof(String) }));
+                ILGenerator ilGen = methodBuilder.GetILGenerator();
+                var dicType = typeof(Dictionary<string, object>);
+                ilGen.Emit(OpCodes.Newobj, dicType);
+                ilGen.Emit(OpCodes.Stloc_0);
+                ilGen.Emit(OpCodes.Ldloc_0);
+                var paraList=  targetMethod.GetParameters();
+                var addMethod = dicType.GetMethod("Add");
+                Type[] optionalParameterTypes = new Type[] {typeof(String),typeof(Object) };
+                if (paraList != null)
+                {
+                   for(var i = 1; i <= paraList.Length; i++)
+                    {
+                        if (i > 1)
+                            ilGen.Emit(OpCodes.Nop);
+                        ilGen.Emit(OpCodes.Ldloc_0);
+                        ilGen.Emit(OpCodes.Ldstr, paraList[i].Name);
+                        ilGen.Emit(OpCodes.Ldarg_S,i);
+                        if (IsBox(paraList[i].ParameterType)) ilGen.Emit(OpCodes.Box, paraList[i].ParameterType);//数字类型需要装箱处理
+                        ilGen.EmitCall(OpCodes.Callvirt, addMethod, optionalParameterTypes);
+                    }
+                }
+                ilGen.Emit(OpCodes.Nop);
+                ilGen.Emit(OpCodes.Ldstr, interfaceType.Name);
+                ilGen.Emit(OpCodes.Ldstr, targetMethod.Name);
+                ilGen.Emit(OpCodes.Ldloc_0);
+                ilGen.EmitCall(OpCodes.Call, typeof(ServiceMethdoProxy).GetMethod("Invoke"), new Type[] { typeof(String), typeof(String), dicType });
+                ilGen.Emit(OpCodes.Stloc_1);
+                ilGen.Emit(OpCodes.Ldloc_1);
+                ilGen.EmitCall(OpCodes.Call, typeof(JsonConvert).GetMethod("DeserializeObject"), new Type[] { typeof(String) });
+                ilGen.Emit(OpCodes.Stloc_2);
+                ilGen.Emit(OpCodes.Ldloc_2);
+                ilGen.Emit(OpCodes.Stloc_3);
+                Label endLabel = ilGen.DefineLabel();
+                ilGen.Emit(OpCodes.Br_S, endLabel);
+                ilGen.Emit(OpCodes.Ldloc_3);
                 ilGen.Emit(OpCodes.Ret);
             }
             return (typeBuilder.CreateType());
+        }
+
+        private static bool IsBox(Type parameterType)
+        {
+            if (parameterType == typeof(int)) return true;
+            if (parameterType == typeof(long)) return true;
+            if (parameterType == typeof(float)) return true;
+            if (parameterType == typeof(double)) return true;
+            if (parameterType == typeof(decimal)) return true;        
+            return false;
         }
     }
 }

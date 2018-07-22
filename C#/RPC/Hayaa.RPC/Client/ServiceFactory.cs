@@ -13,7 +13,7 @@ namespace Hayaa.RPC.Service.Client
         {
             var interfaces = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation.Services;
                 interfaces.ForEach(service=> {
-                    Object serviceImpl = ProxyClassHelper.CreateClass(service.AssemblyName,service.InterfaceName);
+                    Object serviceImpl = EmitHelper.CreateClass(service.AssemblyName,service.InterfaceName);
                     if (serviceImpl != null)
                     {
                         g_service.GetOrAdd(service.InterfaceName, serviceImpl);
