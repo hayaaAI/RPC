@@ -11,18 +11,26 @@ namespace Hayaa.RPC.Service.Client
         private static ConcurrentDictionary<String, Object> g_service = new ConcurrentDictionary<string, object>();
         public static void initService()
         {
-            var interfaces = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation.Services;
+            //var interfaces = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation.Services;
+            List<RPCConfig.ServiceConfig> interfaces = new List<RPCConfig.ServiceConfig>() {
+                new RPCConfig.ServiceConfig(){
+                     AssemblyName="ClassLibrary1",
+                      Group="dev",
+                       InterfaceName="ClassLibrary1.Interface1",
+                        Name="test"
+                }
+            };
                 interfaces.ForEach(service=> {
-                    Object serviceImpl = EmitHelper.CreateClass(service.AssemblyName,service.InterfaceName);
-                    if (serviceImpl != null)
+                    Type serviceImplType = EmitHelper.CreateClass(service.AssemblyName,service.InterfaceName);
+                    if (serviceImplType != null)
                     {
-                        g_service.GetOrAdd(service.InterfaceName, serviceImpl);
+                        g_service.GetOrAdd(service.InterfaceName, Activator.CreateInstance(serviceImplType));
                     }
                 });
             
         }
 
-        public static  T createService<T>(String interfaceName)
+        public static  T CreateService<T>(String interfaceName)
         {
             if (g_service.ContainsKey(interfaceName)) return (T)g_service[interfaceName];
             return default(T);

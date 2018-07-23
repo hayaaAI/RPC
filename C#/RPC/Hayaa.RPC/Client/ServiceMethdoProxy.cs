@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hayaa.RPC.Service.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,16 +7,16 @@ namespace Hayaa.RPC.Service.Client
 {
    public class ServiceMethdoProxy
     {
-        public static String Invoke(String interfaceName, String methodName, Dictionary<String, Object> paramater)
+        public static T Invoke<T>(String interfaceName, String methodName, Dictionary<String, Object> paramater)
         {
-            String result = null;
+            T result = default(T);
             try
             {
-
+                result = JsonHelper.DeserializeObject<T>("");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);              
+                Console.WriteLine(ex.Message);
             }
             return result;
         }
