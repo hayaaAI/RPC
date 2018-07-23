@@ -15,4 +15,11 @@ public class RPCConfigHelper {
         }
         return null;
     }
+    public static RPCConfig getRPCConfig(){
+        RPCConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
+        if(rpcConfig!=null){
+            return  rpcConfig;
+        }
+        return null;
+    }
 }

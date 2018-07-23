@@ -4,7 +4,6 @@ import javassist.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
 
 class JavassistHelper {
     public static Object createClass(String interfaceName) {
