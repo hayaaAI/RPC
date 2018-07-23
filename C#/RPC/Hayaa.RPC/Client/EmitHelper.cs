@@ -16,7 +16,7 @@ namespace Hayaa.RPC.Service.Client
         static EmitHelper()
         {
             //System.Reflection.AssemblyName 是用来表示一个Assembly的完整名称的
-            AssemblyName assyName = new AssemblyName();
+            AssemblyName assyName = new AssemblyName();           
             //为要创建的Assembly定义一个名称（忽略版本号，Culture等信息）
             assyName.Name = "Hayaa.RPCProxy";
             g_assyBuilder = AssemblyBuilder.DefineDynamicAssembly(assyName, AssemblyBuilderAccess.RunAndCollect);
@@ -85,27 +85,27 @@ namespace Hayaa.RPC.Service.Client
                 ilGen.Emit(OpCodes.Ldloc_0);
                 var paraList=  targetMethod.GetParameters();
                 var addMethod = dicType.GetMethod("Add");
-               // Type[] optionalParameterTypes = new Type[] {typeof(String),typeof(Object) };
-                //if (paraList != null)
-                //{
-                //   for(var i =0; i < paraList.Length; i++)
-                //    {
-                //        if (i > 1)
-                //            ilGen.Emit(OpCodes.Nop);
-                //        ilGen.Emit(OpCodes.Ldloc_0);
-                //        ilGen.Emit(OpCodes.Ldstr, paraList[i].Name);
-                //        ilGen.Emit(OpCodes.Ldarg_S,i+1);
-                //        if (IsBox(paraList[i].ParameterType)) ilGen.Emit(OpCodes.Box, paraList[i].ParameterType);//数字类型需要装箱处理
-                //        ilGen.Emit(OpCodes.Callvirt, addMethod);
-                //    }
-                //}
-                ilGen.Emit(OpCodes.Nop);
-                ilGen.Emit(OpCodes.Ldstr, interfaceType.Name);
-                ilGen.Emit(OpCodes.Ldstr, targetMethod.Name);
-                ilGen.Emit(OpCodes.Ldloc_0);
-                ilGen.Emit(OpCodes.Call, typeof(ServiceMethdoProxy).GetMethod("Invoke"));
-                ilGen.Emit(OpCodes.Stloc_1);
-                ilGen.Emit(OpCodes.Ldloc_1);
+                Type[] optionalParameterTypes = new Type[] { typeof(String), typeof(Object) };
+                if (paraList != null)
+                {
+                    for (var i = 0; i < paraList.Length; i++)
+                    {
+                        //if (i > 0)
+                        //    ilGen.Emit(OpCodes.Nop);
+                        //ilGen.Emit(OpCodes.Ldloc_0);
+                        //ilGen.Emit(OpCodes.Ldstr, paraList[i].Name);
+                        //ilGen.Emit(OpCodes.Ldarg_S, i + 1);
+                        //if (IsBox(paraList[i].ParameterType)) ilGen.Emit(OpCodes.Box, paraList[i].ParameterType);//数字类型需要装箱处理
+                        //ilGen.Emit(OpCodes.Callvirt, addMethod);
+                    }
+                }
+                //ilGen.Emit(OpCodes.Nop);
+                //ilGen.Emit(OpCodes.Ldstr, interfaceType.Name);
+                //ilGen.Emit(OpCodes.Ldstr, targetMethod.Name);
+                //ilGen.Emit(OpCodes.Ldloc_0);
+                //ilGen.Emit(OpCodes.Call, typeof(ServiceMethdoProxy).GetMethod("Invoke",new Type[] { typeof(String), typeof(String), dicType }));
+                //ilGen.Emit(OpCodes.Stloc_1);
+                //ilGen.Emit(OpCodes.Ldloc_1);
                 //ilGen.Emit(OpCodes.Call, typeof(JsonHelper).GetMethod("DeserializeObject"));
                 //ilGen.Emit(OpCodes.Stloc_2);
                 //ilGen.Emit(OpCodes.Ldloc_2);
@@ -120,11 +120,10 @@ namespace Hayaa.RPC.Service.Client
 
         private static bool IsBox(Type parameterType)
         {
-            if (parameterType == typeof(int)) return true;
-            if (parameterType == typeof(long)) return true;
-            if (parameterType == typeof(float)) return true;
-            if (parameterType == typeof(double)) return true;
-            if (parameterType == typeof(decimal)) return true;        
+            if (parameterType.IsValueType || parameterType.IsGenericParameter || parameterType.IsGenericType)
+            {
+                return true;
+            }
             return false;
         }
     }

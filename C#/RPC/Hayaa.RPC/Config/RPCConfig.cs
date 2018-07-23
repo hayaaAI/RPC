@@ -16,8 +16,7 @@ namespace Hayaa.RPC.Common.Config
         public String ServicePublice { set; get; }
         //心跳服务地址
         public String KeepUrl { set; get; }
-        //服务端口
-        public int Port { set; get; }
+       
         public ProviderConfig ProviderConfiguation { set; get; }
         public ConsumerConfig ConsumerConfiguation { set; get; }
         internal class ProviderConfig
@@ -27,7 +26,9 @@ namespace Hayaa.RPC.Common.Config
             /// 服务组
             /// </summary>
             public String Group { set; get; }
-          
+            //服务发布端口
+            public int Port { set; get; }
+
         }
         internal class ConsumerConfig
         {
@@ -36,6 +37,8 @@ namespace Hayaa.RPC.Common.Config
         }
         internal class ServiceConfig
         {
+            public String ServerHost { set; get; }
+            public int ServerPort { set; get; }
             public String Name { set; get; }
             public String Group { set; get; }
             public String InterfaceName { set; get; }

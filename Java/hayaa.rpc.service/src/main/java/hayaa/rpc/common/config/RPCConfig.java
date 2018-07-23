@@ -11,8 +11,7 @@ public class RPCConfig extends ConfigContent {
     private String servicePublice;
     //心跳服务地址
     private String keepUrl;
-    //服务端口
-    private Integer port;
+
     public String getServiceReg() {
         return serviceReg;
     }
@@ -29,13 +28,7 @@ public class RPCConfig extends ConfigContent {
         this.servicePublice = servicePublice;
     }
 
-    public Integer getPort() {
-        return port;
-    }
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
 
     public String getKeepUrl() {
         return keepUrl;
@@ -71,7 +64,15 @@ public class RPCConfig extends ConfigContent {
         private String name;
         //服务组
         private String group;
+        //服务发布端口
+        private Integer port;
+        public Integer getPort() {
+            return port;
+        }
 
+        public void setPort(Integer port) {
+            this.port = port;
+        }
         public String getGroup() {
             return group;
         }
@@ -93,6 +94,24 @@ public class RPCConfig extends ConfigContent {
     public class ConsumerConfig {
         private String name;
         private List<ServiceConfig> services;
+private String serverHost;
+private int serverPort;
+
+        public String getServerHost() {
+            return serverHost;
+        }
+
+        public void setServerHost(String serverHost) {
+            this.serverHost = serverHost;
+        }
+
+        public int getServerPort() {
+            return serverPort;
+        }
+
+        public void setServerPort(int serverPort) {
+            this.serverPort = serverPort;
+        }
 
         public String getName() {
             return name;
