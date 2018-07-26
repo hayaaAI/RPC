@@ -11,6 +11,10 @@ namespace Hayaa.RPC.Common.Config
         public AppSettings AppSettings { set; get; }
         public ConnectionStrings ConnectionStrings { set; get; }
         /// <summary>
+        /// 单次会话超时时间,单位毫秒
+        /// </summary>
+        public int SessionTimeout { set; get; }
+        /// <summary>
         /// 宿主服务器的cpu核心数
         /// </summary>
         public int CpuCore { set; get; }
