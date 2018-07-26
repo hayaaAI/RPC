@@ -15,5 +15,6 @@ namespace Hayaa.RPC.Common.Protocol
         public const String INTERRUPT = "HAYAA_SESSION_INTERRUPT";
         //会话内容闭合标签
         public const String CONTENT = "HAYAA_SESSION_CONETENT";
+      
     }
 }

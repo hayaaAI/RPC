@@ -7,6 +7,7 @@ namespace Hayaa.RPC.Service.Protocol
     [Serializable]
    public class ResultMessage
     {
+        public String MsgID { set; get; }
         public String InterfaceName { set; get; }
         public String Method { set; get; }
         public String Result { set; get; }

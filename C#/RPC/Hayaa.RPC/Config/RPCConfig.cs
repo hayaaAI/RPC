@@ -10,6 +10,10 @@ namespace Hayaa.RPC.Common.Config
     {
         public AppSettings AppSettings { set; get; }
         public ConnectionStrings ConnectionStrings { set; get; }
+        /// <summary>
+        /// 宿主服务器的cpu核心数
+        /// </summary>
+        public int CpuCore { set; get; }
         //服务注册地址
         public String ServiceReg { set; get; }
         //服务发布地址

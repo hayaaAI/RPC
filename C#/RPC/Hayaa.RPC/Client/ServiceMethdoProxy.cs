@@ -14,7 +14,13 @@ namespace Hayaa.RPC.Service.Client
             T result = default(T);
             try
             {
-                result = JsonHelper.DeserializeObject<T>("");
+                ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
+                {
+                     InterfaceName=interfaceName,
+                      Method=methodName,
+                       Paramater=paramater,
+                        MsgID=Guid.NewGuid().ToString("N")
+                });
             }
             catch (Exception ex)
             {
