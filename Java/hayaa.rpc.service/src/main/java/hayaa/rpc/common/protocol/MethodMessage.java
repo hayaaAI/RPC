@@ -7,6 +7,14 @@ public class MethodMessage  implements Serializable {
     private String interfaceName;
     private String method;
     private HashMap<String,Object> paramater;
+    private String msgID;
+    public String getMsgID() {
+        return msgID;
+    }
+
+    public void setMsgID(String msgID) {
+        this.msgID = msgID;
+    }
     public String getInterfaceName() {
         return interfaceName;
     }

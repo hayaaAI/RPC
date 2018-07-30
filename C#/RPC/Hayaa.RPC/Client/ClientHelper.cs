@@ -12,7 +12,7 @@ using Hayaa.RPC.Service.Util;
 
 namespace Hayaa.RPC.Service.Client
 {
-    public class ClientHelper
+    internal class ClientHelper
     {
         private static ClientHelper instance = new ClientHelper();
         private int cpucoreTotal = 1;//cpu核心数,按照最小计算能力默认
@@ -21,7 +21,7 @@ namespace Hayaa.RPC.Service.Client
             g_CliPool = new Dictionary<string, TcpClient>();
             g_queue = new Dictionary<int, ConcurrentQueue<MethodMessage>>();
             g_ResultDic = new ConcurrentDictionary<string, ResultMessage>();
-            init(g_queue, g_CliPool);
+           Init(g_queue, g_CliPool);
         }
         public static ClientHelper Instance { get => instance; }
         /// <summary>
@@ -35,7 +35,11 @@ namespace Hayaa.RPC.Service.Client
         /// </summary>
         private Dictionary<int, ConcurrentQueue<MethodMessage>> g_queue = null;
         private ConcurrentDictionary<String,ResultMessage> g_ResultDic = null;
-        private void init(Dictionary<int, ConcurrentQueue<MethodMessage>> queue, Dictionary<string, TcpClient> cliPool)
+        internal void Init()
+        {
+
+        }
+        private void Init(Dictionary<int, ConcurrentQueue<MethodMessage>> queue, Dictionary<string, TcpClient> cliPool)
         {
             var config = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation.Services;
             for(var i = 0; i < cpucoreTotal; i++)
@@ -89,9 +93,15 @@ namespace Hayaa.RPC.Service.Client
         private void Transfer(MethodMessage methodMessage)
         {
             var tcp = g_CliPool[methodMessage.InterfaceName];
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(JsonHelper.SerializeObject(methodMessage));
+            var list = NetPackageHepler.UnPack(methodMessage, methodMessage.MsgID);
             NetworkStream stream = tcp.GetStream();
-            stream.Write(data, 0, data.Length);
+            //将数据分包发送
+            list.ForEach(datapack =>
+            {
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(JsonHelper.SerializeObject(datapack));
+                stream.Write(data, 0, data.Length);
+
+            });  
             byte[] buffer = new byte[tcp.ReceiveBufferSize];          
             try
             {

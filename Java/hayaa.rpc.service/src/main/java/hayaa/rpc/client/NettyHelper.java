@@ -1,4 +1,4 @@
 package hayaa.rpc.client;
 
-public class NettyHelper {
+class NettyHelper {
 }
