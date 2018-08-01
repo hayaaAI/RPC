@@ -29,6 +29,7 @@ namespace Hayaa.RPC.Service.Util
                 {
                     MsgID = msgID,
                     MsgIndex = i,
+                     Total=dataIndex,
                     MsgData = last ? ((mod == 0) ? new byte[900] : new byte[mod]) : new byte[900]
 
                 };

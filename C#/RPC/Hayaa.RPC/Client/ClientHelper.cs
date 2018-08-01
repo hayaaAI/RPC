@@ -15,13 +15,10 @@ namespace Hayaa.RPC.Service.Client
     internal class ClientHelper
     {
         private static ClientHelper instance = new ClientHelper();
-        private int cpucoreTotal = 1;//cpu核心数,按照最小计算能力默认
+        private int cpuCoreTotal = 1;//cpu核心数,按照最小计算能力默认
         private ClientHelper()
         {
-            g_CliPool = new Dictionary<string, TcpClient>();
-            g_queue = new Dictionary<int, ConcurrentQueue<MethodMessage>>();
-            g_ResultDic = new ConcurrentDictionary<string, ResultMessage>();
-           Init(g_queue, g_CliPool);
+           
         }
         public static ClientHelper Instance { get => instance; }
         /// <summary>
@@ -29,20 +26,26 @@ namespace Hayaa.RPC.Service.Client
         /// key:接口
         /// 此种方式适合均衡接口调用，如果有高频函数，则性能有所损失
         /// </summary>
-        private Dictionary<String, TcpClient> g_CliPool = null;
+        private Dictionary<String, TcpClient> g_ClientPool = null;
         /// <summary>
         /// 放置某一个接口请求队列过长造成其他接口堆积
         /// </summary>
-        private Dictionary<int, ConcurrentQueue<MethodMessage>> g_queue = null;
+        private Dictionary<int, ConcurrentQueue<MethodMessage>> g_MethodQueue = null;
+        /// <summary>
+        /// msgID作为key，远程返回结果作为value
+        /// </summary>
         private ConcurrentDictionary<String,ResultMessage> g_ResultDic = null;
         internal void Init()
         {
-
+            g_ClientPool = new Dictionary<string, TcpClient>();
+            g_MethodQueue = new Dictionary<int, ConcurrentQueue<MethodMessage>>();
+            g_ResultDic = new ConcurrentDictionary<string, ResultMessage>();
+            InitNetClient(g_MethodQueue, g_ClientPool);
         }
-        private void Init(Dictionary<int, ConcurrentQueue<MethodMessage>> queue, Dictionary<string, TcpClient> cliPool)
+        private void InitNetClient(Dictionary<int, ConcurrentQueue<MethodMessage>> queue, Dictionary<string, TcpClient> cliPool)
         {
             var config = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation.Services;
-            for(var i = 0; i < cpucoreTotal; i++)
+            for(var i = 0; i < cpuCoreTotal; i++)
             {
                 if (!queue.ContainsKey(i))
                 {
@@ -63,14 +66,14 @@ namespace Hayaa.RPC.Service.Client
                     }
                 }
             });
-            ThreadPool.SetMaxThreads(cpucoreTotal, config.Count);
+            ThreadPool.SetMaxThreads(cpuCoreTotal, config.Count);
             ThreadPool.QueueUserWorkItem(Consume);
         }
         private  void Consume(Object param)
         {
-            if (cpucoreTotal > 1)//支持多线程处理
+            if (cpuCoreTotal > 1)//支持多线程处理
             {
-                Parallel.For(0, cpucoreTotal, i => ConsumenQueue(i));
+                Parallel.For(0, cpuCoreTotal, i => ConsumenQueue(i));
             }
             else 
             {
@@ -79,7 +82,7 @@ namespace Hayaa.RPC.Service.Client
         }
         private void ConsumenQueue(int index)
         {
-            var queue = g_queue[index];
+            var queue = g_MethodQueue[index];
             if (queue == null) return;
             MethodMessage methodMessage;
             while (!queue.IsEmpty)
@@ -92,7 +95,7 @@ namespace Hayaa.RPC.Service.Client
         }       
         private void Transfer(MethodMessage methodMessage)
         {
-            var tcp = g_CliPool[methodMessage.InterfaceName];
+            var tcp = g_ClientPool[methodMessage.InterfaceName];
             var list = NetPackageHepler.UnPack(methodMessage, methodMessage.MsgID);
             NetworkStream stream = tcp.GetStream();
             //将数据分包发送
@@ -130,8 +133,8 @@ namespace Hayaa.RPC.Service.Client
         }
         public void EnQueue(MethodMessage methodMessage)
         {
-            int index = methodMessage.InterfaceName.GetHashCode() % cpucoreTotal;
-            g_queue[index].Enqueue(methodMessage);
+            int index = methodMessage.InterfaceName.GetHashCode() % cpuCoreTotal;
+            g_MethodQueue[index].Enqueue(methodMessage);
 
         }
         public ResultMessage GetResult(String msgID)

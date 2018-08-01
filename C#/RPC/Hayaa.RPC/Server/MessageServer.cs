@@ -58,7 +58,7 @@ namespace Hayaa.RPC.Service.Server
             }
             if (request != null)
             {
-              var response=g_IRPCProviderService.executeMethod(request.InterfaceName, request.Method, request.Paramater);
+              var response=g_IRPCProviderService.ExecuteMethod(request);
                 if (response != null)
                 {
                     byte[] responData = System.Text.Encoding.ASCII.GetBytes(JsonHelper.SerializeObject(response));

@@ -16,8 +16,12 @@ namespace Hayaa.RPC.Service.Protocol
         /// </summary>
         public int MsgIndex { set; get; }       
         /// <summary>
-        /// 数据最大长度1024
+        /// 数据最大长度1024byte
         /// </summary>
         public byte[] MsgData { set; get; }
+        /// <summary>
+        /// 数据包总数
+        /// </summary>
+        public int Total { set; get; }
     }
 }

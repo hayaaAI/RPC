@@ -12,6 +12,7 @@ namespace Hayaa.RPC.Common.Config
         public ConnectionStrings ConnectionStrings { set; get; }
         /// <summary>
         /// 单次会话超时时间,单位毫秒
+        /// 设置数值最大不建议超过1500
         /// </summary>
         public int SessionTimeout { set; get; }
         /// <summary>

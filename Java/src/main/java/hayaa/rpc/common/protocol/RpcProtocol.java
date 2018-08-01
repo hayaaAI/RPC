@@ -6,7 +6,7 @@ import java.util.Arrays;
  * 自定义的协议
  *  数据包格式
  * +——----——+——-----——+——----——+
- * |协议开始标志|  长度             |   数据       |
+ * |协议开始标志|  长度     |   数据       |
  * +——----——+——-----——+——----——+
  * 1.协议开始标志head_data，为int类型的数据，16进制表示为0X76
  * 2.传输数据的长度contentLength，int类型
@@ -27,7 +27,7 @@ public class RpcProtocol {
     private byte[] content;
 
     /**
-     * 用于初始化，SmartCarProtocol
+     * 用于初始化，RpcProtocol
      *
      * @param content
      *            协议里面，消息的数据
@@ -45,17 +45,11 @@ public class RpcProtocol {
         return contentLength;
     }
 
-    public void setContentLength(int contentLength) {
-        this.contentLength = contentLength;
-    }
 
     public byte[] getContent() {
         return content;
     }
 
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
 
     @Override
     public String toString() {
