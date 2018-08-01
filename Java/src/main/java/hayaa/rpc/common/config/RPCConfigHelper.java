@@ -1,22 +1,22 @@
 package hayaa.rpc.common.config;
 
 public class RPCConfigHelper {
-    public static RPCConfig.ProviderConfig getProviderConfig(){
-        RPCConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
+    public static RpcConfig.ProviderConfig getProviderConfig(){
+        RpcConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
         if((rpcConfig!=null)&&(rpcConfig.getProviderConfiguation()!=null)){
             return  rpcConfig.getProviderConfiguation();
         }
         return null;
     }
-    public static RPCConfig.ConsumerConfig getConsumerConfig(){
-        RPCConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
+    public static RpcConfig.ConsumerConfig getConsumerConfig(){
+        RpcConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
         if((rpcConfig!=null)&&(rpcConfig.getConsumerConfiguation()!=null)){
             return  rpcConfig.getConsumerConfiguation();
         }
         return null;
     }
-    public static RPCConfig getRPCConfig(){
-        RPCConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
+    public static RpcConfig getRPCConfig(){
+        RpcConfig rpcConfig= ConfigHelper.getInstance().GetComponentConfig();
         if(rpcConfig!=null){
             return  rpcConfig;
         }

@@ -4,14 +4,28 @@ import hayaa.basemodel.model.ConfigContent;
 
 import java.util.List;
 
-public class RPCConfig extends ConfigContent {
-    //服务注册地址
+public class RpcConfig extends ConfigContent {
+    /**
+     *  服务注册地址
+     */
     private String serviceReg;
-    //服务发布地址
+    /**
+     * 服务发布地址
+     */
     private String servicePublice;
-    //心跳服务地址
+    /**
+     * 心跳服务地址
+     */
     private String keepUrl;
+    private int sessionTimeout;
 
+    public int getSessionTimeout() {
+        return sessionTimeout;
+    }
+
+    public void setSessionTimeout(int sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
     public String getServiceReg() {
         return serviceReg;
     }
@@ -94,24 +108,7 @@ public class RPCConfig extends ConfigContent {
     public class ConsumerConfig {
         private String name;
         private List<ServiceConfig> services;
-private String serverHost;
-private int serverPort;
 
-        public String getServerHost() {
-            return serverHost;
-        }
-
-        public void setServerHost(String serverHost) {
-            this.serverHost = serverHost;
-        }
-
-        public int getServerPort() {
-            return serverPort;
-        }
-
-        public void setServerPort(int serverPort) {
-            this.serverPort = serverPort;
-        }
 
         public String getName() {
             return name;
@@ -137,8 +134,28 @@ private int serverPort;
         private String name;
         private String group;
         private String interfaceName;
-        //此字段对java无用
+        /**
+         * 此字段对java平台无效
+         */
         private String assemblyName;
+        private String serverHost;
+        private int serverPort;
+
+        public String getServerHost() {
+            return serverHost;
+        }
+
+        public void setServerHost(String serverHost) {
+            this.serverHost = serverHost;
+        }
+
+        public int getServerPort() {
+            return serverPort;
+        }
+
+        public void setServerPort(int serverPort) {
+            this.serverPort = serverPort;
+        }
         public String getAssemblyName() {
             return assemblyName;
         }
