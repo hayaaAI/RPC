@@ -3,6 +3,8 @@ package hayaa.rpc.server;
 import hayaa.rpc.IRpcProviderService;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.config.RpcConfig;
+import hayaa.rpc.common.protocol.RpcDecoder;
+import hayaa.rpc.common.protocol.RpcEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -41,8 +43,10 @@ public class RpcServer {
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
+                    pipeline.addLast(new RpcEncoder());
+                    pipeline.addLast(new RpcDecoder());
                     pipeline.addLast(new NettyOutboundHandler());
-                    pipeline.addLast(new NettyInboundHandler());
+                    pipeline.addLast(new NettyInboundHandler(g_service));
                 }
             });
             //绑定端口

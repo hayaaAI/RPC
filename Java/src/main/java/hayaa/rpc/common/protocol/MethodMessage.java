@@ -1,12 +1,12 @@
 package hayaa.rpc.common.protocol;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Hashtable;
 
 public class MethodMessage  implements Serializable {
     private String interfaceName;
     private String method;
-    private HashMap<String,Object> paramater;
+    private Hashtable<String,Object> paramater;
     private String msgID;
     public String getMsgID() {
         return msgID;
@@ -31,11 +31,11 @@ public class MethodMessage  implements Serializable {
         this.method = method;
     }
 
-    public HashMap<String, Object> getParamater() {
+    public Hashtable<String, Object> getParamater() {
         return paramater;
     }
 
-    public void setParamater(HashMap<String, Object> paramater) {
+    public void setParamater(Hashtable<String, Object> paramater) {
         this.paramater = paramater;
     }
 

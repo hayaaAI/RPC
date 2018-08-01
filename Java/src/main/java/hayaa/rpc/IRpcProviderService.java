@@ -1,7 +1,8 @@
 package hayaa.rpc;
 
-import java.util.Hashtable;
+import hayaa.rpc.common.protocol.MethodMessage;
+import hayaa.rpc.common.protocol.ResultMessage;
 
 public interface IRpcProviderService {
-    ExecuteResult executeMethod(String interfaceName, String method, Hashtable<String,Object> parameter);
+    ResultMessage executeMethod(MethodMessage methodMessage);
 }

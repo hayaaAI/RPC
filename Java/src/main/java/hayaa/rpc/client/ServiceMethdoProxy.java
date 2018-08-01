@@ -6,10 +6,11 @@ import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.UUID;
 
 class ServiceMethdoProxy {
-    public static String invoke(String interfaceName, String methodName, HashMap<String, Object> paramater) {
+    public static String invoke(String interfaceName, String methodName, Hashtable<String, Object> paramater) {
         String result = null;
         String msgID = UUID.randomUUID().toString();
         MethodMessage methodMessage = new MethodMessage();

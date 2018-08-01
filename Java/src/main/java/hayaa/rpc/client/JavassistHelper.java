@@ -104,7 +104,7 @@ class JavassistHelper {
         methodDeclare.append(parameterBuilder);
         methodDeclare.append(exceptionBuilder);
         methodDeclare.append("{");
-        methodDeclare.append("HashMap<String, Object> paramater=new HashMap<>();");
+        methodDeclare.append("Hashtable<String, Object> paramater=new Hashtable<>();");
         methodDeclare.append(parameterHashMap);
         methodDeclare.append("String resultJson= ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
         methodDeclare.append(methodReturnType+" result =null;");

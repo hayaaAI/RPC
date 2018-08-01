@@ -4,9 +4,7 @@ import hayaa.common.JsonHelper;
 import hayaa.rpc.common.NetPackageHepler;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.config.RpcConfig;
-import hayaa.rpc.common.protocol.MethodMessage;
-import hayaa.rpc.common.protocol.NetPackage;
-import hayaa.rpc.common.protocol.ResultMessage;
+import hayaa.rpc.common.protocol.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
@@ -152,6 +150,8 @@ class ClientHelper {
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
+                    pipeline.addLast(new RpcEncoder());
+                    pipeline.addLast(new RpcDecoder());
                     pipeline.addLast(new ClientInHandler());
                 }
             });
