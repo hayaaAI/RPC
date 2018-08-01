@@ -14,10 +14,11 @@ import java.util.List;
  * +——----——+——-----——+——----——+
  * 1.协议开始标志head_data，为int类型的数据，16进制表示为0X76
  * 2.传输数据的长度contentLength，int类型
- * 3.要传输的数据,长度不应该超过2048，防止socket流的攻击
+ * 3.要传输的数据,长度最大限制100K，容纳汉字文本最多5万字,满足长文本传输
  */
 public class RpcDecoder extends ByteToMessageDecoder {
-
+    private final int safeSize = 1024*100;
+    private final int startLable=0x76;
     /**
      * 协议开始的标准head_data，int类型，占据4个字节.
      * 表示数据的长度contentLength，int类型，占据4个字节.
@@ -32,7 +33,7 @@ public class RpcDecoder extends ByteToMessageDecoder {
             // 防止socket字节流攻击
             // 防止，客户端传来的数据过大
             // 因为，太大的数据，是不合理的
-            if (buffer.readableBytes() > 2048) {
+            if (buffer.readableBytes() > safeSize) {
                 buffer.skipBytes(buffer.readableBytes());
             }
             // 记录包头开始的index
@@ -43,7 +44,7 @@ public class RpcDecoder extends ByteToMessageDecoder {
                 // 标记包头开始的index
                 buffer.markReaderIndex();
                 // 读到了协议的开始标志，结束while循环
-                if (buffer.readInt() == 0X76) {
+                if (buffer.readInt() == startLable) {
                     break;
                 }
 

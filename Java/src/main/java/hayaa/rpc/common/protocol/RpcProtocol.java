@@ -16,7 +16,7 @@ public class RpcProtocol {
     /**
      * 消息的开头的信息标志
      */
-    private int head_data = 0X76;
+    private int head_data = 0x76;
     /**
      * 消息的长度
      */
