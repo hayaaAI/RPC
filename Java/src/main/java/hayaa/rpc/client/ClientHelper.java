@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 class ClientHelper {
     private static ClientHelper g_instance = new ClientHelper();
