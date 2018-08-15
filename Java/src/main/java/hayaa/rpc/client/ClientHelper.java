@@ -1,12 +1,12 @@
 package hayaa.rpc.client;
 
 import hayaa.common.JsonHelper;
-import hayaa.rpc.common.NetPackageHepler;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.config.RpcConfig;
 import hayaa.rpc.common.protocol.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -14,6 +14,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -40,7 +41,6 @@ class ClientHelper {
      * msgID作为key，远程返回结果作为value
      */
     private volatile ConcurrentHashMap<String, ResultMessage> g_ResultDic = null;
-    private volatile ConcurrentHashMap<String, List<NetPackage>> g_NetData = null;
 
     /**
      * cpu核心数,按照最小计算能力默认
@@ -53,12 +53,28 @@ class ClientHelper {
     public synchronized void init() {
         int serviceTotal = RPCConfigHelper.getConsumerConfig().getServices().size();
         g_ClientPool = new Hashtable<>(serviceTotal);
-        // g_Methodqueue = new ConcurrentLinkedQueue();
         g_ResultDic = new ConcurrentHashMap<>(1000);
-        g_NetData = new ConcurrentHashMap<>(1000);
         initNetClient(g_ClientPool);
     }
 
+    public Boolean enQueue(MethodMessage methodMessage) {
+       Boolean result=false;
+        if (g_ClientPool.containsKey(methodMessage.getInterfaceName())) {
+            Channel channel = g_ClientPool.get(methodMessage.getInterfaceName());
+            ByteBuf echo = Unpooled.directBuffer();
+            String msg=JsonHelper.SerializeObject(methodMessage);
+            RpcProtocol rpcProtocol=new RpcProtocol(msg);
+            echo.writeBytes(rpcProtocol.getMessageFlag());
+            echo.writeInt(rpcProtocol.getContentLength());
+            echo.writeInt(rpcProtocol.getType());
+            echo.writeBytes(rpcProtocol.getData());
+            channel.writeAndFlush(echo);
+        }
+        return result;
+    }
+    private void enResultQueue(ResultMessage msg) {
+        g_ResultDic.put(msg.getMsgID(),msg);
+    }
     public ResultMessage GetResult(String msgID) {
         ResultMessage result = null;
         if (g_ResultDic.containsKey(msgID)) {
@@ -67,50 +83,6 @@ class ClientHelper {
         }
         return result;
     }
-
-    public Boolean enQueue(MethodMessage methodMessage) {
-        // g_Methodqueue.add(methodMessage);
-        Boolean result=false;
-        if (g_ClientPool.containsKey(methodMessage.getInterfaceName())) {
-            Channel channel = g_ClientPool.get(methodMessage.getInterfaceName());
-            List<NetPackage> netPackages = NetPackageHepler.UnPack(methodMessage, methodMessage.getMsgID());
-            if (netPackages != null) {
-                result=true;
-                for(int i=0;i<netPackages.size();i++){
-                    String msg = JsonHelper.SerializeObject(netPackages.get(i));
-                    try {
-                        channel.writeAndFlush(msg);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        result= false;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    private void enResultQueue(String msg) {
-        NetPackage netPackage = null;
-        try {
-            netPackage = JsonHelper.DeserializeObject(msg, NetPackage.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (netPackage != null) {
-            if (!g_NetData.containsKey(netPackage.getMsgID())) {
-                g_NetData.put(netPackage.getMsgID(), new ArrayList<>(netPackage.getTotal()));
-            }
-            g_NetData.get(netPackage.getMsgID()).add(netPackage);
-            if (g_NetData.get(netPackage.getMsgID()).size() == netPackage.getTotal()) {
-                ResultMessage resultMessage = NetPackageHepler.Packing(g_NetData.get(netPackage.getMsgID()), ResultMessage.class);
-                if (resultMessage != null) {
-                    g_ResultDic.put(resultMessage.getMsgID(), resultMessage);
-                }
-            }
-        }
-    }
-
     /**
      * 初始化netty设置
      *
@@ -164,24 +136,24 @@ class ClientHelper {
     }
 
     /**
-     * netty客户端读取服务器回复
+     * 处理服务端返回的信息
      */
     private class ClientInHandler extends ChannelInboundHandlerAdapter {
-        /**
-         * 读取服务端的信息
-         *
-         * @param ctx
-         * @param msg
-         * @throws Exception
-         */
         @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            System.out.println("client.channelRead");
-            ByteBuf resultStr = (ByteBuf) msg;
-            byte[] byteData = new byte[resultStr.readableBytes()];
-            resultStr.readBytes(byteData);
-            resultStr.release();
-            enResultQueue(new String(byteData, 0, byteData.length, "US-ASCII"));
+        public void channelRead(ChannelHandlerContext ctx, Object msg)
+                throws Exception {
+            ByteBuf body = (ByteBuf)msg;
+            if(body.readableBytes() <= 0){
+                ctx.fireChannelRead(msg);
+            }
+            int dataLength = body.readInt();
+            int dataType= body.readInt();
+            int dataSize = body.readableBytes();
+            byte [] data = new byte[dataSize];
+            body.readBytes(data);
+            String strMsg = new String(data,Charset.forName("utf-8"));
+            ResultMessage resultMessage=JsonHelper.DeserializeObject(strMsg,ResultMessage.class);
+            enResultQueue(resultMessage);
         }
 
         /**
