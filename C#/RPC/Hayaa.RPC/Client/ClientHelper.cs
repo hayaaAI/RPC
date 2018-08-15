@@ -71,13 +71,16 @@ namespace Hayaa.RPC.Service.Client
         }
         private  void Consume(Object param)
         {
-            if (cpuCoreTotal > 1)//支持多线程处理
+            while (true)
             {
-                Parallel.For(0, cpuCoreTotal, i => ConsumenQueue(i));
-            }
-            else 
-            {
-                ConsumenQueue(0);
+                if (cpuCoreTotal > 1)//支持多线程处理
+                {
+                    Parallel.For(0, cpuCoreTotal, i => ConsumenQueue(i));
+                }
+                else
+                {
+                    ConsumenQueue(0);
+                }
             }
         }
         private void ConsumenQueue(int index)
