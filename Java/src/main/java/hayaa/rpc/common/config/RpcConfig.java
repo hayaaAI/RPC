@@ -6,7 +6,7 @@ import java.util.List;
 
 public class RpcConfig extends ConfigContent {
     /**
-     *  服务注册地址
+     * 服务注册地址
      */
     private String serviceReg;
     /**
@@ -26,6 +26,7 @@ public class RpcConfig extends ConfigContent {
     public void setSessionTimeout(int sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
+
     public String getServiceReg() {
         return serviceReg;
     }
@@ -41,7 +42,6 @@ public class RpcConfig extends ConfigContent {
     public void setServicePublice(String servicePublice) {
         this.servicePublice = servicePublice;
     }
-
 
 
     public String getKeepUrl() {
@@ -67,6 +67,7 @@ public class RpcConfig extends ConfigContent {
     public void setConsumerConfiguation(ConsumerConfig consumerConfiguation) {
         this.consumerConfiguation = consumerConfiguation;
     }
+
     private ProviderConfig providerConfiguation;
 
     private ConsumerConfig consumerConfiguation;
@@ -76,10 +77,35 @@ public class RpcConfig extends ConfigContent {
      */
     public class ProviderConfig {
         private String name;
-        //服务组
+        /**
+         * 服务组
+         */
         private String group;
-        //服务发布端口
+        /**
+         * 服务发布端口
+         */
         private Integer port;
+        /**
+         * 消息大小
+         * 单位byte
+         */
+        private Integer messageSize;
+
+        public ProviderConfig(){
+            this.name="defaultService";
+            this.group="defaultGroup";
+            this.port=8080;
+            this.messageSize=1024*1024;
+        }
+
+        public Integer getMessageSize() {
+            return messageSize;
+        }
+
+        public void setMessageSize(Integer messageSize) {
+            this.messageSize = messageSize;
+        }
+
         public Integer getPort() {
             return port;
         }
@@ -87,12 +113,15 @@ public class RpcConfig extends ConfigContent {
         public void setPort(Integer port) {
             this.port = port;
         }
+
         public String getGroup() {
             return group;
         }
+
         public void setGroup(String group) {
             this.group = group;
         }
+
         public String getName() {
             return name;
         }
@@ -108,7 +137,22 @@ public class RpcConfig extends ConfigContent {
     public class ConsumerConfig {
         private String name;
         private List<ServiceConfig> services;
+        /**
+         * 消息大小
+         * 单位byte
+         */
+        private Integer messageSize;
+        public ConsumerConfig(){
+            this.name="defaultService";
+            this.messageSize=1024*1024;
+        }
+        public Integer getMessageSize() {
+            return messageSize;
+        }
 
+        public void setMessageSize(Integer messageSize) {
+            this.messageSize = messageSize;
+        }
 
         public String getName() {
             return name;
@@ -156,6 +200,7 @@ public class RpcConfig extends ConfigContent {
         public void setServerPort(int serverPort) {
             this.serverPort = serverPort;
         }
+
         public String getAssemblyName() {
             return assemblyName;
         }

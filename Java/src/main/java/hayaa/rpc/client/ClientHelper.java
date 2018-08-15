@@ -11,6 +11,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ class ClientHelper {
         // g_Methodqueue = new ConcurrentLinkedQueue();
         g_ResultDic = new ConcurrentHashMap<>(1000);
         g_NetData = new ConcurrentHashMap<>(1000);
-        initNetClient(g_ClientPool, RPCConfigHelper.getConsumerConfig().getServices());
+        initNetClient(g_ClientPool);
     }
 
     public ResultMessage GetResult(String msgID) {
@@ -114,26 +115,8 @@ class ClientHelper {
      * 初始化netty设置
      *
      * @param cliPool
-     * @param services
      */
-    private synchronized void initNetClient(Hashtable<String, Channel> cliPool, List<RpcConfig.ServiceConfig> services) {
-
-        services.forEach(c -> {
-            if (!cliPool.containsKey(c.getInterfaceName())) {
-                try {
-                    // cliPool.put(c.getInterfaceName())
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-
-
-    /**
-     * 启动netty客户端
-     */
-    private void nettyRun() {
+    private synchronized void initNetClient(Hashtable<String, Channel> cliPool) {
         //worker负责读写数据
         EventLoopGroup worker = new NioEventLoopGroup();
         //辅助启动类
@@ -143,6 +126,7 @@ class ClientHelper {
         //设置socket工厂
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+        RpcConfig.ConsumerConfig serverConfig= RPCConfigHelper.getConsumerConfig();
         try {
             //设置管道
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -150,18 +134,19 @@ class ClientHelper {
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
-                    pipeline.addLast(new RpcEncoder());
-                    pipeline.addLast(new RpcDecoder());
+                    pipeline.addLast(new LengthFieldBasedFrameDecoder(serverConfig.getMessageSize(),
+                            2,4,0,
+                            2));
                     pipeline.addLast(new ClientInHandler());
                 }
             });
-            List<RpcConfig.ServiceConfig> serviceList = RPCConfigHelper.getConsumerConfig().getServices();
+            List<RpcConfig.ServiceConfig> serviceList =serverConfig.getServices();
             List<ChannelFuture> futrueList = new ArrayList<>(serviceList.size());
             serviceList.forEach(s -> {
                 ChannelFuture futrue = null;
                 try {
                     futrue = bootstrap.connect(new InetSocketAddress(s.getServerHost(), s.getServerPort())).sync();
-                    g_ClientPool.put(s.getInterfaceName(), futrue.channel());
+                    cliPool.put(s.getInterfaceName(), futrue.channel());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

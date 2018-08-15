@@ -5,8 +5,12 @@ import hayaa.rpc.IRpcProviderService;
 import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
 import hayaa.rpc.common.protocol.RpcProtocol;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.nio.charset.Charset;
 
 class NettyInboundHandler extends ChannelInboundHandlerAdapter {
     private IRpcProviderService g_service;
@@ -23,13 +27,26 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("server.channelRead");
-        RpcProtocol netData = (RpcProtocol) msg;
-        String str = new String(netData.getContent(),0,netData.getContentLength());
-        MethodMessage methodMessage=JsonHelper.DeserializeObject(str,MethodMessage.class);
+        ByteBuf body = (ByteBuf)msg;
+        if(body.readableBytes() <= 0){
+            ctx.fireChannelRead(msg);
+        }
+        int dataLength = body.readInt();
+        int dataType= body.readInt();
+        int dataSize = body.readableBytes();
+        byte [] data = new byte[dataSize];
+        body.readBytes(data);
+        String strMsg = new String(data,Charset.forName("utf-8"));
+        MethodMessage methodMessage=JsonHelper.DeserializeObject(strMsg,MethodMessage.class);
         ResultMessage resultMessage=g_service.executeMethod(methodMessage);
-        str=JsonHelper.SerializeObject(resultMessage);
-        RpcProtocol returnData =new RpcProtocol(str.getBytes("US-ASCII"));
-        ctx.writeAndFlush(returnData);
+        strMsg=JsonHelper.SerializeObject(resultMessage);
+        RpcProtocol returnData =new RpcProtocol(strMsg);
+        ByteBuf echo = Unpooled.directBuffer();
+        echo.writeBytes(returnData.getMessageFlag());
+        echo.writeInt(returnData.getContentLength());
+        echo.writeInt(returnData.getType());
+        echo.writeBytes(returnData.getData());
+        ctx.writeAndFlush(echo);
     }
 
     @Override

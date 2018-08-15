@@ -3,13 +3,12 @@ package hayaa.rpc.server;
 import hayaa.rpc.IRpcProviderService;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.config.RpcConfig;
-import hayaa.rpc.common.protocol.RpcDecoder;
-import hayaa.rpc.common.protocol.RpcEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 public class RpcServer {
     private IRpcProviderService g_service;
@@ -30,7 +29,6 @@ public class RpcServer {
         //设置TCP参数
         //1.链接缓冲池的大小（ServerSocketChannel的设置）
         bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
-        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
         //维持链接的活跃，清除死链接(SocketChannel的设置)
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         //关闭延迟发送
@@ -43,8 +41,9 @@ public class RpcServer {
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
-                    pipeline.addLast(new RpcEncoder());
-                    pipeline.addLast(new RpcDecoder());
+                    pipeline.addLast(new LengthFieldBasedFrameDecoder(serverConfig.getMessageSize(),
+                            2,4,0,
+                            2));
                     pipeline.addLast(new NettyOutboundHandler());
                     pipeline.addLast(new NettyInboundHandler(g_service));
                 }

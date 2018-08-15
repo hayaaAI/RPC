@@ -1,6 +1,5 @@
 hayaa\rpc\common\config\RPCRootConfig.class
 hayaa\rpc\common\config\RpcConfig$ServiceConfig.class
-hayaa\rpc\common\protocol\RpcEncoder.class
 hayaa\rpc\client\RpcClient.class
 hayaa\rpc\server\NettyInboundHandler.class
 hayaa\rpc\common\protocol\MethodMessage.class
@@ -16,7 +15,6 @@ hayaa\rpc\client\JavassistHelper.class
 hayaa\rpc\common\NetPackageHepler$1.class
 hayaa\rpc\common\config\RpcConfig$ConsumerConfig.class
 hayaa\rpc\common\config\RPCConfigHelper.class
-hayaa\rpc\common\protocol\RpcDecoder.class
 hayaa\rpc\common\NetPackageHepler.class
 hayaa\rpc\common\config\DefineTable.class
 hayaa\rpc\common\protocol\RpcProtocol.class
@@ -24,6 +22,7 @@ hayaa\rpc\client\ServiceFactory.class
 hayaa\rpc\common\protocol\ResultMessage.class
 hayaa\rpc\client\ClientHelper.class
 hayaa\rpc\client\ServiceMethdoProxy.class
+hayaa\rpc\common\IntHelper.class
 hayaa\rpc\client\ClientHelper$1.class
 hayaa\rpc\common\protocol\NetPackage.class
 hayaa\rpc\server\NettyOutboundHandler.class
