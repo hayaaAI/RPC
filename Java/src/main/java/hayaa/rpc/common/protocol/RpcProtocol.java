@@ -38,7 +38,7 @@ public class RpcProtocol {
      */
     public RpcProtocol(String content) {
         this.data = content.getBytes(Charset.forName("utf-8"));
-        this.contentLength = this.data.length;
+        this.contentLength = this.data.length+4;
         this.type = 1;
         messageFlag[0] = (byte) 0xaa;
         messageFlag[1] = (byte) 0xbb;

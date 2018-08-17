@@ -26,7 +26,7 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("server.channelRead");
+        System.out.println("server.channelRead start");
         ByteBuf body = (ByteBuf)msg;
         if(body.readableBytes() <= 0){
             ctx.fireChannelRead(msg);
@@ -47,6 +47,7 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
         echo.writeInt(returnData.getType());
         echo.writeBytes(returnData.getData());
         ctx.writeAndFlush(echo);
+        System.out.println("server.channelRead end");
     }
 
     @Override

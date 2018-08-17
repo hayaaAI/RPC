@@ -10,11 +10,20 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
+/**
+ * 服务运行启动类
+ */
 public class RpcServer {
     private IRpcProviderService g_service;
     public IRpcProviderService getService(){
         return g_service;
     }
+
+    /**
+     * rpc服务端启动入口函数
+     * @param service
+     * @throws Exception
+     */
     public  void run(IRpcProviderService service) throws Exception {
         g_service=service;
         //boss线程监听端口，worker线程负责数据读写
@@ -50,7 +59,7 @@ public class RpcServer {
             });
             //绑定端口
             ChannelFuture future = bootstrap.bind(serverConfig.getPort()).sync();
-            System.out.println("rpc server start ...... ");
+            System.out.println("rpc server start listen on:"+serverConfig.getPort());
             //等待服务端监听端口关闭
             future.channel().closeFuture().sync();
 

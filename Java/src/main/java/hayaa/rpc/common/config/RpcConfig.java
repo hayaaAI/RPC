@@ -8,15 +8,18 @@ public class RpcConfig extends ConfigContent {
     /**
      * 服务注册地址
      */
-    private String serviceReg;
+    private String serviceRegUrl;
     /**
      * 服务发布地址
      */
-    private String servicePublice;
+    private String servicePubliceUrl;
     /**
      * 心跳服务地址
      */
     private String keepUrl;
+    /**
+     * 会话超时,单位毫秒(milliseconds)
+     */
     private int sessionTimeout;
 
     public int getSessionTimeout() {
@@ -27,22 +30,21 @@ public class RpcConfig extends ConfigContent {
         this.sessionTimeout = sessionTimeout;
     }
 
-    public String getServiceReg() {
-        return serviceReg;
+    public String getServiceRegUrl() {
+        return serviceRegUrl;
     }
 
-    public void setServiceReg(String serviceReg) {
-        this.serviceReg = serviceReg;
+    public void setServiceRegUrl(String serviceRegUrl) {
+        this.serviceRegUrl = serviceRegUrl;
     }
 
-    public String getServicePublice() {
-        return servicePublice;
+    public String getServicePubliceUrl() {
+        return servicePubliceUrl;
     }
 
-    public void setServicePublice(String servicePublice) {
-        this.servicePublice = servicePublice;
+    public void setServicePubliceUrl(String servicePubliceUrl) {
+        this.servicePubliceUrl = servicePubliceUrl;
     }
-
 
     public String getKeepUrl() {
         return keepUrl;
@@ -184,6 +186,10 @@ public class RpcConfig extends ConfigContent {
         private String assemblyName;
         private String serverHost;
         private int serverPort;
+
+        public ServiceConfig(){
+
+        }
 
         public String getServerHost() {
             return serverHost;

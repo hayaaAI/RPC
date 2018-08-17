@@ -20,7 +20,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-class ClientHelper {
+/**
+ * @author hsieh
+ */
+public class ClientHelper {
     private static ClientHelper g_instance = new ClientHelper();
 
     public static ClientHelper get_instance() {
@@ -61,14 +64,17 @@ class ClientHelper {
        Boolean result=false;
         if (g_ClientPool.containsKey(methodMessage.getInterfaceName())) {
             Channel channel = g_ClientPool.get(methodMessage.getInterfaceName());
-            ByteBuf echo = Unpooled.directBuffer();
             String msg=JsonHelper.SerializeObject(methodMessage);
             RpcProtocol rpcProtocol=new RpcProtocol(msg);
+            System.out.println("rpc client send starting");
+            ByteBuf echo = Unpooled.directBuffer();
             echo.writeBytes(rpcProtocol.getMessageFlag());
             echo.writeInt(rpcProtocol.getContentLength());
             echo.writeInt(rpcProtocol.getType());
             echo.writeBytes(rpcProtocol.getData());
             channel.writeAndFlush(echo);
+            result=true;
+            System.out.println("rpc client send end");
         }
         return result;
     }
@@ -131,7 +137,7 @@ class ClientHelper {
         } finally {
             System.out.println("netty client quit");
             //优雅的退出，释放NIO线程组
-            worker.shutdownGracefully();
+          //  worker.shutdownGracefully();
         }
     }
 
