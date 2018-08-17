@@ -16,9 +16,12 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author hsieh
@@ -61,26 +64,35 @@ public class ClientHelper {
     }
 
     public Boolean enQueue(MethodMessage methodMessage) {
-       Boolean result=false;
+        Boolean result = false;
         if (g_ClientPool.containsKey(methodMessage.getInterfaceName())) {
             Channel channel = g_ClientPool.get(methodMessage.getInterfaceName());
-            String msg=JsonHelper.SerializeObject(methodMessage);
-            RpcProtocol rpcProtocol=new RpcProtocol(msg);
+            String msg = JsonHelper.SerializeObject(methodMessage);
+            RpcProtocol rpcProtocol = new RpcProtocol(msg);
             System.out.println("rpc client send starting");
             ByteBuf echo = Unpooled.directBuffer();
             echo.writeBytes(rpcProtocol.getMessageFlag());
             echo.writeInt(rpcProtocol.getContentLength());
             echo.writeInt(rpcProtocol.getType());
             echo.writeBytes(rpcProtocol.getData());
-            channel.writeAndFlush(echo);
-            result=true;
-            System.out.println("rpc client send end");
+            try {
+                channel.writeAndFlush(echo);
+                result = true;
+                System.out.println("rpc client send end");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(methodMessage.getInterfaceName()+" client quit");
+                resetServiceClient(methodMessage.getInterfaceName());
+            }
+
         }
         return result;
     }
+
     private void enResultQueue(ResultMessage msg) {
-        g_ResultDic.put(msg.getMsgID(),msg);
+        g_ResultDic.put(msg.getMsgID(), msg);
     }
+
     public ResultMessage GetResult(String msgID) {
         ResultMessage result = null;
         if (g_ResultDic.containsKey(msgID)) {
@@ -89,6 +101,28 @@ public class ClientHelper {
         }
         return result;
     }
+    private EventLoopGroup worker;
+    private Bootstrap bootstrap;
+
+    /**
+     * 重新建立一个服务的client与到服务端的长连接
+     * @param interfaceName
+     */
+    private synchronized void resetServiceClient(String interfaceName){
+        RpcConfig.ConsumerConfig consumerConfig = RPCConfigHelper.getConsumerConfig();
+        RpcConfig.ServiceConfig serviceConfig= consumerConfig.getServices().stream().
+              filter(a->a.getInterfaceName().equals(interfaceName)).collect(Collectors.toList()).get(0);
+        System.out.println(interfaceName+" client reset");
+        try {
+            ChannelFuture futrue = bootstrap.connect(new InetSocketAddress(serviceConfig.getServerHost(), serviceConfig.getServerPort())).sync();
+            g_ClientPool.remove(serviceConfig.getInterfaceName());
+            g_ClientPool.put(serviceConfig.getInterfaceName(), futrue.channel());
+            System.out.println(interfaceName+" client reset success");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(interfaceName+" client reset fail");
+        }
+    }
     /**
      * 初始化netty设置
      *
@@ -96,15 +130,16 @@ public class ClientHelper {
      */
     private synchronized void initNetClient(Hashtable<String, Channel> cliPool) {
         //worker负责读写数据
-        EventLoopGroup worker = new NioEventLoopGroup();
+         worker = new NioEventLoopGroup();
         //辅助启动类
-        Bootstrap bootstrap = new Bootstrap();
+        bootstrap = new Bootstrap();
         //设置线程池
         bootstrap.group(worker);
         //设置socket工厂
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-        RpcConfig.ConsumerConfig serverConfig= RPCConfigHelper.getConsumerConfig();
+        bootstrap.option(ChannelOption.TCP_NODELAY, true);
+        RpcConfig.ConsumerConfig serverConfig = RPCConfigHelper.getConsumerConfig();
         try {
             //设置管道
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -113,13 +148,12 @@ public class ClientHelper {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
                     pipeline.addLast(new LengthFieldBasedFrameDecoder(serverConfig.getMessageSize(),
-                            2,4,0,
+                            2, 4, 0,
                             2));
                     pipeline.addLast(new ClientInHandler());
                 }
             });
-            List<RpcConfig.ServiceConfig> serviceList =serverConfig.getServices();
-            List<ChannelFuture> futrueList = new ArrayList<>(serviceList.size());
+            List<RpcConfig.ServiceConfig> serviceList = serverConfig.getServices();
             serviceList.forEach(s -> {
                 ChannelFuture futrue = null;
                 try {
@@ -128,17 +162,15 @@ public class ClientHelper {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (futrue != null) {
-                    futrueList.add(futrue);
-                }
             });
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            System.out.println("netty client quit");
-            //优雅的退出，释放NIO线程组
-          //  worker.shutdownGracefully();
         }
+//        finally {
+//            System.out.println("netty client quit");
+//            //优雅的退出，释放NIO线程组
+//            worker.shutdownGracefully();
+//        }
     }
 
     /**
@@ -148,17 +180,17 @@ public class ClientHelper {
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg)
                 throws Exception {
-            ByteBuf body = (ByteBuf)msg;
-            if(body.readableBytes() <= 0){
+            ByteBuf body = (ByteBuf) msg;
+            if (body.readableBytes() <= 0) {
                 ctx.fireChannelRead(msg);
             }
             int dataLength = body.readInt();
-            int dataType= body.readInt();
+            int dataType = body.readInt();
             int dataSize = body.readableBytes();
-            byte [] data = new byte[dataSize];
+            byte[] data = new byte[dataSize];
             body.readBytes(data);
-            String strMsg = new String(data,Charset.forName("utf-8"));
-            ResultMessage resultMessage=JsonHelper.DeserializeObject(strMsg,ResultMessage.class);
+            String strMsg = new String(data, Charset.forName("utf-8"));
+            ResultMessage resultMessage = JsonHelper.DeserializeObject(strMsg, ResultMessage.class);
             enResultQueue(resultMessage);
         }
 
