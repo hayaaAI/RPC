@@ -4,8 +4,12 @@ import javassist.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Hashtable;
 
-class JavassistHelper {
+/**
+ * 以源码形式创建接口实现类
+ */
+public class JavassistHelper {
     public static Object createClass(String interfaceName) {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctInterface =null;
@@ -44,7 +48,8 @@ class JavassistHelper {
         }
         Object serviceResult=null;
         try{
-            serviceResult=proxyClass.toClass().newInstance();
+            Class temp=proxyClass.toClass();
+            serviceResult=temp.newInstance();
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -63,7 +68,6 @@ class JavassistHelper {
     }
 
     private static String createMethodCode(String interfaceName,Method method) {
-        StringBuilder stringBuilder=new StringBuilder();
         Class[] exceptionTypes = method.getExceptionTypes();
         StringBuilder exceptionBuilder = new StringBuilder();
         //组装方法的Exception声明
@@ -99,19 +103,18 @@ class JavassistHelper {
         String methodReturnType = method.getReturnType().getName();
         methodDeclare.append("public ");
         methodDeclare.append(methodReturnType);
-        methodDeclare.append(" ");
-        methodDeclare.append(methodName);
+        methodDeclare.append(" "+methodName);
         methodDeclare.append(parameterBuilder);
         methodDeclare.append(exceptionBuilder);
         methodDeclare.append("{");
-        methodDeclare.append("Hashtable<String, Object> paramater=new Hashtable<>();");
+        methodDeclare.append("java.util.Hashtable paramater=new java.util.Hashtable();");
         methodDeclare.append(parameterHashMap);
-        methodDeclare.append("String resultJson= ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
+        methodDeclare.append(" String resultJson= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
         methodDeclare.append(methodReturnType+" result =null;");
-        methodDeclare.append("if(resultJson==null) return result;");
-        methodDeclare.append("result =JsonHelper.DeserializeComplexObject(str,new TypeReference<"+methodReturnType+">(){});");
-        methodDeclare.append("return result");
+        methodDeclare.append("if(resultJson==null){ return result;}");
+        methodDeclare.append("result =hayaa.common.JsonHelper.gsonDeserialize(resultJson,"+methodReturnType+".class);");
+        methodDeclare.append("return result;");
         methodDeclare.append("}");
-        return stringBuilder.toString();
+        return methodDeclare.toString();
     }
 }

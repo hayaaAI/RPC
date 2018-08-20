@@ -52,12 +52,14 @@ public class ClientHelper {
      * cpu核心数,按照最小计算能力默认
      */
     private int cpuCoreTotal = 1;
+    private RpcConfig.ConsumerConfig config;
 
     /**
      * 通信初始化
      */
-    public synchronized void init() {
-        int serviceTotal = RPCConfigHelper.getConsumerConfig().getServices().size();
+    public synchronized void init(RpcConfig.ConsumerConfig config) {
+        this.config=config;
+        int serviceTotal = config.getServices().size();
         g_ClientPool = new Hashtable<>(serviceTotal);
         g_ResultDic = new ConcurrentHashMap<>(1000);
         initNetClient(g_ClientPool);
@@ -81,7 +83,7 @@ public class ClientHelper {
                 System.out.println("rpc client send end");
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println(methodMessage.getInterfaceName()+" client quit");
+                System.out.println(methodMessage.getInterfaceName() + " client quit");
                 resetServiceClient(methodMessage.getInterfaceName());
             }
 
@@ -101,28 +103,33 @@ public class ClientHelper {
         }
         return result;
     }
+
     private EventLoopGroup worker;
     private Bootstrap bootstrap;
 
     /**
      * 重新建立一个服务的client与到服务端的长连接
+     *
      * @param interfaceName
      */
-    private synchronized void resetServiceClient(String interfaceName){
-        RpcConfig.ConsumerConfig consumerConfig = RPCConfigHelper.getConsumerConfig();
-        RpcConfig.ServiceConfig serviceConfig= consumerConfig.getServices().stream().
-              filter(a->a.getInterfaceName().equals(interfaceName)).collect(Collectors.toList()).get(0);
-        System.out.println(interfaceName+" client reset");
+    private synchronized void resetServiceClient(String interfaceName) {
+        RpcConfig.ServiceConfig serviceConfig = this.config.getServices().stream().
+                filter(a -> a.getInterfaceName().equals(interfaceName)).collect(Collectors.toList()).get(0);
+        if(serviceConfig==null) {
+            System.out.println(interfaceName + " can not reset");
+            return;}
+        System.out.println(interfaceName + " client reset");
         try {
             ChannelFuture futrue = bootstrap.connect(new InetSocketAddress(serviceConfig.getServerHost(), serviceConfig.getServerPort())).sync();
             g_ClientPool.remove(serviceConfig.getInterfaceName());
             g_ClientPool.put(serviceConfig.getInterfaceName(), futrue.channel());
-            System.out.println(interfaceName+" client reset success");
+            System.out.println(interfaceName + " client reset success");
         } catch (InterruptedException e) {
             e.printStackTrace();
-            System.out.println(interfaceName+" client reset fail");
+            System.out.println(interfaceName + " client reset fail");
         }
     }
+
     /**
      * 初始化netty设置
      *
@@ -130,7 +137,7 @@ public class ClientHelper {
      */
     private synchronized void initNetClient(Hashtable<String, Channel> cliPool) {
         //worker负责读写数据
-         worker = new NioEventLoopGroup();
+        worker = new NioEventLoopGroup();
         //辅助启动类
         bootstrap = new Bootstrap();
         //设置线程池
@@ -139,21 +146,20 @@ public class ClientHelper {
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
         bootstrap.option(ChannelOption.TCP_NODELAY, true);
-        RpcConfig.ConsumerConfig serverConfig = RPCConfigHelper.getConsumerConfig();
-        try {
+         try {
             //设置管道
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
-                    pipeline.addLast(new LengthFieldBasedFrameDecoder(serverConfig.getMessageSize(),
+                    pipeline.addLast(new LengthFieldBasedFrameDecoder(config.getMessageSize(),
                             2, 4, 0,
                             2));
                     pipeline.addLast(new ClientInHandler());
                 }
             });
-            List<RpcConfig.ServiceConfig> serviceList = serverConfig.getServices();
+            List<RpcConfig.ServiceConfig> serviceList = config.getServices();
             serviceList.forEach(s -> {
                 ChannelFuture futrue = null;
                 try {

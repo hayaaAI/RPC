@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServiceFactory {
     private static ConcurrentHashMap<String, Object> g_service = new ConcurrentHashMap<>();
 
-    public static void initService(List<String> interfaces) {
+    public static synchronized void initService(List<String> interfaces) {
         if (interfaces != null) {
             interfaces.forEach(service -> {
                 Object serviceImpl = JavassistHelper.createClass(service);

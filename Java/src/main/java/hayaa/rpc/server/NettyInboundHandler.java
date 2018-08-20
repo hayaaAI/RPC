@@ -37,7 +37,7 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
         byte [] data = new byte[dataSize];
         body.readBytes(data);
         String strMsg = new String(data,Charset.forName("utf-8"));
-        MethodMessage methodMessage=JsonHelper.DeserializeObject(strMsg,MethodMessage.class);
+        MethodMessage methodMessage=JsonHelper.gsonDeserialize(strMsg,MethodMessage.class);
         ResultMessage resultMessage=g_service.executeMethod(methodMessage);
         strMsg=JsonHelper.SerializeObject(resultMessage);
         RpcProtocol returnData =new RpcProtocol(strMsg);
