@@ -4,8 +4,14 @@ import javassist.*;
 
 /**
  * 以源码形式创建接口实现类
+ * @author hsieh
  */
 public class JavassistHelper {
+    /**
+     * 创建接口代理对象
+     * @param interfaceName 接口全名称
+     * @return
+     */
     public static Object createClass(String interfaceName) {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctInterface =null;
@@ -47,6 +53,15 @@ public class JavassistHelper {
         return serviceResult;
     }
 
+    /**
+     * 构建函数
+     * @param classPool
+     * @param interfaceName 接口名称
+     * @param proxyClass 代理对象类
+     * @param method 函数
+     * @return
+     * @throws NotFoundException
+     */
     private static CtMethod createMethod(ClassPool classPool,String interfaceName,CtClass proxyClass,CtMethod method) throws NotFoundException {
         CtClass returnType=classPool.get(method.getReturnType().getName());
         CtClass[] paraCtClass=method.getParameterTypes();
@@ -62,6 +77,13 @@ public class JavassistHelper {
         return ctMethod;
     }
 
+    /**
+     * 构建函数主体
+     * @param interfaceName 接口名称
+     * @param method 函数对象
+     * @param varTotal 变量总数
+     * @return
+     */
     private static String createMethodCode(String interfaceName,CtMethod method,int varTotal) {
         StringBuilder parameterHashMap = new StringBuilder();
         for(int i = 0; i < varTotal; i++) {
@@ -78,7 +100,7 @@ public class JavassistHelper {
         methodDeclare.append("java.util.Hashtable paramater=new java.util.Hashtable();");
         methodDeclare.append(parameterHashMap);
         methodDeclare.append(" String resultJson= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
-        methodDeclare.append(methodReturnType+" result =new test1.RpcData();");
+        methodDeclare.append(methodReturnType+" result =null;");
         methodDeclare.append("if(resultJson==null){ return result;}");
         methodDeclare.append("result =hayaa.common.JsonHelper.gsonDeserialize(resultJson,"+methodReturnType+".class);");
         methodDeclare.append("return result;");
