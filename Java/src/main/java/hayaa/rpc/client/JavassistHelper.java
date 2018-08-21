@@ -2,10 +2,6 @@ package hayaa.rpc.client;
 
 import javassist.*;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Hashtable;
-
 /**
  * 以源码形式创建接口实现类
  */
@@ -14,7 +10,7 @@ public class JavassistHelper {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctInterface =null;
         try {
-             ctInterface = classPool.getCtClass(interfaceName);
+            ctInterface = classPool.getCtClass(interfaceName);
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
@@ -24,20 +20,15 @@ public class JavassistHelper {
         //命名格式：接口+Hayaa_ProxyClass
         CtClass proxyClass = classPool.makeClass(interfaceName+"Hayaa_ProxyClass");
         proxyClass.addInterface(ctInterface);
-        Class interfaceClass = null;
-        try {
-            interfaceClass = Class.forName(interfaceName);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if(interfaceClass==null){
-            return null;
-        }
-
-        Method[] methods = interfaceClass.getMethods();
+        CtMethod[] methods = ctInterface.getDeclaredMethods();
         for(int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            CtMethod ctMethod=createMethod(interfaceName,proxyClass,method,i);
+            CtMethod method = methods[i];
+            CtMethod ctMethod= null;
+            try {
+                ctMethod = createMethod(classPool,interfaceName,proxyClass,method);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
             if(ctMethod!=null) {
                 try {
                     proxyClass.addMethod(ctMethod);
@@ -56,61 +47,38 @@ public class JavassistHelper {
         return serviceResult;
     }
 
-    private static CtMethod createMethod(String interfaceName,CtClass proxyClass,Method method, int i) {
-        CtMethod ctMethod=null;
-        String methodCode=createMethodCode(interfaceName,method);
+    private static CtMethod createMethod(ClassPool classPool,String interfaceName,CtClass proxyClass,CtMethod method) throws NotFoundException {
+        CtClass returnType=classPool.get(method.getReturnType().getName());
+        CtClass[] paraCtClass=method.getParameterTypes();
+        CtMethod ctMethod=new CtMethod(returnType,method.getName(),paraCtClass,proxyClass);
+        ctMethod.setModifiers(Modifier.PUBLIC);
+        ctMethod.setModifiers(ctMethod.getModifiers() | Modifier.VARARGS);
+        String methodBody=createMethodCode(interfaceName,method,paraCtClass.length);
         try {
-            ctMethod=CtNewMethod.make(methodCode,proxyClass);
+            ctMethod.setBody(methodBody);
         } catch (CannotCompileException e) {
             e.printStackTrace();
         }
         return ctMethod;
     }
 
-    private static String createMethodCode(String interfaceName,Method method) {
-        Class[] exceptionTypes = method.getExceptionTypes();
-        StringBuilder exceptionBuilder = new StringBuilder();
-        //组装方法的Exception声明
-        if(exceptionTypes.length > 0){
-            exceptionBuilder.append(" throws ");
-        }
-        for(int i = 0; i < exceptionTypes.length; i++) {
-            if(i != exceptionTypes.length - 1){
-                exceptionBuilder.append(exceptionTypes[i].getName()).append(",");
-            }
-            else{
-                exceptionBuilder.append(exceptionTypes[i].getName());
-            }
-        }
-        StringBuilder parameterBuilder = new StringBuilder("(");
+    private static String createMethodCode(String interfaceName,CtMethod method,int varTotal) {
         StringBuilder parameterHashMap = new StringBuilder();
-        //组装方法的参数列表
-        Parameter[] parameters = method.getParameters();
-        for(int i = 0; i < parameters.length; i++) {
-            Parameter parameter = parameters[i];
-            String parameterType = parameter.getType().getName();
-            parameterBuilder.append(parameterType);
-            parameterBuilder.append(" ");
-            parameterBuilder.append(parameter.getName());
-            if((parameters.length-1)>i){
-                parameterBuilder.append(",");
-            }
-            parameterHashMap.append("paramater.put(\""+parameter.getName()+"\","+parameter.getName()+");");
+        for(int i = 0; i < varTotal; i++) {
+            parameterHashMap.append("paramater.put(\"args"+i+"\",$"+(i+1)+");");
         }
-        parameterBuilder.append(")");
         StringBuilder methodDeclare = new StringBuilder();
-        String methodName = method.getName();
-        String methodReturnType = method.getReturnType().getName();
-        methodDeclare.append("public ");
-        methodDeclare.append(methodReturnType);
-        methodDeclare.append(" "+methodName);
-        methodDeclare.append(parameterBuilder);
-        methodDeclare.append(exceptionBuilder);
+        String methodReturnType = null;
+        try {
+            methodReturnType = method.getReturnType().getName();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
         methodDeclare.append("{");
         methodDeclare.append("java.util.Hashtable paramater=new java.util.Hashtable();");
         methodDeclare.append(parameterHashMap);
         methodDeclare.append(" String resultJson= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
-        methodDeclare.append(methodReturnType+" result =null;");
+        methodDeclare.append(methodReturnType+" result =new test1.RpcData();");
         methodDeclare.append("if(resultJson==null){ return result;}");
         methodDeclare.append("result =hayaa.common.JsonHelper.gsonDeserialize(resultJson,"+methodReturnType+".class);");
         methodDeclare.append("return result;");
