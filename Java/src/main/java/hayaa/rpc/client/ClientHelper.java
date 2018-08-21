@@ -186,6 +186,7 @@ public class ClientHelper {
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg)
                 throws Exception {
+            System.out.println("client read start");
             ByteBuf body = (ByteBuf) msg;
             if (body.readableBytes() <= 0) {
                 ctx.fireChannelRead(msg);
@@ -196,7 +197,9 @@ public class ClientHelper {
             byte[] data = new byte[dataSize];
             body.readBytes(data);
             String strMsg = new String(data, Charset.forName("utf-8"));
+            System.out.println("client read end");
             ResultMessage resultMessage = JsonHelper.DeserializeObject(strMsg, ResultMessage.class);
+            System.out.println("client read data is"+((resultMessage==null)?"null":"data"));
             enResultQueue(resultMessage);
         }
 

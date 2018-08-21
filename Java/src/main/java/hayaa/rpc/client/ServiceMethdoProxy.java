@@ -27,7 +27,9 @@ public class ServiceMethdoProxy {
             if (!action) {
                 return null;
             }
+            System.out.println("result wait timeOut:"+timeOut);
             while (time < timeOut) {
+                System.out.println("result wait loop");
                 msgResult = ClientHelper.get_instance().GetResult(msgID);
                 if (msgResult != null) {
                     time = timeOut + 1;
@@ -44,6 +46,7 @@ public class ServiceMethdoProxy {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Server result:"+strResult);
         Object result=JsonHelper.gsonDeserialize(strResult,resultType);
         return result;
     }
