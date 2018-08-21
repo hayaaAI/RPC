@@ -1,5 +1,6 @@
 package hayaa.rpc.client;
 
+import hayaa.common.JsonHelper;
 import hayaa.common.StringUtil;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.protocol.MethodMessage;
@@ -9,9 +10,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.UUID;
 
-class ServiceMethdoProxy {
-    public static String invoke(String interfaceName, String methodName, Hashtable<String, Object> paramater) {
-        String result = null;
+public class ServiceMethdoProxy {
+    public static Object invoke(String interfaceName, String methodName, Hashtable<String, Object> paramater,Class<?> resultType) {
+        String strResult = null;
         String msgID = UUID.randomUUID().toString();
         MethodMessage methodMessage = new MethodMessage();
         methodMessage.setInterfaceName(interfaceName);
@@ -24,7 +25,7 @@ class ServiceMethdoProxy {
         try {
             Boolean action = ClientHelper.get_instance().enQueue(methodMessage);
             if (!action) {
-                return result;
+                return null;
             }
             while (time < timeOut) {
                 msgResult = ClientHelper.get_instance().GetResult(msgID);
@@ -38,11 +39,12 @@ class ServiceMethdoProxy {
                 time = time + 3;
             }
             if (StringUtil.IsNullOrEmpty(msgResult.getErrMsg())) {
-                result = msgResult.getResult();
+                strResult = msgResult.getResult();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Object result=JsonHelper.gsonDeserialize(strResult,resultType);
         return result;
     }
 

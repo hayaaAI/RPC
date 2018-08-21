@@ -1,5 +1,6 @@
 package hayaa.rpc.client;
 
+
 import javassist.*;
 
 /**
@@ -14,6 +15,7 @@ public class JavassistHelper {
      */
     public static Object createClass(String interfaceName) {
         ClassPool classPool = ClassPool.getDefault();
+        //classPool.insertClassPath(new ClassClassPath(ServiceMethdoProxy.class));
         CtClass ctInterface =null;
         try {
             ctInterface = classPool.getCtClass(interfaceName);
@@ -99,10 +101,10 @@ public class JavassistHelper {
         methodDeclare.append("{");
         methodDeclare.append("java.util.Hashtable paramater=new java.util.Hashtable();");
         methodDeclare.append(parameterHashMap);
-        methodDeclare.append(" String resultJson= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""+interfaceName+"\",\""+method.getName()+"\",paramater);");
+        methodDeclare.append("Object resultObj= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""
+                +interfaceName+"\",\""+method.getName()+"\",paramater,"+methodReturnType+".class);");
         methodDeclare.append(methodReturnType+" result =null;");
-        methodDeclare.append("if(resultJson==null){ return result;}");
-        methodDeclare.append("result =hayaa.common.JsonHelper.gsonDeserialize(resultJson,"+methodReturnType+".class);");
+        methodDeclare.append("if(resultObj==null){ return result;} else { result =("+methodReturnType+")resultObj;}");
         methodDeclare.append("return result;");
         methodDeclare.append("}");
         return methodDeclare.toString();
