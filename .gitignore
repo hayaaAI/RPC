@@ -259,3 +259,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/C#/RPC/XUnitTestProject1
+/C#/RPC/ClassLibrary1
+/C#/RPC/ConsoleApp1
