@@ -42,8 +42,12 @@ public class ServiceMethdoProxy {
                 //考虑代码操作时间增量
                 time = time + 3;
             }
-            if ((msgResult!=null)&&StringUtil.IsNullOrEmpty(msgResult.getErrMsg())) {
-                strResult = msgResult.getResult();
+            if(msgResult!=null) {
+                if (StringUtil.IsNullOrEmpty(msgResult.getErrMsg())){
+                    strResult = msgResult.getResult();
+                }
+            }else {
+                ClientHelper.get_instance().delTimeoutMsgID(msgID);
             }
         } catch (Exception e) {
             e.printStackTrace();

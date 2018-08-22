@@ -103,7 +103,15 @@ public class ClientHelper {
         }
         return result;
     }
-
+    /**
+     * 删除超时的会话ID
+     * @param msgID
+     */
+    public void delTimeoutMsgID(String msgID) {
+        if (g_ResultDic.containsKey(msgID)) {
+            g_ResultDic.remove(msgID);
+        }
+    }
     private EventLoopGroup worker;
     private Bootstrap bootstrap;
 
@@ -178,6 +186,8 @@ public class ClientHelper {
 //            worker.shutdownGracefully();
 //        }
     }
+
+
 
     /**
      * 处理服务端返回的信息
