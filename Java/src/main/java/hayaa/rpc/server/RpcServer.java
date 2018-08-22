@@ -1,6 +1,5 @@
 package hayaa.rpc.server;
 
-import hayaa.rpc.IRpcProviderService;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.config.RpcConfig;
 import io.netty.bootstrap.ServerBootstrap;
@@ -14,18 +13,13 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
  * 服务运行启动类
  */
 public class RpcServer {
-    private IRpcProviderService g_service;
-    public IRpcProviderService getService(){
-        return g_service;
-    }
+
 
     /**
      * rpc服务端启动入口函数
-     * @param service
-     * @throws Exception
+      * @throws Exception
      */
-    public  void run(IRpcProviderService service) throws Exception {
-        g_service=service;
+    public  void run() throws Exception {
         //boss线程监听端口，worker线程负责数据读写
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
@@ -54,7 +48,7 @@ public class RpcServer {
                             2,4,0,
                             2));
                     //pipeline.addLast(new NettyOutboundHandler());
-                    pipeline.addLast(new NettyInboundHandler(g_service));
+                    pipeline.addLast(new NettyInboundHandler());
                 }
             });
             //绑定端口

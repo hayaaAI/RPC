@@ -214,4 +214,12 @@ public class ClientHelper {
             System.out.println("client.channelActive");
         }
     }
+
+
+    /**
+     * 关闭netty客户端并且释放资源
+     */
+    public void shutdownNetty() {
+        this.worker.shutdownGracefully();
+    }
 }

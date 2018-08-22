@@ -23,6 +23,7 @@ public class ServiceMethdoProxy {
         int timeOut = RPCConfigHelper.getRPCConfig().getSessionTimeout();
         int time = 0;
         try {
+
             Boolean action = ClientHelper.get_instance().enQueue(methodMessage);
             if (!action) {
                 return null;
@@ -47,7 +48,10 @@ public class ServiceMethdoProxy {
             e.printStackTrace();
         }
         System.out.println("Server result:"+strResult);
-        Object result=JsonHelper.gsonDeserialize(strResult,resultType);
+        Object result=null;
+        if(!StringUtil.IsNullOrEmpty(strResult)) {
+            result = JsonHelper.gsonDeserialize(strResult, resultType);
+        }
         return result;
     }
 
