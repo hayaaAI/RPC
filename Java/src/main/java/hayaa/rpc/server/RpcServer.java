@@ -26,11 +26,15 @@ public class RpcServer {
      */
     public void run() throws Exception {
         RpcConfig.ProviderConfig providerConfig= RPCConfigHelper.getProviderConfig();
+        if(providerConfig==null){
+            System.out.println("配置文件中ProviderConfig节点未配置");
+            return;
+        }
       String packages=providerConfig.getPackages();
       if(!StringUtil.IsNullOrEmpty(packages)){
           List<String> packageList= Arrays.stream(packages.split(",")).collect(Collectors.toList());
           ProviderFactory.ScanServices(packageList);
-          initNetty();
+          initNetty(providerConfig.getMessageSize(),providerConfig.getPort());
       }else {
           System.out.println("配置文件中ProviderConfig节点packages字段未配置");
       }
@@ -39,7 +43,7 @@ public class RpcServer {
      * 初始化服务端netty
      * @throws Exception
      */
-    public  void initNetty() throws Exception {
+    public  void initNetty(int messageSize,int port) throws Exception {
         //boss线程监听端口，worker线程负责数据读写
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
@@ -56,7 +60,6 @@ public class RpcServer {
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         //关闭延迟发送
         bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-        RpcConfig.ProviderConfig serverConfig= RPCConfigHelper.getProviderConfig();
         try {
             //设置管道工厂
             bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
@@ -64,7 +67,7 @@ public class RpcServer {
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     //获取管道
                     ChannelPipeline pipeline = socketChannel.pipeline();
-                    pipeline.addLast(new LengthFieldBasedFrameDecoder(serverConfig.getMessageSize(),
+                    pipeline.addLast(new LengthFieldBasedFrameDecoder(messageSize,
                             2,4,0,
                             2));
                     //pipeline.addLast(new NettyOutboundHandler());
@@ -72,8 +75,8 @@ public class RpcServer {
                 }
             });
             //绑定端口
-            ChannelFuture future = bootstrap.bind(serverConfig.getPort()).sync();
-            System.out.println("rpc server start listen on:"+serverConfig.getPort());
+            ChannelFuture future = bootstrap.bind(port).sync();
+            System.out.println("rpc server start listen on:"+port);
             //等待服务端监听端口关闭
             future.channel().closeFuture().sync();
 

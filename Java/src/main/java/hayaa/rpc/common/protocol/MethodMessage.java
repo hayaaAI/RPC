@@ -6,7 +6,7 @@ import java.util.Hashtable;
 public class MethodMessage  implements Serializable {
     private String interfaceName;
     private String method;
-    private Hashtable<String,Object> paramater;
+    private Hashtable<String,RpcDataValue> paramater;
     private String msgID;
     public String getMsgID() {
         return msgID;
@@ -31,11 +31,11 @@ public class MethodMessage  implements Serializable {
         this.method = method;
     }
 
-    public Hashtable<String, Object> getParamater() {
+    public Hashtable<String, RpcDataValue> getParamater() {
         return paramater;
     }
 
-    public void setParamater(Hashtable<String, Object> paramater) {
+    public void setParamater(Hashtable<String, RpcDataValue> paramater) {
         this.paramater = paramater;
     }
 

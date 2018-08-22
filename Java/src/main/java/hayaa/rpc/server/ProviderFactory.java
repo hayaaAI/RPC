@@ -2,8 +2,10 @@ package hayaa.rpc.server;
 
 import hayaa.common.JsonHelper;
 import hayaa.common.PackageScanHelper;
+import hayaa.rpc.common.RpcDataHelper;
 import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
+import hayaa.rpc.common.protocol.RpcDataValue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,7 +20,13 @@ class ProviderFactory {
         Method method = getService(methodMessage.getInterfaceName(), methodMessage.getMethod());
         if (method != null) {
             try {
-                Object resultObj = method.invoke(getServiceInstance(methodMessage.getInterfaceName()), getParamaters(methodMessage.getParamater()));
+                List<Object> methodParamater=getParamaters(methodMessage.getParamater());
+                Object resultObj =null;
+                if(methodParamater!=null) {
+                    resultObj = method.invoke(getServiceInstance(methodMessage.getInterfaceName()), methodParamater);
+                }else {
+                    resultMessage.setErrMsg("方法参数转换失败");
+                }
                 if (resultObj != null) {
                     resultMessage.setResult(JsonHelper.SerializeObject(resultObj));
                 }
@@ -33,6 +41,7 @@ class ProviderFactory {
         }
         return resultMessage;
     }
+    private static Hashtable<String, ProviderContainer> services = new Hashtable<>(100);
 
     /**
      * 扫描服务所在package
@@ -45,6 +54,7 @@ class ProviderFactory {
             if(classList!=null){
                 classList.forEach(classObj->{
                     if(!classObj.isInterface()){
+                        ServerClassDataStore.setClass(classObj);
                         Class<?>[] interfaceList=classObj.getInterfaces();
                         if(interfaceList!=null){
                             Object instance=null;
@@ -77,22 +87,25 @@ class ProviderFactory {
         });
     }
 
-    private static Hashtable<String, ProviderContainer> services = new Hashtable<>(100);
 
     /**
      * 按照变量名字排序参数
      * @param paramater
      * @return
      */
-    private static List<Object> getParamaters(Hashtable<String, Object> paramater) {
+    private static List<Object> getParamaters(Hashtable<String, RpcDataValue> paramater) {
         List<Object> result = null;
         if (paramater.size() > 0) {
             result = new ArrayList<>();
             for (int i = 0; i < paramater.size(); i++) {
                 //保证参数顺序和客户端一致
-                Object p = paramater.get("args" + i);
+                RpcDataValue rpcDataValue = paramater.get("args" + i);
+                Object p= RpcDataHelper.parseServerData(rpcDataValue);
                 if (p != null) {
                     result.add(p);
+                }else {
+                    result = null;
+                    return result;
                 }
             }
         }

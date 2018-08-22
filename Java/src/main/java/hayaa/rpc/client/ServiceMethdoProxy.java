@@ -5,13 +5,14 @@ import hayaa.common.StringUtil;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
+import hayaa.rpc.common.protocol.RpcDataValue;
 
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.UUID;
 
 public class ServiceMethdoProxy {
-    public static Object invoke(String interfaceName, String methodName, Hashtable<String, Object> paramater,Class<?> resultType) {
+    public static Object invoke(String interfaceName, String methodName, Hashtable<String, RpcDataValue> paramater, Class<?> resultType) {
         String strResult = null;
         String msgID = UUID.randomUUID().toString();
         MethodMessage methodMessage = new MethodMessage();
