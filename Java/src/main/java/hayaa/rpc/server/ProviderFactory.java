@@ -1,12 +1,14 @@
 package hayaa.rpc.server;
 
 import hayaa.common.JsonHelper;
+import hayaa.common.PackageScanHelper;
 import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -34,16 +36,55 @@ public class ProviderFactory {
     }
 
     /**
-     * 扫描服务所在jar
-     *
-     * @param jarPaths 需要扫描的jar路径
+     * 扫描服务所在package
+     *·
+     * @param packageNames 需要扫描的package名字
      */
-    public synchronized static void ScanServices(List<String> jarPaths) {
-
+    public synchronized static void ScanServices(List<String> packageNames) {
+        packageNames.forEach(packageName -> {
+            List<Class<?>> classList= PackageScanHelper.scan(packageName);
+            if(classList!=null){
+                classList.forEach(classObj->{
+                    if(!classObj.isInterface()){
+                        Class<?>[] interfaceList=classObj.getInterfaces();
+                        if(interfaceList!=null){
+                            Object instance=null;
+                            try {
+                                //创建服务实现类实例
+                                 instance=classObj.newInstance();
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                            if(instance!=null){
+                                for(int i=0;i<interfaceList.length;i++){
+                                    Method[] methods=interfaceList[i].getDeclaredMethods();
+                                    if(methods!=null) {
+                                        Hashtable<String,Method> hashtable=new Hashtable<>(methods.length);
+                                        for(int mi=0;mi<methods.length;mi++){
+                                            hashtable.put(methods[mi].getName(),methods[mi]);
+                                        }
+                                        ProviderContainer providerContainer = new ProviderContainer(interfaceList[i].getName(),
+                                                instance,hashtable);
+                                        services.put(interfaceList[i].getName(),providerContainer);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
-    private static Hashtable<String, ProviderContainer> services = new Hashtable<>();
+    private static Hashtable<String, ProviderContainer> services = new Hashtable<>(100);
 
+    /**
+     * 按照变量名字排序参数
+     * @param paramater
+     * @return
+     */
     private static List<Object> getParamaters(Hashtable<String, Object> paramater) {
         List<Object> result = null;
         if (paramater.size() > 0) {
