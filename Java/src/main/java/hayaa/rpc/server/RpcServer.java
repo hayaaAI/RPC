@@ -1,5 +1,6 @@
 package hayaa.rpc.server;
 
+import hayaa.common.StringUtil;
 import hayaa.rpc.common.config.RPCConfigHelper;
 import hayaa.rpc.common.config.RpcConfig;
 import io.netty.bootstrap.ServerBootstrap;
@@ -8,6 +9,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 服务运行启动类
@@ -19,7 +24,22 @@ public class RpcServer {
      * rpc服务端启动入口函数
       * @throws Exception
      */
-    public  void run() throws Exception {
+    public void run() throws Exception {
+        RpcConfig.ProviderConfig providerConfig= RPCConfigHelper.getProviderConfig();
+      String packages=providerConfig.getPackages();
+      if(!StringUtil.IsNullOrEmpty(packages)){
+          List<String> packageList= Arrays.stream(packages.split(",")).collect(Collectors.toList());
+          ProviderFactory.ScanServices(packageList);
+          initNetty();
+      }else {
+          System.out.println("配置文件中ProviderConfig节点packages字段未配置");
+      }
+    }
+    /**
+     * 初始化服务端netty
+     * @throws Exception
+     */
+    public  void initNetty() throws Exception {
         //boss线程监听端口，worker线程负责数据读写
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();

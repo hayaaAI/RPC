@@ -92,12 +92,24 @@ public class RpcConfig extends ConfigContent {
          * 单位byte
          */
         private Integer messageSize;
+        /**
+         * 需要扫描的包名称列表，使用逗号分隔
+         */
+        private String packages;
 
         public ProviderConfig(){
             this.name="defaultService";
             this.group="defaultGroup";
             this.port=8080;
             this.messageSize=1024*1024;
+        }
+
+        public String getPackages() {
+            return packages;
+        }
+
+        public void setPackages(String packages) {
+            this.packages = packages;
         }
 
         public Integer getMessageSize() {

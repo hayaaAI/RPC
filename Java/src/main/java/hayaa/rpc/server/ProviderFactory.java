@@ -8,11 +8,10 @@ import hayaa.rpc.common.protocol.ResultMessage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
-public class ProviderFactory {
+class ProviderFactory {
     public static ResultMessage executeMethod(MethodMessage methodMessage) {
         ResultMessage resultMessage = new ResultMessage();
         resultMessage.setMsgID(methodMessage.getMsgID());
