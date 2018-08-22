@@ -20,10 +20,11 @@ class ProviderFactory {
         Method method = getService(methodMessage.getInterfaceName(), methodMessage.getMethod());
         if (method != null) {
             try {
-                List<Object> methodParamater=getParamaters(methodMessage.getParamater());
+                Object[] methodParamater=getParamaters(methodMessage.getParamater());
                 Object resultObj =null;
                 if(methodParamater!=null) {
-                    resultObj = method.invoke(getServiceInstance(methodMessage.getInterfaceName()), methodParamater);
+                    Object instance=getServiceInstance(methodMessage.getInterfaceName());
+                    resultObj = method.invoke(instance, methodParamater);
                 }else {
                     resultMessage.setErrMsg("方法参数转换失败");
                 }
@@ -93,7 +94,7 @@ class ProviderFactory {
      * @param paramater
      * @return
      */
-    private static List<Object> getParamaters(Hashtable<String, RpcDataValue> paramater) {
+    private static Object[] getParamaters(Hashtable<String, RpcDataValue> paramater) {
         List<Object> result = null;
         if (paramater.size() > 0) {
             result = new ArrayList<>();
@@ -104,12 +105,11 @@ class ProviderFactory {
                 if (p != null) {
                     result.add(p);
                 }else {
-                    result = null;
-                    return result;
+                    return null;
                 }
             }
         }
-        return result;
+        return result.toArray();
     }
 
     /**

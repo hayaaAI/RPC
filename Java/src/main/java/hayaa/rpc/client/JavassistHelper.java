@@ -90,7 +90,7 @@ public class JavassistHelper {
         StringBuilder parameterHashMap = new StringBuilder();
         for(int i = 0; i < varTotal; i++) {
             parameterHashMap.append("hayaa.rpc.common.protocol.RpcDataValue rpcDataVal=" +
-                    "new hayaa.rpc.common.protocol.RpcDataValue($"+(i+1));
+                    "new hayaa.rpc.common.protocol.RpcDataValue($"+(i+1)+");");
             parameterHashMap.append("paramater.put(\"args"+i+"\",rpcDataVal);");
         }
         StringBuilder methodDeclare = new StringBuilder();

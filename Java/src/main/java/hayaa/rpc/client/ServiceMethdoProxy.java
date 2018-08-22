@@ -42,7 +42,7 @@ public class ServiceMethdoProxy {
                 //考虑代码操作时间增量
                 time = time + 3;
             }
-            if (StringUtil.IsNullOrEmpty(msgResult.getErrMsg())) {
+            if ((msgResult!=null)&&StringUtil.IsNullOrEmpty(msgResult.getErrMsg())) {
                 strResult = msgResult.getResult();
             }
         } catch (Exception e) {
