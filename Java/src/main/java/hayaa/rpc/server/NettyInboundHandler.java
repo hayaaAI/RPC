@@ -26,8 +26,8 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
         if(body.readableBytes() <= 0){
             ctx.fireChannelRead(msg);
         }
-        byte dataType = body.readByte();
         int dataLength = body.readInt();
+        int dataType = body.readInt();
         int dataSize = body.readableBytes();
         byte [] data = new byte[dataSize];
         body.readBytes(data);
@@ -38,8 +38,8 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
         RpcProtocol returnData =new RpcProtocol(strMsg);
         ByteBuf echo = Unpooled.directBuffer();
         echo.writeBytes(returnData.getMessageFlag());
-        echo.writeInt(returnData.getType());
         echo.writeInt(returnData.getContentLength());
+        echo.writeInt(returnData.getType());
         echo.writeBytes(returnData.getData());
         ctx.writeAndFlush(echo);
         System.out.println("server.channelRead end");

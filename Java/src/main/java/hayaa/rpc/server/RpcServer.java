@@ -70,7 +70,6 @@ public class RpcServer {
                     pipeline.addLast(new LengthFieldBasedFrameDecoder(messageSize,
                             2,4,0,
                             2));
-                    //pipeline.addLast(new NettyOutboundHandler());
                     pipeline.addLast(new NettyInboundHandler());
                 }
             });
