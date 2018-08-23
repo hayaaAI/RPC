@@ -26,7 +26,7 @@ public class RpcProtocol {
     /**
      * 消息类型
      */
-    private int type;
+    private byte type;
     /**
      * 消息头
      */
@@ -59,11 +59,11 @@ public class RpcProtocol {
         this.data = data;
     }
 
-    public int getType() {
+    public byte getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(byte type) {
         this.type = type;
     }
 

@@ -3,6 +3,9 @@ package hayaa.rpc.server;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 
+/**
+ * @author hsieh
+ */
 public class ProviderContainer {
     private String interfaceName;
     private Object serviceInstance;

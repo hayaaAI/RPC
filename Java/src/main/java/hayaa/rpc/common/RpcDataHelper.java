@@ -12,6 +12,11 @@ import java.math.BigDecimal;
  */
 public class RpcDataHelper {
 
+    /**
+     * 获取参数变量的多平台通用数据类型
+     * @param arg 方法参数变量
+     * @return
+     */
     public static int parseDataType(Object arg) {
         Class<?> clazz = arg.getClass();
         //默认为可定义类

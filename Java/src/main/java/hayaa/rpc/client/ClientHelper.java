@@ -73,9 +73,13 @@ public class ClientHelper {
             RpcProtocol rpcProtocol = new RpcProtocol(msg);
             System.out.println("rpc client send starting");
             ByteBuf echo = Unpooled.directBuffer();
+            //写头部标识
             echo.writeBytes(rpcProtocol.getMessageFlag());
-            echo.writeInt(rpcProtocol.getContentLength());
+            //写数据类型
             echo.writeInt(rpcProtocol.getType());
+            //写数据长度
+            echo.writeInt(rpcProtocol.getContentLength());
+            //写数据
             echo.writeBytes(rpcProtocol.getData());
             try {
                 channel.writeAndFlush(echo);
@@ -201,8 +205,8 @@ public class ClientHelper {
             if (body.readableBytes() <= 0) {
                 ctx.fireChannelRead(msg);
             }
+            byte dataType = body.readByte();
             int dataLength = body.readInt();
-            int dataType = body.readInt();
             int dataSize = body.readableBytes();
             byte[] data = new byte[dataSize];
             body.readBytes(data);

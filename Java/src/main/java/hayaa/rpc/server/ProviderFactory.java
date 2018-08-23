@@ -13,43 +13,17 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * 此类中方法必须首先执行ScanServices函数
+ */
 class ProviderFactory {
-    public static ResultMessage executeMethod(MethodMessage methodMessage) {
-        ResultMessage resultMessage = new ResultMessage();
-        resultMessage.setMsgID(methodMessage.getMsgID());
-        Method method = getService(methodMessage.getInterfaceName(), methodMessage.getMethod());
-        if (method != null) {
-            try {
-                Object[] methodParamater=getParamaters(methodMessage.getParamater());
-                Object resultObj =null;
-                if(methodParamater!=null) {
-                    Object instance=getServiceInstance(methodMessage.getInterfaceName());
-                    resultObj = method.invoke(instance, methodParamater);
-                }else {
-                    resultMessage.setErrMsg("方法参数转换失败");
-                }
-                if (resultObj != null) {
-                    resultMessage.setResult(JsonHelper.SerializeObject(resultObj));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                resultMessage.setErrMsg("服务端异常:"+e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            resultMessage.setErrMsg("服务端无指定服务函数:" + methodMessage.getInterfaceName() + "." + methodMessage.getMethod());
-        }
-        return resultMessage;
-    }
     private static Hashtable<String, ProviderContainer> services = new Hashtable<>(100);
-
     /**
      * 扫描服务所在package
      *·
      * @param packageNames 需要扫描的package名字
      */
-    public synchronized static void ScanServices(List<String> packageNames) {
+    public synchronized static void scanServices(List<String> packageNames) {
         packageNames.forEach(packageName -> {
             List<Class<?>> classList= PackageScanHelper.scan(packageName);
             if(classList!=null){
@@ -61,7 +35,7 @@ class ProviderFactory {
                             Object instance=null;
                             try {
                                 //创建服务实现类实例
-                                 instance=classObj.newInstance();
+                                instance=classObj.newInstance();
                             } catch (InstantiationException e) {
                                 e.printStackTrace();
                             } catch (IllegalAccessException e) {
@@ -87,8 +61,39 @@ class ProviderFactory {
             }
         });
     }
-
-
+    /**
+     * 通过反射执行目标接口的函数
+     * @param methodMessage 消费端发送的参数
+     * @return
+     */
+    public static ResultMessage executeMethod(MethodMessage methodMessage) {
+        ResultMessage resultMessage = new ResultMessage();
+        resultMessage.setMsgID(methodMessage.getMsgID());
+        Method method = getMethod(methodMessage.getInterfaceName(), methodMessage.getMethod());
+        if (method != null) {
+            try {
+                Object[] methodParamater=getParamaters(methodMessage.getParamater());
+                Object resultObj =null;
+                if(methodParamater!=null) {
+                    Object instance=getServiceInstance(methodMessage.getInterfaceName());
+                    resultObj = method.invoke(instance, methodParamater);
+                }else {
+                    resultMessage.setErrMsg("方法参数转换失败");
+                }
+                if (resultObj != null) {
+                    resultMessage.setResult(JsonHelper.SerializeObject(resultObj));
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                resultMessage.setErrMsg("服务端异常:"+e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            resultMessage.setErrMsg("服务端无指定服务函数:" + methodMessage.getInterfaceName() + "." + methodMessage.getMethod());
+        }
+        return resultMessage;
+    }
     /**
      * 按照变量名字排序参数
      * @param paramater
@@ -119,7 +124,7 @@ class ProviderFactory {
      * @param methodName    函数名称
      * @return
      */
-    private static Method getService(String interfaceName, String methodName) {
+    private static Method getMethod(String interfaceName, String methodName) {
         Method method = null;
         if (services.containsKey(interfaceName)) {
             Hashtable<String, Method> methods = services.get(interfaceName).getMethods();
