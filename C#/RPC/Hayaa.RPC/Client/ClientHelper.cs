@@ -117,10 +117,11 @@ namespace Hayaa.RPC.Service.Client
             //写头部标识
             stream.Write(rpcProtocol.MessageFlag,0, rpcProtocol.MessageFlag.Length);
             byte[] dataLength = IntHelper.IntToByteArray(rpcProtocol.ContentLength);
-            //写数据类型
-            stream.WriteByte(rpcProtocol.Type);
             //写数据长度
-            stream.Write(dataLength, 0, dataLength.Length);           
+            stream.Write(dataLength, 0, dataLength.Length);
+            byte[] dataType = IntHelper.IntToByteArray(rpcProtocol.Type);
+            //写数据类型
+            stream.Write(dataType, 0, dataType.Length);
             //写数据
             stream.Write(rpcProtocol.Data, 0, rpcProtocol.Data.Length);
 
@@ -129,8 +130,13 @@ namespace Hayaa.RPC.Service.Client
             {
                 byte[] header = new byte[2];
                 stream.ReadAsync(header, 0, header.Length);
-               //读取类型
-                stream.ReadByte();
+                //读取类型
+                dataType = new byte[4];
+                //类型是4个字节的数据长度
+                dataType[0] = (byte)stream.ReadByte();
+                dataType[1] = (byte)stream.ReadByte();
+                dataType[2] = (byte)stream.ReadByte();
+                dataType[3] = (byte)stream.ReadByte();
                 dataLength = new byte[4];
                 //长度是4个字节的数据长度
                 dataLength[0]=(byte)stream.ReadByte();
