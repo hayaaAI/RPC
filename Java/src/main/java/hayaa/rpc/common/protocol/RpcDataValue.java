@@ -10,11 +10,16 @@ import java.io.Serializable;
  */
 public class RpcDataValue implements Serializable {
     /**
-     * 1-class
+     * 1-class 可定义类
      * 2-string
-     * 3-int
-     * 4-float
-     * 5-double
+     * 3-bool
+     * 4-byte
+     * 5-short
+     * 6-int
+     * 7-long
+     * 8-float
+     * 9-double
+     * 10-decimal
      * 传输的数据类型
      */
     private Integer dataType;

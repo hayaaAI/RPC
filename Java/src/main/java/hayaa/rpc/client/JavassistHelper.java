@@ -89,9 +89,9 @@ public class JavassistHelper {
     private static String createMethodCode(String interfaceName,CtMethod method,int varTotal) {
         StringBuilder parameterHashMap = new StringBuilder();
         for(int i = 0; i < varTotal; i++) {
-            parameterHashMap.append("hayaa.rpc.common.protocol.RpcDataValue rpcDataVal=" +
+            parameterHashMap.append("hayaa.rpc.common.protocol.RpcDataValue rpcDataVal"+i+"=" +
                     "new hayaa.rpc.common.protocol.RpcDataValue($"+(i+1)+");");
-            parameterHashMap.append("paramater.put(\"args"+i+"\",rpcDataVal);");
+            parameterHashMap.append("paramater.put(\"args"+i+"\",rpcDataVal"+i+");");
         }
         StringBuilder methodDeclare = new StringBuilder();
         String methodReturnType = null;
