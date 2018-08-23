@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Hayaa.RPC.Service.Util
 {
-    class RpcDataHelper
+  public  class RpcDataHelper
     {
         /// <summary>
         /// 获取参数变量的多平台通用数据类型
