@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hayaa.RPC.Common.Protocol;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,42 +9,39 @@ namespace Hayaa.RPC.Service.Protocol
     /// 自定义的协议
     /// 数据包格式
     /// +——----——+——-----——+——----——+
-    /// |协议开始标志|  长度     |   数据       |
+    /// |   头标识   |  长度       |   数据     |
     /// +——----——+——-----——+——----——+
-    /// 1.协议开始标志head_data，为int类型的数据，16进制表示为0X76
+    /// 1.头部标识:0xaa 0xbb
     /// 2.传输数据的长度contentLength，int类型
     /// 3.要传输的数据
     /// </summary>
     internal class RpcProtocol
     {
-        private int head_data = 0x76;
-        private int contentLength;
-        private byte[] content;
+      
         public RpcProtocol(String content)
         {
-            this.contentLength = content.Length;
-            this.content = System.Text.Encoding.ASCII.GetBytes(content);
+            this.Data = System.Text.Encoding.UTF8.GetBytes(content);
+            this.ContentLength = this.Data.Length + 4;
+            this.Type = 1;
+            MessageFlag = CommunicationPrimitives.PROTOCOLHEADERTAG;
         }
-        public int HeadData
+        public byte[] MessageFlag
         {
-            get
-            {
-                return head_data;
-            }
+            set;get;
         }
-        public byte[] Content
+        public byte[] Data
         {
-            get
-            {
-                return this.content;
-            }
+            set; get;
         }
         public int ContentLength
         {
-            get
-            {
-                return this.contentLength;
-            }
+            set; get;
         }
+        public byte Type
+        {
+            set;get;
+        }
+
+       
     }
 }

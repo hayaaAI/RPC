@@ -6,15 +6,17 @@ namespace Hayaa.RPC.Common.Protocol
     /// 通讯原语
     /// </summary>
     public class CommunicationPrimitives
-    {
-        //会话开始标识
-        public const String START = "HAYAA_SESSION_START";
-        //会话结束
-        public const String END = "HAYAA_SESSION_END"; 
-        //连接中断
-        public const String INTERRUPT = "HAYAA_SESSION_INTERRUPT";
-        //会话内容闭合标签
-        public const String CONTENT = "HAYAA_SESSION_CONETENT";
-      
+    {     
+        public static readonly byte[] PROTOCOLHEADERTAG =new byte[2] { (byte)0xaa, (byte)0xbb };
+        public const int CLASS = 1;
+        public const int String = 2;
+        public const int Boolean = 3;
+        public const int Byte = 4;
+        public const int Short = 5;
+        public const int Integer = 6;
+        public const int Long = 7;
+        public const int Float = 8;
+        public const int Double = 9;
+        public const int Decimal = 10;
     }
 }

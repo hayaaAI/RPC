@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hayaa.RPC.Common.Protocol;
 using Hayaa.RPC.Service.Util;
+using static Hayaa.RPC.Common.Config.RPCConfig;
 
 namespace Hayaa.RPC.Service.Client
 {
@@ -35,8 +36,11 @@ namespace Hayaa.RPC.Service.Client
         /// msgID作为key，远程返回结果作为value
         /// </summary>
         private ConcurrentDictionary<String,ResultMessage> g_ResultDic = null;
-        internal void Init()
+
+        private List<ServiceConfig> g_Config;
+        internal void Init(List<ServiceConfig> config)
         {
+            g_Config = config;
             g_ClientPool = new Dictionary<string, TcpClient>();
             g_MethodQueue = new Dictionary<int, ConcurrentQueue<MethodMessage>>();
             g_ResultDic = new ConcurrentDictionary<string, ResultMessage>();
@@ -44,7 +48,7 @@ namespace Hayaa.RPC.Service.Client
         }
         private void InitNetClient(Dictionary<int, ConcurrentQueue<MethodMessage>> queue, Dictionary<string, TcpClient> cliPool)
         {
-            var config = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation.Services;
+           
             for(var i = 0; i < cpuCoreTotal; i++)
             {
                 if (!queue.ContainsKey(i))
@@ -52,7 +56,7 @@ namespace Hayaa.RPC.Service.Client
                     queue.Add(i, new ConcurrentQueue<MethodMessage>());
                 }
             }
-            config.ForEach(c =>
+            g_Config.ForEach(c =>
             {              
                 if (!cliPool.ContainsKey(c.InterfaceName))
                 {
@@ -66,9 +70,16 @@ namespace Hayaa.RPC.Service.Client
                     }
                 }
             });
-            ThreadPool.SetMaxThreads(cpuCoreTotal, config.Count);
+            ThreadPool.SetMaxThreads(cpuCoreTotal, g_Config.Count);
             ThreadPool.QueueUserWorkItem(Consume);
         }
+
+        internal void DelTimeoutMsgID(string msgID)
+        {
+            ResultMessage resultMessage = null;
+            g_ResultDic.Remove(msgID,out resultMessage);
+        }
+
         private  void Consume(Object param)
         {
             while (true)
@@ -99,32 +110,51 @@ namespace Hayaa.RPC.Service.Client
         private void Transfer(MethodMessage methodMessage)
         {
             var tcp = g_ClientPool[methodMessage.InterfaceName];
-            var list = NetPackageHepler.UnPack(methodMessage, methodMessage.MsgID);
+            String msg = JsonHelper.SerializeObject(methodMessage);
+            RpcProtocol rpcProtocol = new RpcProtocol(msg);
+            Console.WriteLine("rpc client send starting");
             NetworkStream stream = tcp.GetStream();
-            //将数据分包发送
-            list.ForEach(datapack =>
-            {
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(JsonHelper.SerializeObject(datapack));
-                stream.Write(data, 0, data.Length);
+            //写头部标识
+            stream.Write(rpcProtocol.MessageFlag,0, rpcProtocol.MessageFlag.Length);
+            byte[] dataLength = IntHelper.IntToByteArray(rpcProtocol.ContentLength);
+            //写数据类型
+            stream.WriteByte(rpcProtocol.Type);
+            //写数据长度
+            stream.Write(dataLength, 0, dataLength.Length);           
+            //写数据
+            stream.Write(rpcProtocol.Data, 0, rpcProtocol.Data.Length);
 
-            });  
-            byte[] buffer = new byte[tcp.ReceiveBufferSize];          
+            byte[] buffer = null;          
             try
             {
+                byte[] header = new byte[2];
+                stream.ReadAsync(header, 0, header.Length);
+               //读取类型
+                stream.ReadByte();
+                dataLength = new byte[4];
+                //长度是4个字节的数据长度
+                dataLength[0]=(byte)stream.ReadByte();
+                dataLength[1] = (byte)stream.ReadByte();
+                dataLength[2] = (byte)stream.ReadByte();
+                dataLength[3] = (byte)stream.ReadByte();
+                int contentLength = IntHelper.ByteArrayToInt(dataLength);
+                buffer = new byte[contentLength];
                 stream.ReadAsync(buffer, 0, buffer.Length);
-            }catch(Exception ex)
+
+            }
+            catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
             String responseData = null;
             stream.Close();
-            if (buffer.Length > 0)
+            if ((buffer!=null)&&(buffer.Length > 0))
             {
-                responseData = System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+                responseData = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
             }
             try
             {
-                var resultData = JsonHelper.DeserializeObject<ResultMessage>(responseData);
+                var resultData = JsonHelper.Deserialize<ResultMessage>(responseData);
                 if (!g_ResultDic.ContainsKey(resultData.MsgID))
                 {
                     g_ResultDic.TryAdd(resultData.MsgID, resultData);

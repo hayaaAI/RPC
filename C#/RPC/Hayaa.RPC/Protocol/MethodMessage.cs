@@ -10,6 +10,6 @@ namespace Hayaa.RPC.Service.Protocol
         public String MsgID { set; get; }
         public String InterfaceName { set; get; }
         public String Method { set; get; }
-        public Dictionary<String,Object> Paramater { set; get; }
+        public Dictionary<String, RpcDataValue> Paramater { set; get; }
     }
 }
