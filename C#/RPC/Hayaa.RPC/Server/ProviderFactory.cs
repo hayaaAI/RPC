@@ -112,7 +112,7 @@ namespace Hayaa.RPC.Service.Server
                 {
                     //保证参数顺序和客户端一致
                     RpcDataValue rpcDataValue = paramater["args" + i];
-                    Object p = RpcDataHelper.parseServerData(rpcDataValue);
+                    Object p = RpcDataHelper.ParseDataToArg(rpcDataValue);
                     if (p != null)
                     {
                         result.Add(p);

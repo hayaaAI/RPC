@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hayaa.RPC.Service.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +8,12 @@ namespace Hayaa.RPC.Service.Protocol
     [Serializable]
     public class RpcDataValue
     {
+        public RpcDataValue(Type dataType,Object arg)
+        {
+            this.DataType = RpcDataHelper.ParseDataType(dataType);
+            this.ClassName = dataType.Name;
+            this.ValContainer = JsonHelper.SerializeObject(arg);
+        }
         /// <summary>
         /// 1-class 可定义类
         /// 2-string

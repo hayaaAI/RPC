@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using Newtonsoft.Json;
 using Hayaa.RPC.Service.Util;
+using Hayaa.RPC.Service.Protocol;
 
 namespace Hayaa.RPC.Service.Client
 {
@@ -22,21 +23,7 @@ namespace Hayaa.RPC.Service.Client
             g_assyBuilder = AssemblyBuilder.DefineDynamicAssembly(assyName, AssemblyBuilderAccess.RunAndCollect);
             //获取ModuleBuilder，提供String参数作为Module名称
             g_modBuilder = g_assyBuilder.DefineDynamicModule("RPCProxy_RemoteServic");
-        }
-        //public static AssemblyBuilder AessemblyBuilderInstance
-        //{
-        //    get
-        //    {
-        //        return g_assyBuilder;
-        //    }
-        //}
-        //public static ModuleBuilder ModuleBuilderInstance
-        //{
-        //    get
-        //    {
-        //        return g_modBuilder;
-        //    }
-        //}
+        }      
         internal static Type CreateClass(String assemblyName, String serviceName)
         {
             var assemblyList = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -48,6 +35,7 @@ namespace Hayaa.RPC.Service.Client
                     interfaceAssembly = a;
                 }
             });
+            if (interfaceAssembly == null) interfaceAssembly = Assembly.LoadFrom(assemblyName);
             if (interfaceAssembly == null) return null;
             String className = serviceName + "Hayaa_ProxyClass";
             // 新类型的属性：要创建的是Class，而非Interface，Abstract Class等，而且是Public的
@@ -78,11 +66,14 @@ namespace Hayaa.RPC.Service.Client
                 //由于要生成的是具体类，所以方法的实现是必不可少的。而方法的实现是通过Emit IL代码来产生的
                 //得到IL生成器                
                 ILGenerator ilGen = methodBuilder.GetILGenerator();
-                var dicType = typeof(Dictionary<string, object>);
+                var dicType = typeof(Dictionary<string, RpcDataValue>);
                 ilGen.Emit(OpCodes.Nop);
+                //声明Dictionary<String, Protocol.RpcDataValue>实例
                 ilGen.Emit(OpCodes.Newobj, dicType);
                 ilGen.Emit(OpCodes.Stloc_0);
-                ilGen.Emit(OpCodes.Ldloc_0);
+                ilGen.Emit(OpCodes.Ldarg_1);
+                var rpcDataHelperType = typeof(RpcDataHelper);
+                var parseArgsToDataMethod = rpcDataHelperType.GetMethod("ParseArgsToData");
                 var paraList=  targetMethod.GetParameters();
                 var addMethod = dicType.GetMethod("Add");
                 Type[] optionalParameterTypes = new Type[] { typeof(String), typeof(Object) };
@@ -90,29 +81,27 @@ namespace Hayaa.RPC.Service.Client
                 {
                     for (var i = 0; i < paraList.Length; i++)
                     {
-                        //if (i > 0)
-                        //    ilGen.Emit(OpCodes.Nop);
-                        //ilGen.Emit(OpCodes.Ldloc_0);
-                        //ilGen.Emit(OpCodes.Ldstr, paraList[i].Name);
-                        //ilGen.Emit(OpCodes.Ldarg_S, i + 1);
-                        //if (IsBox(paraList[i].ParameterType)) ilGen.Emit(OpCodes.Box, paraList[i].ParameterType);//数字类型需要装箱处理
-                        //ilGen.Emit(OpCodes.Callvirt, addMethod);
+                        if (i > 0)
+                            ilGen.Emit(OpCodes.Nop);
+                        ilGen.Emit(OpCodes.Ldarg_S, i + 1);
+                        ilGen.Emit(OpCodes.Call, parseArgsToDataMethod);
+                        ilGen.Emit(OpCodes.Stloc_S, i + 1);
+                        ilGen.Emit(OpCodes.Ldstr,"arg"+i);
+                        ilGen.Emit(OpCodes.Ldloc_S, i + 1);
+                        ilGen.Emit(OpCodes.Callvirt, addMethod);
                     }
                 }
-                //ilGen.Emit(OpCodes.Nop);
-                //ilGen.Emit(OpCodes.Ldstr, interfaceType.Name);
-                //ilGen.Emit(OpCodes.Ldstr, targetMethod.Name);
-                //ilGen.Emit(OpCodes.Ldloc_0);
-                //ilGen.Emit(OpCodes.Call, typeof(ServiceMethdoProxy).GetMethod("Invoke",new Type[] { typeof(String), typeof(String), dicType }));
-                //ilGen.Emit(OpCodes.Stloc_1);
-                //ilGen.Emit(OpCodes.Ldloc_1);
-                //ilGen.Emit(OpCodes.Call, typeof(JsonHelper).GetMethod("DeserializeObject"));
-                //ilGen.Emit(OpCodes.Stloc_2);
-                //ilGen.Emit(OpCodes.Ldloc_2);
-                //ilGen.Emit(OpCodes.Stloc_3);
-                //Label endLabel = ilGen.DefineLabel();
-               // ilGen.Emit(OpCodes.Br_S, endLabel);
-               // ilGen.Emit(OpCodes.Ldloc_3);
+                ilGen.Emit(OpCodes.Nop);
+                ilGen.Emit(OpCodes.Ldstr, interfaceType.Name);
+                ilGen.Emit(OpCodes.Ldstr, targetMethod.Name);
+                ilGen.Emit(OpCodes.Ldloc_0);
+                ilGen.Emit(OpCodes.Call, typeof(ServiceMethdoProxy).GetMethod("Invoke",new Type[] { typeof(String), typeof(String), dicType }));              
+                ilGen.Emit(OpCodes.Stloc_S, "V_4");
+                ilGen.Emit(OpCodes.Ldloc_S, "V_4");
+                ilGen.Emit(OpCodes.Stloc_S, "V_5");
+                Label endLabel = ilGen.DefineLabel();
+                ilGen.Emit(OpCodes.Br_S, endLabel);
+                ilGen.Emit(OpCodes.Ldloc_S, "V_5");
                 ilGen.Emit(OpCodes.Ret);               
             }           
             return  typeBuilder.CreateType();

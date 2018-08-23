@@ -11,12 +11,10 @@ namespace Hayaa.RPC.Service.Util
         /// <summary>
         /// 获取参数变量的多平台通用数据类型
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arg">方法参数变量</param>
+        /// <param name="arg">方法参数变量的类型</param>
         /// <returns></returns>
-        public static int parseDataType<T>(T arg)
+        public static int ParseDataType(Type type)
         {
-            Type type = typeof(T);
             int result = CommunicationPrimitives.CLASS;
             switch (type.Name)
             {
@@ -52,7 +50,12 @@ namespace Hayaa.RPC.Service.Util
             }
             return result;
         }
-        public static Object parseServerData(RpcDataValue rpcDataValue)
+        /// <summary>
+        /// 转换RpcDataValue为封箱状态下的参数变量
+        /// </summary>
+        /// <param name="rpcDataValue"></param>
+        /// <returns></returns>
+        public static Object ParseDataToArg(RpcDataValue rpcDataValue)
         {
             Object result = null;
             if (rpcDataValue.DataType == CommunicationPrimitives.CLASS)
@@ -96,6 +99,18 @@ namespace Hayaa.RPC.Service.Util
                 }
             }
             return result;
+        }
+        /// <summary>
+        /// 将参数变量转换为RpcDataValue
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static RpcDataValue ParseArgsToData<T>(T arg)
+        {
+            Type type =typeof(T);
+            RpcDataValue rpcDataValue = new RpcDataValue(type, arg);
+            return rpcDataValue;
         }
     }
 }
