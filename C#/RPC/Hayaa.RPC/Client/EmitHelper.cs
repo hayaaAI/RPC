@@ -10,6 +10,9 @@ using Hayaa.RPC.Service.Protocol;
 
 namespace Hayaa.RPC.Service.Client
 {
+    /// <summary>
+    /// 作为技术研究遗产放弃，但是不删除此类
+    /// </summary>
     public class EmitHelper
     {
         private static ModuleBuilder g_modBuilder = null;
@@ -103,10 +106,11 @@ namespace Hayaa.RPC.Service.Client
                 ilGen.Emit(OpCodes.Ldstr, targetMethod.Name);
                 ilGen.Emit(OpCodes.Ldloc_0);//将dicObj变量从索引0处取出
                 ilGen.Emit(OpCodes.Call, typeof(ServiceMethdoProxy).GetMethod("Invoke", new Type[] { typeof(String), typeof(String), dicType }));
-                LocalBuilder resultObj = ilGen.DeclareLocal(targetMethod.ReturnType);
+                LocalBuilder invokeObj = ilGen.DeclareLocal(targetMethod.ReturnType);
                 varIndex++;//索引推进
                 ilGen.Emit(OpCodes.Stloc_S, varIndex);//Invoke的结果存储变量表的varIndex
                 ilGen.Emit(OpCodes.Ldloc_S, varIndex);//从局部变量列表索引varIndex处取出
+                LocalBuilder resultObj = ilGen.DeclareLocal(targetMethod.ReturnType);
                 varIndex++;//索引推进，指向return的变量
                 ilGen.Emit(OpCodes.Stloc_S, varIndex);
                 ilGen.Emit(OpCodes.Br_S);

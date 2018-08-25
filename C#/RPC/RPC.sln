@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestProject1", "XUnitT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hayaa.NetNio.Service", "Hayaa.NetNio.Service\Hayaa.NetNio.Service.csproj", "{724C5376-DBD7-4B37-A370-A3D337340E13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{4495D196-546E-4B76-94B9-2BBD26BEA905}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{4495D196-546E-4B76-94B9-2BBD26BEA905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyEmitter", "ProxyEmitter\ProxyEmitter.csproj", "{53B77633-41B7-44CA-B848-6186F050AC4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{4495D196-546E-4B76-94B9-2BBD26BEA905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4495D196-546E-4B76-94B9-2BBD26BEA905}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4495D196-546E-4B76-94B9-2BBD26BEA905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53B77633-41B7-44CA-B848-6186F050AC4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53B77633-41B7-44CA-B848-6186F050AC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53B77633-41B7-44CA-B848-6186F050AC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53B77633-41B7-44CA-B848-6186F050AC4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{E73EF857-AF86-4464-A0F3-7999B9E0BA70} = {42464F2B-047E-47DD-A1B5-F4709A98F3F2}
 		{724C5376-DBD7-4B37-A370-A3D337340E13} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 		{4495D196-546E-4B76-94B9-2BBD26BEA905} = {42464F2B-047E-47DD-A1B5-F4709A98F3F2}
+		{53B77633-41B7-44CA-B848-6186F050AC4A} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADCE1FB6-60F1-45C6-A4B6-5D9B21500933}

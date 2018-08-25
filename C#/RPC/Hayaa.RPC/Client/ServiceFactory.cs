@@ -1,8 +1,8 @@
-﻿using Hayaa.RPC.Common.Config;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
+using System.Linq;
 using static Hayaa.RPC.Common.Config.RPCConfig;
 
 namespace Hayaa.RPC.Service.Client
@@ -15,13 +15,31 @@ namespace Hayaa.RPC.Service.Client
 
             interfaces.ForEach(service =>
             {
-                Type serviceImplType = EmitHelper.CreateClass(service.AssemblyName, service.InterfaceName);
+                Type interfaceType = GetInterfaceType(service.AssemblyName, service.InterfaceName);
+                Object serviceImplType = ProxyEmitter.ProxyEmitter.CreateProxy(typeof(RemoteProxy),interfaceType);
                 if (serviceImplType != null)
                 {
-                    g_service.GetOrAdd(service.InterfaceName, Activator.CreateInstance(serviceImplType));
+                    g_service.GetOrAdd(service.InterfaceName, serviceImplType);
                 }
             });
 
+        }
+
+        private static Type GetInterfaceType(string assemblyName, string interfaceName)
+        {
+            var assemblyList = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            Assembly interfaceAssembly = null;
+            assemblyList.ForEach(a =>
+            {
+                if (a.FullName.Contains(assemblyName))
+                {
+                    interfaceAssembly = a;
+                }
+            });
+            if (interfaceAssembly == null) interfaceAssembly = Assembly.LoadFrom(assemblyName);
+            if (interfaceAssembly == null) return null;
+            Type interfaceType = interfaceAssembly.GetType(interfaceName);
+            return interfaceType;
         }
 
         public static T CreateService<T>(String interfaceName)

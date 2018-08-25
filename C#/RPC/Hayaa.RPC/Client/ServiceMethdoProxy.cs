@@ -11,9 +11,9 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceMethdoProxy
     {
-        public static T Invoke<T>(String interfaceName, String methodName, Dictionary<String, RpcDataValue> paramater)
+        public static Object Invoke(String interfaceName, String methodName, Dictionary<String, RpcDataValue> paramater)
         {
-            T result = default(T);
+            Object result = null;
             try
             {
                 String msgID = Guid.NewGuid().ToString("N");
@@ -44,7 +44,7 @@ namespace Hayaa.RPC.Service.Client
                 if (msgResult != null)
                 {
                     if (String.IsNullOrEmpty(msgResult.ErrMsg))
-                        result = JsonHelper.Deserialize<T>(msgResult.Result);
+                        result = JsonHelper.DeserializeObject(msgResult.Result);
                 }
                 else
                 {
