@@ -18,10 +18,14 @@ namespace Hayaa.RPC.Service.Protocol
     internal class RpcProtocol
     {
       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="content"></param>
         public RpcProtocol(String content)
         {
             this.Data = System.Text.Encoding.UTF8.GetBytes(content);
-            this.ContentLength = this.Data.Length + 4;
+            this.ContentLength = this.Data.Length + 4;//针对netty的粘包处理进行的特异处理
             this.Type = 1;
             MessageFlag = CommunicationPrimitives.PROTOCOLHEADERTAG;
         }

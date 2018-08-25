@@ -4,12 +4,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Concurrent;
 
 namespace Hayaa.NetNio.Service
 {
     /// <summary>
     /// Nio通信模式
+    /// 数据编码以网络通信的大端为准
     /// </summary>
     public class SocketServer
     {
@@ -18,7 +20,7 @@ namespace Hayaa.NetNio.Service
         {
             g_boundHandler = boundHandler;
         }      
-        private List<Socket> socketListeningList = new List<Socket>(1000);
+        private ConcurrentBag<Socket> socketListeningList = new ConcurrentBag<Socket>();
         /// <summary>
         /// 
         /// </summary>
@@ -31,7 +33,7 @@ namespace Hayaa.NetNio.Service
             IPEndPoint ipe = new IPEndPoint(iPAddress, port);
             Socket rootSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
-            {
+            {                
                 rootSocket.Bind(ipe);
                 rootSocket.Listen(requestQueueMax);
             }
@@ -59,12 +61,16 @@ namespace Hayaa.NetNio.Service
         private void SocketWait(Object param)
         {
             while (true)
-            {                            
+            {
+                //Console.WriteLine("SocketWait");
                 for (int i = 0; i < socketListeningList.Count; i++)
                 {
-                    if (socketListeningList[i].Poll(3, SelectMode.SelectRead))
-                    {
-                        ReadSocket(socketListeningList[i]);
+                    Socket temp = null;
+                    if(socketListeningList.TryPeek(out temp)) {
+                       if(temp.Poll(3, SelectMode.SelectRead))
+                        {
+                            ReadSocket(temp);
+                        }
                     }
                 }
 
@@ -84,9 +90,10 @@ namespace Hayaa.NetNio.Service
         }
         private void DelSocket(Socket socket)
         {
-            socketListeningList.Remove(socket);
+            
             socket.Close();
             socket.Dispose();
+            socketListeningList.TryTake(out socket);
         }
         private void ReadSocket(Socket socket)
         {
@@ -109,6 +116,7 @@ namespace Hayaa.NetNio.Service
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
             int bytesRead = handler.EndReceive(ar);
+            byte[] tagHeader = new byte[] { (byte)0xaa, (byte)0xbb };
             byte[] dateLengthByte = new byte[4];
             try
             {
@@ -120,8 +128,8 @@ namespace Hayaa.NetNio.Service
                 Console.WriteLine(ex.Message);
                 return;
             }
-            int dateLength = BitConverter.ToInt32(dateLengthByte, 0);
-            int dataType = BitConverter.ToInt32(state.dataTypeBuffer, 0);
+            int dataType = IntHelper.ByteArrayToInt(state.dataTypeBuffer);
+            int dateLength= IntHelper.ByteArrayToInt(dateLengthByte);
             state.dataBuffer = new byte[dateLength];
             handler.BeginReceive(state.dataBuffer, 0, dateLength, 0,
                new AsyncCallback(ReadDataCallback), state);
@@ -132,18 +140,19 @@ namespace Hayaa.NetNio.Service
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
             int bytesRead = handler.EndReceive(ar);
-            String msg = Encoding.UTF8.GetString(state.dataBuffer);
+            byte[] readData = state.dataBuffer.Take(bytesRead).ToArray();//按照实际获取长度，编码其他平台特异处理的干扰
+            String msg = EncodingUTF8Helper.ParseBytesToString(readData);
             String resultMsg = g_boundHandler.Excute(msg);
             byte[] data = null;
             if (resultMsg == null) return;
-            data = Encoding.UTF8.GetBytes(resultMsg);
+            data = EncodingUTF8Helper.ParseStringToBytes(resultMsg);
             handler.Send(state.headerBuffer);//发送头部标识
-            byte[] dateLengthByte = BitConverter.GetBytes(data.Length);
+            byte[] dateLengthByte =IntHelper.IntToByteArray(data.Length+4);//针对netty基于长度处理粘包逻辑，需要加长度4
             try
             {
                 handler.Send(dateLengthByte);//发送数据长度
-                handler.Send(state.dataTypeBuffer);//发送数据类型
-                handler.Send(data);
+                handler.Send(state.dataTypeBuffer);//发送数据类型,未经过转换操作，可以直接发回
+                handler.Send(data);//发送数据
             }catch(Exception ex)
             {
                 DelSocket(handler);
@@ -157,7 +166,7 @@ namespace Hayaa.NetNio.Service
             public Socket workSocket = null;
             public byte[] dataBuffer =null;
             public byte[] headerBuffer = new byte[2];
-            public byte[] dataTypeBuffer = new byte[4];
+            public byte[] dataTypeBuffer = new byte[4];           
         }
 
 

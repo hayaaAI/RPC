@@ -13,6 +13,9 @@ using static Hayaa.RPC.Common.Config.RPCConfig;
 
 namespace Hayaa.RPC.Service.Client
 {
+    /// <summary>
+    /// 数据编码以网络通信的大端为准
+    /// </summary>
     internal class ClientHelper
     {
         private static ClientHelper instance = new ClientHelper();
@@ -116,14 +119,14 @@ namespace Hayaa.RPC.Service.Client
             NetworkStream stream = tcp.GetStream();
             //写头部标识
             stream.Write(rpcProtocol.MessageFlag,0, rpcProtocol.MessageFlag.Length);
-            byte[] dataLength = IntHelper.IntToByteArray(rpcProtocol.ContentLength);
+            byte[] dataLength =  IntHelper.IntToByteArray(rpcProtocol.ContentLength);//按照大端数据编码发送
             //写数据长度
             stream.Write(dataLength, 0, dataLength.Length);
-            byte[] dataType = IntHelper.IntToByteArray(rpcProtocol.Type);
+            byte[] dataType =  IntHelper.IntToByteArray(rpcProtocol.Type);//按照大端数据编码发送
             //写数据类型
             stream.Write(dataType, 0, dataType.Length);
             //写数据
-            stream.Write(rpcProtocol.Data, 0, rpcProtocol.Data.Length);
+            stream.Write(rpcProtocol.Data, 0, rpcProtocol.Data.Length);//UTF8字符串无需处理大小端
 
             byte[] buffer = null;          
             try
@@ -132,17 +135,17 @@ namespace Hayaa.RPC.Service.Client
                 stream.ReadAsync(header, 0, header.Length);
                 //读取类型
                 dataType = new byte[4];
-                //类型是4个字节的数据长度
-                dataType[0] = (byte)stream.ReadByte();
-                dataType[1] = (byte)stream.ReadByte();
-                dataType[2] = (byte)stream.ReadByte();
+                //类型是4个字节的数据长度,按照大端读取
                 dataType[3] = (byte)stream.ReadByte();
+                dataType[2] = (byte)stream.ReadByte();
+                dataType[1] = (byte)stream.ReadByte();
+                dataType[0] = (byte)stream.ReadByte();
                 dataLength = new byte[4];
-                //长度是4个字节的数据长度
-                dataLength[0]=(byte)stream.ReadByte();
-                dataLength[1] = (byte)stream.ReadByte();
+                //长度是4个字节的数据长度,按照大端读取
+                dataLength[3]=(byte)stream.ReadByte();
                 dataLength[2] = (byte)stream.ReadByte();
-                dataLength[3] = (byte)stream.ReadByte();
+                dataLength[1] = (byte)stream.ReadByte();
+                dataLength[0] = (byte)stream.ReadByte();
                 int contentLength = IntHelper.ByteArrayToInt(dataLength);
                 buffer = new byte[contentLength];
                 stream.ReadAsync(buffer, 0, buffer.Length);
