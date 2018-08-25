@@ -2,8 +2,13 @@ package hayaa.rpc.common.protocol;
 
 /**
  * 通讯原语
+ * @author hsieh
  */
 public class CommunicationPrimitives {
+    /**
+     * 无返回数据的网络服务层通知标识
+     */
+    public final static String NO_DATA ="<EOF>";
     /**
      * 协议分隔头TAG
      */

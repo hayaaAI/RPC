@@ -1,6 +1,7 @@
 package hayaa.rpc.common.protocol;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ResultMessage implements Serializable {
     private String interfaceName;
@@ -8,6 +9,15 @@ public class ResultMessage implements Serializable {
     private String result;
     private String errMsg;
     private String msgID;
+    private Date createTime;
+
+    public ResultMessage(){
+        this.createTime=new Date();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
 
     public String getMsgID() {
         return msgID;

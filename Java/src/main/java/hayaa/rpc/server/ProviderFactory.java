@@ -9,9 +9,7 @@ import hayaa.rpc.common.protocol.RpcDataValue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 /**
  * 此类中方法必须首先执行ScanServices函数
@@ -99,13 +97,19 @@ class ProviderFactory {
      * @param paramater
      * @return
      */
-    private static Object[] getParamaters(Hashtable<String, RpcDataValue> paramater) {
+    private static Object[] getParamaters(List<RpcDataValue> paramater) {
         List<Object> result = null;
         if (paramater.size() > 0) {
+            Collections.sort(paramater, new Comparator<RpcDataValue>() {
+                @Override
+                public int compare(RpcDataValue o1, RpcDataValue o2) {
+                    return o1.getArgIndex()-o2.getArgIndex();
+                }
+            });
             result = new ArrayList<>();
             for (int i = 0; i < paramater.size(); i++) {
                 //保证参数顺序和客户端一致
-                RpcDataValue rpcDataValue = paramater.get("args" + i);
+                RpcDataValue rpcDataValue = paramater.get(i);
                 Object p= RpcDataHelper.parseServerData(rpcDataValue);
                 if (p != null) {
                     result.add(p);

@@ -2,12 +2,14 @@ package hayaa.rpc.common.protocol;
 
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.List;
 
 public class MethodMessage  implements Serializable {
+    private String msgID;
     private String interfaceName;
     private String method;
-    private Hashtable<String,RpcDataValue> paramater;
-    private String msgID;
+    private List<RpcDataValue> paramater;
+
     public String getMsgID() {
         return msgID;
     }
@@ -15,6 +17,7 @@ public class MethodMessage  implements Serializable {
     public void setMsgID(String msgID) {
         this.msgID = msgID;
     }
+
     public String getInterfaceName() {
         return interfaceName;
     }
@@ -31,13 +34,11 @@ public class MethodMessage  implements Serializable {
         this.method = method;
     }
 
-    public Hashtable<String, RpcDataValue> getParamater() {
+    public List<RpcDataValue> getParamater() {
         return paramater;
     }
 
-    public void setParamater(Hashtable<String, RpcDataValue> paramater) {
+    public void setParamater(List<RpcDataValue> paramater) {
         this.paramater = paramater;
     }
-
-
 }

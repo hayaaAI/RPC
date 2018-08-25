@@ -72,6 +72,7 @@ public class ClientHelper {
             String msg = JsonHelper.SerializeObject(methodMessage);
             RpcProtocol rpcProtocol = new RpcProtocol(msg);
             System.out.println("rpc client send starting");
+            System.out.println("data:"+rpcProtocol.getContentLength());
             ByteBuf echo = Unpooled.directBuffer();
             //写头部标识
             echo.writeBytes(rpcProtocol.getMessageFlag());
@@ -109,6 +110,7 @@ public class ClientHelper {
     }
     /**
      * 删除超时的会话ID
+     * 用于被定时器删除
      * @param msgID
      */
     public void delTimeoutMsgID(String msgID) {

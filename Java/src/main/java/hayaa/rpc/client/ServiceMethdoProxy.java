@@ -7,17 +7,18 @@ import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
 import hayaa.rpc.common.protocol.RpcDataValue;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.UUID;
+import java.util.*;
 
 public class ServiceMethdoProxy {
-    public static Object invoke(String interfaceName, String methodName, Hashtable<String, RpcDataValue> paramater, Class<?> resultType) {
+    public static Object invoke(String interfaceName, String methodName, List<RpcDataValue> paramater, Class<?> resultType) {
         String strResult = null;
         String msgID = UUID.randomUUID().toString();
         MethodMessage methodMessage = new MethodMessage();
         methodMessage.setInterfaceName(interfaceName);
         methodMessage.setMethod(methodName);
+        if(paramater.size()==0){
+            paramater=null;
+        }
         methodMessage.setParamater(paramater);
         methodMessage.setMsgID(msgID);
         ResultMessage msgResult = null;
@@ -29,9 +30,8 @@ public class ServiceMethdoProxy {
             if (!action) {
                 return null;
             }
-            System.out.println("result wait timeOut:"+timeOut);
+            System.out.println("result wait timeOut:" + timeOut);
             while (time < timeOut) {
-                System.out.println("result wait loop");
                 msgResult = ClientHelper.get_instance().GetResult(msgID);
                 if (msgResult != null) {
                     time = timeOut + 1;
@@ -42,19 +42,17 @@ public class ServiceMethdoProxy {
                 //考虑代码操作时间增量
                 time = time + 3;
             }
-            if(msgResult!=null) {
-                if (StringUtil.IsNullOrEmpty(msgResult.getErrMsg())){
+            if (msgResult != null) {
+                if (StringUtil.IsNullOrEmpty(msgResult.getErrMsg())) {
                     strResult = msgResult.getResult();
                 }
-            }else {
-                ClientHelper.get_instance().delTimeoutMsgID(msgID);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Server result:"+strResult);
-        Object result=null;
-        if(!StringUtil.IsNullOrEmpty(strResult)) {
+        System.out.println("Server result:" + strResult);
+        Object result = null;
+        if (!StringUtil.IsNullOrEmpty(strResult)) {
             result = JsonHelper.gsonDeserialize(strResult, resultType);
         }
         return result;

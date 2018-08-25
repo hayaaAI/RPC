@@ -1,6 +1,7 @@
 package hayaa.rpc.server;
 
 import hayaa.common.JsonHelper;
+import hayaa.rpc.common.protocol.CommunicationPrimitives;
 import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
 import hayaa.rpc.common.protocol.RpcProtocol;
@@ -32,7 +33,13 @@ class NettyInboundHandler extends ChannelInboundHandlerAdapter {
         byte [] data = new byte[dataSize];
         body.readBytes(data);
         String strMsg = new String(data,Charset.forName("utf-8"));
-        MethodMessage methodMessage=JsonHelper.gsonDeserialize(strMsg,MethodMessage.class);
+        MethodMessage methodMessage =null;
+        try {
+            methodMessage = JsonHelper.gsonDeserialize(strMsg, MethodMessage.class);
+        }catch(Exception e){
+            e.printStackTrace();
+            return;
+        }
         ResultMessage resultMessage=ProviderFactory.executeMethod(methodMessage);
         strMsg=JsonHelper.SerializeObject(resultMessage);
         RpcProtocol returnData =new RpcProtocol(strMsg);

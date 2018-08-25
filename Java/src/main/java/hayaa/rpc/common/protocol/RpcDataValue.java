@@ -32,16 +32,29 @@ public class RpcDataValue implements Serializable {
      * 跨平台传输时只有类型1才有使用意义
      */
     private String className;
+    /**
+     * 参数索引号
+     */
+    private Integer argIndex;
 
     /**
-     *
+     *Json序列化无法使用此构造函数
      * @param arg 函数中的参数变量
      */
-    public RpcDataValue(Object arg) {
+    public RpcDataValue(Object arg,int argIndex) {
         this.dataType = RpcDataHelper.parseDataType(arg);
         this.className = arg.getClass().getName();
         this.valContainer = JsonHelper.SerializeObject(arg);
+        this.argIndex=argIndex;
     }
+
+    /**
+     * 提供给Json序列化使用
+     */
+    public RpcDataValue() {
+
+    }
+
 
     public String getValContainer() {
         return valContainer;
@@ -67,5 +80,11 @@ public class RpcDataValue implements Serializable {
         this.dataType = dataType;
     }
 
+    public Integer getArgIndex() {
+        return argIndex;
+    }
 
+    public void setArgIndex(Integer argIndex) {
+        this.argIndex = argIndex;
+    }
 }
