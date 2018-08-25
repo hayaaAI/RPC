@@ -8,11 +8,24 @@ namespace Hayaa.RPC.Service.Protocol
     [Serializable]
     public class RpcDataValue
     {
-        public RpcDataValue(Type dataType,Object arg)
+        /// <summary>
+        /// 提供给Json序列化使用
+        /// </summary>
+        public RpcDataValue()
+        {
+
+        }
+        /// <summary>
+        /// Json序列化无法使用此构造函数
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <param name="arg"></param>
+        public RpcDataValue(Type dataType,Object arg,int argIndex)
         {
             this.DataType = RpcDataHelper.ParseDataType(dataType);
             this.ClassName = dataType.Name;
             this.ValContainer = JsonHelper.SerializeObject(arg);
+            this.ArgIndex = argIndex;
         }
         /// <summary>
         /// 1-class 可定义类
@@ -37,5 +50,9 @@ namespace Hayaa.RPC.Service.Protocol
         /// 跨平台传输时只有类型1才有使用意义
         /// </summary>
         public String ClassName { set; get; }
+        /// <summary>
+        /// 参数索引号
+        /// </summary>
+        public int ArgIndex { set; get; }
     }
 }

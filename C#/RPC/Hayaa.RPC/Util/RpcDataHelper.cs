@@ -100,17 +100,6 @@ namespace Hayaa.RPC.Service.Util
             }
             return result;
         }
-        /// <summary>
-        /// 将参数变量转换为RpcDataValue
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public static RpcDataValue ParseArgsToData<T>(T arg)
-        {
-            Type type =typeof(T);
-            RpcDataValue rpcDataValue = new RpcDataValue(type, arg);
-            return rpcDataValue;
-        }
+       
     }
 }

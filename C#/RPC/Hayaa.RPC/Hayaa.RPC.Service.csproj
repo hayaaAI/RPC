@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hayaa.NetNio.Service\Hayaa.NetNio.Service.csproj" />
     <ProjectReference Include="..\ProxyEmitter\ProxyEmitter.csproj" />
   </ItemGroup>
 

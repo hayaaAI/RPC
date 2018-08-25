@@ -102,16 +102,25 @@ namespace Hayaa.RPC.Service.Server
             return instance;
         }
 
-        private static object[] GetParamaters(Dictionary<string, RpcDataValue> paramater)
+        private static object[] GetParamaters(List<RpcDataValue> paramater)
         {
             List<Object> result = null;
             if (paramater.Count> 0)
             {
+                //保证参数顺序一致
+                paramater.Sort((left, right) =>
+                {
+                    if (left.ArgIndex > right.ArgIndex)
+                        return 1;
+                    else if (left.ArgIndex == right.ArgIndex)
+                        return 0;
+                    else
+                        return -1;
+                });
                 result = new List<Object>();
                 for (int i = 0; i < paramater.Count; i++)
-                {
-                    //保证参数顺序和客户端一致
-                    RpcDataValue rpcDataValue = paramater["args" + i];
+                {                    
+                    RpcDataValue rpcDataValue = paramater[i];
                     Object p = RpcDataHelper.ParseDataToArg(rpcDataValue);
                     if (p != null)
                     {

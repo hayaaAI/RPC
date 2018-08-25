@@ -11,7 +11,7 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceMethdoProxy
     {
-        public static Object Invoke(String interfaceName, String methodName, Dictionary<String, RpcDataValue> paramater)
+        public static Object Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
         {
             Object result = null;
             try
@@ -20,7 +20,7 @@ namespace Hayaa.RPC.Service.Client
                
                 ResultMessage msgResult = null;
                 int timeOut = ConfigHelper.Instance.GetComponentConfig().SessionTimeout;
-                int time = 0;
+                int time = 0;               
                  ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
                 {
                     InterfaceName = interfaceName,

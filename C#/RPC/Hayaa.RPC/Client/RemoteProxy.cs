@@ -17,16 +17,16 @@ namespace Hayaa.RPC.Service.Client
 
         protected override object Invoke(string interfaceName, string methodName, object[] arguments)
         {
-            Dictionary<String, RpcDataValue> argDic =null;
+            List<RpcDataValue> argDic =null;
             if (arguments != null)
             {
-                argDic = new Dictionary<String, RpcDataValue>();
+                argDic = new List<RpcDataValue>();
                 for(int i = 0; i < arguments.Length; i++)
                 {
-                    var temp = new RpcDataValue(arguments[i].GetType(), arguments[i]);
+                    var temp = new RpcDataValue(arguments[i].GetType(), arguments[i],i);
                 }
             }
-            return ServiceMethdoProxy.Invoke(interfaceName, methodName, null);
+            return ServiceMethdoProxy.Invoke(interfaceName, methodName, argDic);
         }
     }
 }

@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Linq;
+using Hayaa.NetNio.Service;
 
 namespace Hayaa.RPC.Service.Server
 {
-    class RpcServer
+  public  class RpcServer
     {
       
         public void Run()
@@ -32,7 +33,10 @@ namespace Hayaa.RPC.Service.Server
                 Console.WriteLine("配置文件中ProviderConfig节点packages字段未配置");
             }
             //------------------NIO服务器实现TODO-------------------//
-           
+            BoundHandler service = new BoundHandlerProvider();
+            SocketServer socketServer = new SocketServer(service);
+            Console.WriteLine("server run");
+            socketServer.Run("0.0.0.0", providerConfig.Port);
         }
 
        
