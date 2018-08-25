@@ -11,24 +11,27 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceMethdoProxy
     {
-        public static T Invoke<T>(String interfaceName, String methodName, Dictionary<String, Object> paramater)
+        public static Object Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
         {
-            T result = default(T);
+            Object result = null;
             try
             {
                 String msgID = Guid.NewGuid().ToString("N");
-                ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
+               
+                ResultMessage msgResult = null;
+                int timeOut = ConfigHelper.Instance.GetComponentConfig().SessionTimeout;
+                int time = 0;               
+                 ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
                 {
                     InterfaceName = interfaceName,
                     Method = methodName,
                     Paramater = paramater,
                     MsgID = msgID
                 });
-                ResultMessage msgResult = null;
-                int timeOut = ConfigHelper.Instance.GetComponentConfig().SessionTimeout;
-                int time = 0;
+                Console.WriteLine("result wait timeOut:" + timeOut);
                 while (time<timeOut)
                 {
+                    Console.WriteLine("result wait loop");
                     msgResult = ClientHelper.Instance.GetResult(msgID);
                     if (msgResult != null)
                     {
@@ -38,8 +41,16 @@ namespace Hayaa.RPC.Service.Client
                     Thread.SpinWait(1);
                     time= time+3;//考虑代码操作时间增量
                 }
-                if(String.IsNullOrEmpty(msgResult.ErrMsg))
-                result = JsonHelper.DeserializeObject<T>(msgResult.Result);
+                if (msgResult != null)
+                {
+                    if (String.IsNullOrEmpty(msgResult.ErrMsg))
+                        result = JsonHelper.DeserializeObject(msgResult.Result);
+                }
+                else
+                {
+                    ClientHelper.Instance.DelTimeoutMsgID(msgID);
+                }
+                Console.WriteLine("Server result:" + msgResult.Result);
             }
             catch (Exception ex)
             {

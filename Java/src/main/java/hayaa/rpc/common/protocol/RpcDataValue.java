@@ -10,11 +10,16 @@ import java.io.Serializable;
  */
 public class RpcDataValue implements Serializable {
     /**
-     * 1-class
+     * 1-class 可定义类
      * 2-string
-     * 3-int
-     * 4-float
-     * 5-double
+     * 3-bool
+     * 4-byte
+     * 5-short
+     * 6-int
+     * 7-long
+     * 8-float
+     * 9-double
+     * 10-decimal
      * 传输的数据类型
      */
     private Integer dataType;
@@ -27,16 +32,29 @@ public class RpcDataValue implements Serializable {
      * 跨平台传输时只有类型1才有使用意义
      */
     private String className;
+    /**
+     * 参数索引号
+     */
+    private Integer argIndex;
 
     /**
-     *
+     *Json序列化无法使用此构造函数
      * @param arg 函数中的参数变量
      */
-    public RpcDataValue(Object arg) {
+    public RpcDataValue(Object arg,int argIndex) {
         this.dataType = RpcDataHelper.parseDataType(arg);
         this.className = arg.getClass().getName();
         this.valContainer = JsonHelper.SerializeObject(arg);
+        this.argIndex=argIndex;
     }
+
+    /**
+     * 提供给Json序列化使用
+     */
+    public RpcDataValue() {
+
+    }
+
 
     public String getValContainer() {
         return valContainer;
@@ -62,5 +80,11 @@ public class RpcDataValue implements Serializable {
         this.dataType = dataType;
     }
 
+    public Integer getArgIndex() {
+        return argIndex;
+    }
 
+    public void setArgIndex(Integer argIndex) {
+        this.argIndex = argIndex;
+    }
 }

@@ -30,7 +30,7 @@ public class RpcProtocol {
     /**
      * 消息头
      */
-    private byte[] messageFlag = new byte[2];
+    private byte[] messageFlag;
     /**
      * 用于初始化，RpcProtocol
      *
@@ -40,8 +40,7 @@ public class RpcProtocol {
         this.data = content.getBytes(Charset.forName("utf-8"));
         this.contentLength = this.data.length+4;
         this.type = 1;
-        messageFlag[0] = (byte) 0xaa;
-        messageFlag[1] = (byte) 0xbb;
+        messageFlag = CommunicationPrimitives.PROTOCOLHEADERTAG;
     }
 
     public int getContentLength() {

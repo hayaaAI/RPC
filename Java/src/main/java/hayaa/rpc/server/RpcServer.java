@@ -33,7 +33,7 @@ public class RpcServer {
       String packages=providerConfig.getPackages();
       if(!StringUtil.IsNullOrEmpty(packages)){
           List<String> packageList= Arrays.stream(packages.split(",")).collect(Collectors.toList());
-          ProviderFactory.ScanServices(packageList);
+          ProviderFactory.scanServices(packageList);
           initNetty(providerConfig.getMessageSize(),providerConfig.getPort());
       }else {
           System.out.println("配置文件中ProviderConfig节点packages字段未配置");
@@ -70,7 +70,6 @@ public class RpcServer {
                     pipeline.addLast(new LengthFieldBasedFrameDecoder(messageSize,
                             2,4,0,
                             2));
-                    //pipeline.addLast(new NettyOutboundHandler());
                     pipeline.addLast(new NettyInboundHandler());
                 }
             });

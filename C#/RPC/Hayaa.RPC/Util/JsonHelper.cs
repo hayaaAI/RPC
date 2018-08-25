@@ -5,11 +5,15 @@ using System.Text;
 
 namespace Hayaa.RPC.Service.Util
 {
-    class JsonHelper
+ public   class JsonHelper
     {
-        public static T DeserializeObject<T>(String jsonData)
+        public static T Deserialize<T>(String jsonData)
         {
             return JsonConvert.DeserializeObject<T>(jsonData);
+        }
+        public static Object DeserializeObject(String jsonData)
+        {
+            return JsonConvert.DeserializeObject(jsonData);
         }
         public static String SerializeObject(Object data)
         {

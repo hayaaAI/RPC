@@ -28,8 +28,26 @@ namespace Hayaa.RPC.Common.Config
        
         public ProviderConfig ProviderConfiguation { set; get; }
         public ConsumerConfig ConsumerConfiguation { set; get; }
+        
+
         internal class ProviderConfig
         {
+            public ProviderConfig()
+            {
+                this.Name = "defaultService";
+                this.Group = "defaultGroup";
+                this.Port = 8080;
+                this.MessageSize = 1024 * 1024;
+            }
+            /// <summary>
+            /// 此字段对C#平台无效
+            /// </summary>
+            public string Packages { get; set; }
+            /// <summary>
+            /// 需要扫描的程序集名称集合
+            /// 采用逗号分隔
+            /// </summary>
+            public string AssemblyNames { get; set; }
             public String Name { set; get; }
             /// <summary>
             /// 服务组
@@ -37,6 +55,7 @@ namespace Hayaa.RPC.Common.Config
             public String Group { set; get; }
             //服务发布端口
             public int Port { set; get; }
+            public int MessageSize { set; get; }
 
         }
         internal class ConsumerConfig

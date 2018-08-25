@@ -3,6 +3,8 @@ package hayaa.rpc.client;
 
 import javassist.*;
 
+import java.util.ArrayList;
+
 /**
  * 以源码形式创建接口实现类
  * @author hsieh
@@ -89,9 +91,9 @@ public class JavassistHelper {
     private static String createMethodCode(String interfaceName,CtMethod method,int varTotal) {
         StringBuilder parameterHashMap = new StringBuilder();
         for(int i = 0; i < varTotal; i++) {
-            parameterHashMap.append("hayaa.rpc.common.protocol.RpcDataValue rpcDataVal=" +
-                    "new hayaa.rpc.common.protocol.RpcDataValue($"+(i+1)+");");
-            parameterHashMap.append("paramater.put(\"args"+i+"\",rpcDataVal);");
+            parameterHashMap.append("hayaa.rpc.common.protocol.RpcDataValue rpcDataVal"+i+"=" +
+                    "new hayaa.rpc.common.protocol.RpcDataValue($"+(i+1)+","+i+");");
+            parameterHashMap.append("paramater.add(rpcDataVal"+i+");");
         }
         StringBuilder methodDeclare = new StringBuilder();
         String methodReturnType = null;
@@ -101,7 +103,7 @@ public class JavassistHelper {
             e.printStackTrace();
         }
         methodDeclare.append("{");
-        methodDeclare.append("java.util.Hashtable paramater=new java.util.Hashtable();");
+        methodDeclare.append("java.util.List<hayaa.rpc.common.protocol.RpcDataValue> paramater=new java.util.ArrayList<hayaa.rpc.common.protocol.RpcDataValue>();");
         methodDeclare.append(parameterHashMap);
         methodDeclare.append("Object resultObj= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""
                 +interfaceName+"\",\""+method.getName()+"\",paramater,"+methodReturnType+".class);");

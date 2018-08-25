@@ -96,12 +96,24 @@ public class RpcConfig extends ConfigContent {
          * 需要扫描的包名称列表，使用逗号分隔
          */
         private String packages;
+        /**
+         * 此字段对java平台无效
+         */
+        private String assemblyNames;
 
         public ProviderConfig(){
             this.name="defaultService";
             this.group="defaultGroup";
             this.port=8080;
             this.messageSize=1024*1024;
+        }
+
+        public String getAssemblyNames() {
+            return assemblyNames;
+        }
+
+        public void setAssemblyNames(String assemblyNames) {
+            this.assemblyNames = assemblyNames;
         }
 
         public String getPackages() {
