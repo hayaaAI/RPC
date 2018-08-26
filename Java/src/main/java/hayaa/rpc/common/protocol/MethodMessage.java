@@ -4,41 +4,45 @@ import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * 由于java的json序列化对于大小写敏感，所以字段命名和其他平台一致
+ * @author hsieh
+ */
 public class MethodMessage  implements Serializable {
-    private String msgID;
-    private String interfaceName;
-    private String method;
-    private List<RpcDataValue> paramater;
+    private String MsgID;
+    private String InterfaceName;
+    private String Method;
+    private List<RpcDataValue> Paramater;
 
     public String getMsgID() {
-        return msgID;
+        return MsgID;
     }
 
     public void setMsgID(String msgID) {
-        this.msgID = msgID;
+        MsgID = msgID;
     }
 
     public String getInterfaceName() {
-        return interfaceName;
+        return InterfaceName;
     }
 
     public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
+        InterfaceName = interfaceName;
     }
 
     public String getMethod() {
-        return method;
+        return Method;
     }
 
     public void setMethod(String method) {
-        this.method = method;
+        Method = method;
     }
 
     public List<RpcDataValue> getParamater() {
-        return paramater;
+        return Paramater;
     }
 
     public void setParamater(List<RpcDataValue> paramater) {
-        this.paramater = paramater;
+        Paramater = paramater;
     }
 }

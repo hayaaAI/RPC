@@ -103,7 +103,7 @@ public class JavassistHelper {
             e.printStackTrace();
         }
         methodDeclare.append("{");
-        methodDeclare.append("java.util.List<hayaa.rpc.common.protocol.RpcDataValue> paramater=new java.util.ArrayList<hayaa.rpc.common.protocol.RpcDataValue>();");
+        methodDeclare.append("java.util.List paramater=new java.util.ArrayList();");
         methodDeclare.append(parameterHashMap);
         methodDeclare.append("Object resultObj= hayaa.rpc.client.ServiceMethdoProxy.invoke(\""
                 +interfaceName+"\",\""+method.getName()+"\",paramater,"+methodReturnType+".class);");

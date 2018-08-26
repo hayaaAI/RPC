@@ -38,16 +38,16 @@ public class ClientHelper {
      * key:接口
      * 此种方式适合均衡接口调用，如果有高频函数，则性能有所损失
      */
-    private Hashtable<String, Channel> g_ClientPool = null;
+    private volatile Hashtable<String, Channel> g_ClientPool = null;
     /**
      * 放置某一个接口请求队列过长造成其他接口堆积
      */
-    //private volatile ConcurrentLinkedQueue<MethodMessage> g_Methodqueue = null;
+    //private  ConcurrentLinkedQueue<MethodMessage> g_Methodqueue = null;
     /**
      * msgID作为key，远程返回结果作为value
      */
-    private volatile ConcurrentHashMap<String, ResultMessage> g_ResultDic = null;
-
+    private  ConcurrentHashMap<String, ResultMessage> g_ResultDic = null;
+    private  ConcurrentHashMap<String, Boolean> g_ResultDicTag = null;
     /**
      * cpu核心数,按照最小计算能力默认
      */
@@ -62,12 +62,14 @@ public class ClientHelper {
         int serviceTotal = config.getServices().size();
         g_ClientPool = new Hashtable<>(serviceTotal);
         g_ResultDic = new ConcurrentHashMap<>(1000);
+        g_ResultDicTag=new ConcurrentHashMap<>(1000);
         initNetClient(g_ClientPool);
     }
 
     public Boolean enQueue(MethodMessage methodMessage) {
         Boolean result = false;
         if (g_ClientPool.containsKey(methodMessage.getInterfaceName())) {
+            g_ResultDicTag.put(methodMessage.getMsgID(),true);
             Channel channel = g_ClientPool.get(methodMessage.getInterfaceName());
             String msg = JsonHelper.SerializeObject(methodMessage);
             RpcProtocol rpcProtocol = new RpcProtocol(msg);
@@ -97,7 +99,9 @@ public class ClientHelper {
     }
 
     private void enResultQueue(ResultMessage msg) {
-        g_ResultDic.put(msg.getMsgID(), msg);
+       if(g_ResultDicTag.containsKey(msg.getMsgID())) {
+           g_ResultDic.put(msg.getMsgID(), msg);
+       }
     }
 
     public ResultMessage GetResult(String msgID) {
@@ -105,6 +109,7 @@ public class ClientHelper {
         if (g_ResultDic.containsKey(msgID)) {
             result = g_ResultDic.get(msgID);
             g_ResultDic.remove(msgID);
+            g_ResultDicTag.remove(msgID);
         }
         return result;
     }
@@ -114,8 +119,8 @@ public class ClientHelper {
      * @param msgID
      */
     public void delTimeoutMsgID(String msgID) {
-        if (g_ResultDic.containsKey(msgID)) {
-            g_ResultDic.remove(msgID);
+        if (g_ResultDicTag.containsKey(msgID)) {
+            g_ResultDicTag.remove(msgID);
         }
     }
     private EventLoopGroup worker;
@@ -214,7 +219,7 @@ public class ClientHelper {
             body.readBytes(data);
             String strMsg = new String(data, Charset.forName("utf-8"));
             System.out.println("client read end");
-            ResultMessage resultMessage = JsonHelper.DeserializeObject(strMsg, ResultMessage.class);
+            ResultMessage resultMessage = JsonHelper.gsonDeserialize(strMsg, ResultMessage.class);
             System.out.println("client read data is"+((resultMessage==null)?"null":"data"));
             enResultQueue(resultMessage);
         }

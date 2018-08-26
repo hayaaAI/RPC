@@ -6,6 +6,7 @@ import hayaa.rpc.common.RpcDataHelper;
 import java.io.Serializable;
 
 /**
+ * 由于java的json序列化对于大小写敏感，所以字段命名和其他平台一致
  * @author hsieh
  */
 public class RpcDataValue implements Serializable {
@@ -22,30 +23,30 @@ public class RpcDataValue implements Serializable {
      * 10-decimal
      * 传输的数据类型
      */
-    private Integer dataType;
+    private Integer DataType;
     /**
      * 参数json序列化后的存储字段
      */
-    private String valContainer;
+    private String ValContainer;
     /**
      * 参数的类型
      * 跨平台传输时只有类型1才有使用意义
      */
-    private String className;
+    private String ClassName;
     /**
      * 参数索引号
      */
-    private Integer argIndex;
+    private Integer ArgIndex;
 
     /**
      *Json序列化无法使用此构造函数
      * @param arg 函数中的参数变量
      */
     public RpcDataValue(Object arg,int argIndex) {
-        this.dataType = RpcDataHelper.parseDataType(arg);
-        this.className = arg.getClass().getName();
-        this.valContainer = JsonHelper.SerializeObject(arg);
-        this.argIndex=argIndex;
+        this.DataType = RpcDataHelper.parseDataType(arg);
+        this.ClassName = arg.getClass().getName();
+        this.ValContainer = JsonHelper.SerializeObject(arg);
+        this.ArgIndex=argIndex;
     }
 
     /**
@@ -57,34 +58,34 @@ public class RpcDataValue implements Serializable {
 
 
     public String getValContainer() {
-        return valContainer;
+        return ValContainer;
     }
 
     public void setValContainer(String valContainer) {
-        this.valContainer = valContainer;
+        this.ValContainer = valContainer;
     }
 
     public String getClassName() {
-        return className;
+        return ClassName;
     }
 
     public void setClassName(String className) {
-        this.className = className;
+        this.ClassName = className;
     }
 
     public Integer getDataType() {
-        return dataType;
+        return DataType;
     }
 
     public void setDataType(Integer dataType) {
-        this.dataType = dataType;
+        this.DataType = dataType;
     }
 
     public Integer getArgIndex() {
-        return argIndex;
+        return ArgIndex;
     }
 
     public void setArgIndex(Integer argIndex) {
-        this.argIndex = argIndex;
+        this.ArgIndex = argIndex;
     }
 }

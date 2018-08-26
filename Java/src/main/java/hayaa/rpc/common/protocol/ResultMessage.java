@@ -3,64 +3,58 @@ package hayaa.rpc.common.protocol;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 由于java的json序列化对于大小写敏感，所以字段命名和其他平台一致
+ * @author hsieh
+ */
 public class ResultMessage implements Serializable {
-    private String interfaceName;
-    private String method;
-    private String result;
-    private String errMsg;
-    private String msgID;
-    private Date createTime;
+    private String MsgID;
+    private String InterfaceName;
+    private String Method;
+    private String Result;
+    private String ErrMsg;
 
     public ResultMessage(){
-        this.createTime=new Date();
-    }
 
-    public Date getCreateTime() {
-        return createTime;
     }
 
     public String getMsgID() {
-        return msgID;
+        return MsgID;
     }
 
     public void setMsgID(String msgID) {
-        this.msgID = msgID;
+        MsgID = msgID;
     }
-
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
-
 
     public String getInterfaceName() {
-        return interfaceName;
+        return InterfaceName;
     }
 
     public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
+        InterfaceName = interfaceName;
     }
 
     public String getMethod() {
-        return method;
+        return Method;
     }
 
     public void setMethod(String method) {
-        this.method = method;
+        Method = method;
     }
 
     public String getResult() {
-        return result;
+        return Result;
     }
 
     public void setResult(String result) {
-        this.result = result;
+        Result = result;
     }
 
+    public String getErrMsg() {
+        return ErrMsg;
+    }
 
-
-
+    public void setErrMsg(String errMsg) {
+        ErrMsg = errMsg;
+    }
 }
