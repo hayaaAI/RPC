@@ -11,6 +11,10 @@ namespace Hayaa.RPC.Service.Util
         {
             return JsonConvert.DeserializeObject<T>(jsonData);
         }
+        public static Object DeserializeObject(String jsonData,Type type)
+        {
+            return JsonConvert.DeserializeObject(jsonData, type);
+        }
         public static Object DeserializeObject(String jsonData)
         {
             return JsonConvert.DeserializeObject(jsonData);

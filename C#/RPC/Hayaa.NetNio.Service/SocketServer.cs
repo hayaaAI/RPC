@@ -15,6 +15,7 @@ namespace Hayaa.NetNio.Service
     /// </summary>
     public class SocketServer
     {
+        public ManualResetEvent allDone = new ManualResetEvent(false);
         private BoundHandler g_boundHandler;
         public SocketServer(BoundHandler boundHandler)
         {
@@ -46,15 +47,17 @@ namespace Hayaa.NetNio.Service
             Console.WriteLine("Listen on:" + port);
             Boolean listenLoop = true;
             while (listenLoop)
-            {               
+            {
+                allDone.Reset();
                 try
                 {
-                    rootSocket.BeginAccept(new AsyncCallback(AcceptCallback),rootSocket);
+                    rootSocket.BeginAccept(new AsyncCallback(AcceptCallback), rootSocket);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                }               
+                }
+                allDone.WaitOne();
             }
 
         }
@@ -78,6 +81,7 @@ namespace Hayaa.NetNio.Service
         }
         public void AcceptCallback(IAsyncResult ar)
         {
+            allDone.Set();
             Console.WriteLine("AcceptCallback");
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);

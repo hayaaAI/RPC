@@ -39,7 +39,7 @@ namespace Hayaa.RPC.Service.Client
         /// msgID作为key，远程返回结果作为value
         /// </summary>
         private ConcurrentDictionary<String,ResultMessage> g_ResultDic = null;
-
+        private ConcurrentDictionary<String, Boolean> g_ResultDicTag = null;
         private List<ServiceConfig> g_Config;
         internal void Init(List<ServiceConfig> config)
         {
@@ -47,6 +47,7 @@ namespace Hayaa.RPC.Service.Client
             g_ClientPool = new Dictionary<string, TcpClient>();
             g_MethodQueue = new Dictionary<int, ConcurrentQueue<MethodMessage>>();
             g_ResultDic = new ConcurrentDictionary<string, ResultMessage>();
+            g_ResultDicTag = new ConcurrentDictionary<string, bool>();
             InitNetClient(g_MethodQueue, g_ClientPool);
         }
         private void InitNetClient(Dictionary<int, ConcurrentQueue<MethodMessage>> queue, Dictionary<string, TcpClient> cliPool)
@@ -79,8 +80,8 @@ namespace Hayaa.RPC.Service.Client
 
         internal void DelTimeoutMsgID(string msgID)
         {
-            ResultMessage resultMessage = null;
-            g_ResultDic.Remove(msgID,out resultMessage);
+            Boolean t = true;
+            g_ResultDicTag.TryRemove(msgID, out t);
         }
 
         private  void Consume(Object param)
@@ -177,11 +178,19 @@ namespace Hayaa.RPC.Service.Client
         {
             int index = methodMessage.InterfaceName.GetHashCode() % cpuCoreTotal;
             g_MethodQueue[index].Enqueue(methodMessage);
+            g_ResultDicTag.TryAdd(methodMessage.MsgID, true);
 
         }
         public ResultMessage GetResult(String msgID)
         {
-           return g_ResultDic[msgID];
+            ResultMessage result = null;
+            g_ResultDic.TryGetValue(msgID, out result);
+            if (result != null)
+            {
+                Boolean t = true;
+                g_ResultDicTag.TryRemove(msgID,out t);
+            }
+           return result;
         }
     }
 }

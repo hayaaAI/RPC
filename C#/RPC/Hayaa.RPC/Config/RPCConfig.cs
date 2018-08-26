@@ -20,15 +20,15 @@ namespace Hayaa.RPC.Common.Config
         /// </summary>
         public int CpuCore { set; get; }
         //服务注册地址
-        public String ServiceReg { set; get; }
+        public String ServiceRegUrl { set; get; }
         //服务发布地址
-        public String ServicePublice { set; get; }
+        public String ServicePubliceUrl { set; get; }
         //心跳服务地址
         public String KeepUrl { set; get; }
        
         public ProviderConfig ProviderConfiguation { set; get; }
         public ConsumerConfig ConsumerConfiguation { set; get; }
-        
+
 
         internal class ProviderConfig
         {
@@ -39,6 +39,17 @@ namespace Hayaa.RPC.Common.Config
                 this.Port = 8080;
                 this.MessageSize = 1024 * 1024;
             }
+            public String Name { set; get; }
+            /// <summary>
+            /// 服务组
+            /// </summary>
+            public String Group { set; get; }
+            //服务发布端口
+            public int Port { set; get; }
+            /// <summary>
+            /// 消息大小,单位byte
+            /// </summary>
+            public int MessageSize { set; get; }
             /// <summary>
             /// 此字段对C#平台无效
             /// </summary>
@@ -48,25 +59,20 @@ namespace Hayaa.RPC.Common.Config
             /// 采用逗号分隔
             /// </summary>
             public string AssemblyNames { get; set; }
-            public String Name { set; get; }
-            /// <summary>
-            /// 服务组
-            /// </summary>
-            public String Group { set; get; }
-            //服务发布端口
-            public int Port { set; get; }
-            public int MessageSize { set; get; }
 
         }
         internal class ConsumerConfig
         {
             public String Name { set; get; }
             public List<ServiceConfig> Services { set; get; }
+            /// <summary>
+            /// 消息大小,单位byte
+            /// </summary>
+            public int MessageSize { set; get; }
         }
         internal class ServiceConfig
         {
-            public String ServerHost { set; get; }
-            public int ServerPort { set; get; }
+          
             public String Name { set; get; }
             public String Group { set; get; }
             public String InterfaceName { set; get; }
@@ -74,6 +80,8 @@ namespace Hayaa.RPC.Common.Config
             /// 此字段仅对net有效
             /// </summary>
             public String AssemblyName { set; get; }
+            public String ServerHost { set; get; }
+            public int ServerPort { set; get; }
         }
     }
 }

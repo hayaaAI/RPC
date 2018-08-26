@@ -1,5 +1,6 @@
 ﻿using Hayaa.RPC.Common.Protocol;
 using Hayaa.RPC.Service.Protocol;
+using Hayaa.RPC.Service.Server;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -60,7 +61,8 @@ namespace Hayaa.RPC.Service.Util
             Object result = null;
             if (rpcDataValue.DataType == CommunicationPrimitives.CLASS)
             {
-                result = JsonHelper.DeserializeObject(rpcDataValue.ValContainer);
+                Type type = ProviderFactory.GetType(rpcDataValue.ClassName);
+                result = JsonHelper.DeserializeObject(rpcDataValue.ValContainer, type);
             }
             else
             {

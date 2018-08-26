@@ -10,16 +10,17 @@ namespace Hayaa.RPC.Service.Server
     class ProviderFactory
     {
         private static Dictionary<string, ProviderContainer> g_services = new Dictionary<string, ProviderContainer>();
+        private static Dictionary<String, Type> g_ObjList = new Dictionary<string, Type>();
         internal static void ScanServices(List<String> assemblyNames)
         {
             assemblyNames.ForEach(assemblyName => {
-                var assembly = Assembly.LoadFrom(assemblyName);
+                var assembly = Assembly.LoadFrom(assemblyName);              
                var types= assembly.GetTypes();
                 types.ToList().ForEach(t => {
                     if (!t.IsInterface)
                     {
                         var interfaces = t.GetInterfaces();
-                        if (interfaces != null)
+                        if ((interfaces != null)&&(interfaces.Length>0))
                         {
                             Object instance = null;
                             try
@@ -34,7 +35,7 @@ namespace Hayaa.RPC.Service.Server
                             {
                                 for(int i = 0; i < interfaces.Length; i++)
                                 {
-                                    MethodInfo[] methods = interfaces[i].GetMethods(BindingFlags.Public);
+                                    MethodInfo[] methods = interfaces[i].GetMethods();
                                     if (methods != null)
                                     {
                                         var dic = new Dictionary<String, MethodInfo>(methods.Length);
@@ -44,14 +45,22 @@ namespace Hayaa.RPC.Service.Server
                                         }
                                         ProviderContainer providerContainer = new ProviderContainer(interfaces[i].Name,
                                                 instance, dic);
-                                        g_services.Add(interfaces[i].Name, providerContainer);
+                                        g_services.Add(interfaces[i].FullName, providerContainer);
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            g_ObjList.Add(t.FullName, t);
+                        }
                     }
                 });
             });
+        }
+        internal static Type GetType(String fullName)
+        {
+            return g_ObjList.ContainsKey(fullName) ? g_ObjList[fullName] : null;
         }
         /// <summary>
         /// 通过反射执行目标接口的函数
@@ -120,7 +129,7 @@ namespace Hayaa.RPC.Service.Server
                 result = new List<Object>();
                 for (int i = 0; i < paramater.Count; i++)
                 {                    
-                    RpcDataValue rpcDataValue = paramater[i];
+                    RpcDataValue rpcDataValue = paramater[i];                 
                     Object p = RpcDataHelper.ParseDataToArg(rpcDataValue);
                     if (p != null)
                     {
@@ -155,5 +164,6 @@ namespace Hayaa.RPC.Service.Server
             }
             return method;
         }
+
     }
 }
