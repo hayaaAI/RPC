@@ -162,7 +162,7 @@ namespace ProxyEmitter
             }
 
             // Get namespace information
-            var interfaceName = interfaceType.Name;
+            var interfaceName = interfaceType.FullName;
           
             // Create methods in interfaceType
             var superType = typeof(ProxyBase);

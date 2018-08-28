@@ -17,7 +17,7 @@ namespace Hayaa.RPC.Service.Util
         public static int ParseDataType(Type type)
         {
             int result = CommunicationPrimitives.CLASS;
-            switch (type.Name)
+            switch (type.FullName)
             {
                 case "System.String":
                     result = CommunicationPrimitives.String;
@@ -78,7 +78,7 @@ namespace Hayaa.RPC.Service.Util
                         result = Byte.Parse(rpcDataValue.ValContainer);
                         break;
                     case CommunicationPrimitives.Short:
-                        result = rpcDataValue.ValContainer;
+                        result =short.Parse(rpcDataValue.ValContainer);
                         break;
                     case CommunicationPrimitives.Integer:
                         result = int.Parse(rpcDataValue.ValContainer);
@@ -102,6 +102,47 @@ namespace Hayaa.RPC.Service.Util
             }
             return result;
         }
-       
+        public static T ParseValueTypeData<T>(String valContainer,out Boolean isClass)
+        {
+            isClass = false;
+            Object result = null;
+            String name = typeof(T).FullName;
+            switch (name)
+            {
+                case "System.String":
+                    result = valContainer;
+                    break;
+                case "System.Boolean":
+                    result = Boolean.Parse(valContainer);
+                    break;
+                case "System.Byte":
+                    result = Byte.Parse(valContainer);
+                    break;
+                case "System.Int16":
+                    result = short.Parse(valContainer);
+                    break;
+                case "System.Int32":
+                    result = int.Parse(valContainer);
+                    break;
+                case "System.Int64":
+                    result = long.Parse(valContainer);
+                    break;
+                case "System.Single":
+                    result = float.Parse(valContainer);
+                    break;
+                case "System.Double":
+                    result = double.Parse(valContainer);
+                    break;
+                case "System.Decimal":
+                    result = decimal.Parse(valContainer);
+                    break;
+                default:
+                    break;
+            }
+            if (result == null) {
+                isClass = true;
+                return default(T); }
+            return (T)result;
+        }
     }
 }

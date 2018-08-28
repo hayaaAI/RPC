@@ -6,7 +6,7 @@ using System.Text;
 namespace Hayaa.RPC.Common.Config
 {
     [Serializable]
-  internal  class RPCConfig : BaseData, ConfigContent
+    internal class RPCConfig : BaseData, ConfigContent
     {
         public AppSettings AppSettings { set; get; }
         public ConnectionStrings ConnectionStrings { set; get; }
@@ -63,6 +63,10 @@ namespace Hayaa.RPC.Common.Config
         }
         internal class ConsumerConfig
         {
+            public ConsumerConfig()
+            {
+                this.MessageSize= 1024 * 1024;
+            }
             public String Name { set; get; }
             public List<ServiceConfig> Services { set; get; }
             /// <summary>

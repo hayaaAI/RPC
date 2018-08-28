@@ -11,7 +11,7 @@ namespace Hayaa.RPC.Service.Client
     /// </summary>
     public class RpcClient
     {
-        public  void run()
+        public  void Run()
         {
             var consumerConfig = ConfigHelper.Instance.GetComponentConfig().ConsumerConfiguation;          
             ServiceFactory.initService(consumerConfig.Services);

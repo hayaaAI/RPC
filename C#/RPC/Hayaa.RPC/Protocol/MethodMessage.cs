@@ -11,5 +11,6 @@ namespace Hayaa.RPC.Service.Protocol
         public String InterfaceName { set; get; }
         public String Method { set; get; }
         public List<RpcDataValue> Paramater { set; get; }
+
     }
 }

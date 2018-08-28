@@ -11,14 +11,12 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceMethdoProxy
     {
-        public static Object Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
+        public static ResultMessage Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
         {
-            Object result = null;
+            ResultMessage result = null;
             try
             {
-                String msgID = Guid.NewGuid().ToString("N");
-               
-                ResultMessage msgResult = null;
+                String msgID = Guid.NewGuid().ToString("N");               
                 int timeOut = ConfigHelper.Instance.GetComponentConfig().SessionTimeout;
                 int time = 0;               
                  ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
@@ -31,26 +29,26 @@ namespace Hayaa.RPC.Service.Client
                 Console.WriteLine("result wait timeOut:" + timeOut);
                 while (time<timeOut)
                 {
-                    Console.WriteLine("result wait loop");
-                    msgResult = ClientHelper.Instance.GetResult(msgID);
-                    if (msgResult != null)
+                    Thread.SpinWait(5000);
+                    result = ClientHelper.Instance.GetResult(msgID);
+                    if (result != null)
+                    {
+                        Console.WriteLine("time enough");
+                    }
+                    if (result != null)
                     {
                         time= timeOut+1;
                     }
-                    if(time< timeOut)
-                    Thread.SpinWait(1);
-                    time= time+3;//考虑代码操作时间增量
+                    if (time < timeOut)
+                        Thread.SpinWait(1);
+                    time = time+3;//考虑代码操作时间增量
                 }
-                if (msgResult != null)
+                if (result == null)
                 {
-                    if (String.IsNullOrEmpty(msgResult.ErrMsg))
-                        result = JsonHelper.DeserializeObject(msgResult.Result);
-                }
-                else
-                {
+                    Console.WriteLine("remove msgId:" + msgID);
                     ClientHelper.Instance.DelTimeoutMsgID(msgID);
-                }
-                Console.WriteLine("Server result:" + msgResult.Result);
+                }               
+                Console.WriteLine("Invoke done");
             }
             catch (Exception ex)
             {

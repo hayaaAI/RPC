@@ -66,7 +66,7 @@ namespace Hayaa.RPC.Service.Client
                 {
                     try
                     {
-                        cliPool.Add(c.InterfaceName, new TcpClient(c.ServerHost, c.ServerPort)); 
+                        cliPool.Add(c.InterfaceName, new TcpClient(c.ServerHost, c.ServerPort) {NoDelay=true }); 
                     }
                     catch(Exception ex)
                     {
@@ -105,17 +105,18 @@ namespace Hayaa.RPC.Service.Client
             MethodMessage methodMessage;
             while (!queue.IsEmpty)
             {
-                if(queue.TryPeek(out methodMessage))
+                if (queue.TryDequeue(out methodMessage))
                 {
                     Transfer(methodMessage);
-                }                    
+                }
             }
         }       
         private void Transfer(MethodMessage methodMessage)
         {
             var tcp = g_ClientPool[methodMessage.InterfaceName];
             String msg = JsonHelper.SerializeObject(methodMessage);
-            RpcProtocol rpcProtocol = new RpcProtocol(msg);
+            RpcProtocol rpcProtocol = new RpcProtocol(msg);           
+           // if (!tcp.Connected) return;
             Console.WriteLine("rpc client send starting");
             NetworkStream stream = tcp.GetStream();
             //写头部标识
@@ -128,36 +129,37 @@ namespace Hayaa.RPC.Service.Client
             stream.Write(dataType, 0, dataType.Length);
             //写数据
             stream.Write(rpcProtocol.Data, 0, rpcProtocol.Data.Length);//UTF8字符串无需处理大小端
-
+            Console.WriteLine("rpc client send end");
             byte[] buffer = null;          
             try
             {
                 byte[] header = new byte[2];
-                stream.ReadAsync(header, 0, header.Length);
+                Console.WriteLine("rpc client read starting");
+                stream.ReadAsync(header, 0, header.Length);               
+                dataLength = new byte[4];
+                //长度是4个字节的数据长度,按照大端读取
+                dataLength[0]=(byte)stream.ReadByte();
+                dataLength[1] = (byte)stream.ReadByte();
+                dataLength[2] = (byte)stream.ReadByte();
+                dataLength[3] = (byte)stream.ReadByte();
+                int contentLength = IntHelper.ByteArrayToInt(dataLength);
                 //读取类型
                 dataType = new byte[4];
                 //类型是4个字节的数据长度,按照大端读取
-                dataType[3] = (byte)stream.ReadByte();
-                dataType[2] = (byte)stream.ReadByte();
-                dataType[1] = (byte)stream.ReadByte();
                 dataType[0] = (byte)stream.ReadByte();
-                dataLength = new byte[4];
-                //长度是4个字节的数据长度,按照大端读取
-                dataLength[3]=(byte)stream.ReadByte();
-                dataLength[2] = (byte)stream.ReadByte();
-                dataLength[1] = (byte)stream.ReadByte();
-                dataLength[0] = (byte)stream.ReadByte();
-                int contentLength = IntHelper.ByteArrayToInt(dataLength);
+                dataType[1] = (byte)stream.ReadByte();
+                dataType[2] = (byte)stream.ReadByte();
+                dataType[3] = (byte)stream.ReadByte();
                 buffer = new byte[contentLength];
                 stream.ReadAsync(buffer, 0, buffer.Length);
-
+                Console.WriteLine("rpc client read end");
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
             String responseData = null;
-            stream.Close();
+           // stream.Close();
             if ((buffer!=null)&&(buffer.Length > 0))
             {
                 responseData = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
@@ -167,6 +169,7 @@ namespace Hayaa.RPC.Service.Client
                 var resultData = JsonHelper.Deserialize<ResultMessage>(responseData);
                 if (!g_ResultDic.ContainsKey(resultData.MsgID))
                 {
+                    Console.WriteLine("put result");
                     g_ResultDic.TryAdd(resultData.MsgID, resultData);
                 }
             }catch(Exception ex)

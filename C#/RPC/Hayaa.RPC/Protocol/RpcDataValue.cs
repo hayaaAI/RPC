@@ -23,8 +23,8 @@ namespace Hayaa.RPC.Service.Protocol
         public RpcDataValue(Type dataType,Object arg,int argIndex)
         {
             this.DataType = RpcDataHelper.ParseDataType(dataType);
-            this.ClassName = dataType.Name;
-            this.ValContainer = JsonHelper.SerializeObject(arg);
+            this.ClassName = dataType.FullName;
+            this.ValContainer = JsonHelper.SerializeObject(arg,true);
             this.ArgIndex = argIndex;
         }
         /// <summary>
