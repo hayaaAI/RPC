@@ -30,7 +30,7 @@ public class ServiceMethdoProxy {
             if (!action) {
                 return null;
             }
-            System.out.println("result wait timeOut:" + timeOut);
+            //System.out.println("result wait timeOut:" + timeOut);
             while (time < timeOut) {
                 msgResult = ClientHelper.get_instance().GetResult(msgID);
                 if (msgResult != null) {
@@ -50,9 +50,10 @@ public class ServiceMethdoProxy {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Server result:" + strResult);
+        //System.out.println("Server result:" + strResult);
         Object result = null;
         if (!StringUtil.IsNullOrEmpty(strResult)) {
+            System.out.println("invoke done");
             result = JsonHelper.gsonDeserialize(strResult, resultType);
         }
         return result;
