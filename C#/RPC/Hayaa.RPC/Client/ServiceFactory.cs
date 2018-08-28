@@ -9,8 +9,12 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceFactory
     {
-        private static ConcurrentDictionary<String, Object> g_service = new ConcurrentDictionary<string, object>();
-        internal static void initService(List<ServiceConfig> interfaces)
+        /// <summary>
+        /// key:接口全名称
+        /// value:服务实例
+        /// </summary>
+        private static ConcurrentDictionary<String, Object> g_service = new ConcurrentDictionary<String, Object>();
+         internal static void initService(List<ServiceConfig> interfaces)
         {
 
             interfaces.ForEach(service =>

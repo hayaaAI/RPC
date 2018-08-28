@@ -22,6 +22,16 @@ public class RpcConfig extends ConfigContent {
      */
     private int sessionTimeout;
 
+    private int cpuCore;
+
+    public int getCpuCore() {
+        return cpuCore;
+    }
+
+    public void setCpuCore(int cpuCore) {
+        this.cpuCore = cpuCore;
+    }
+
     public int getSessionTimeout() {
         return sessionTimeout;
     }

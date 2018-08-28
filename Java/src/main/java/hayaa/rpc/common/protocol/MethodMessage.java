@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * 由于java的Gson序列化对于大小写敏感，所以字段命名和其他平台一致
+ * @author hsieh
+ */
 public class MethodMessage  implements Serializable {
     private String msgID;
     private String interfaceName;

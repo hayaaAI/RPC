@@ -14,7 +14,7 @@ namespace ProxyEmitter
         /// <param name="methodName">Method to be invoked</param>
         /// <param name="arguments">Argument list for the invoked method</param>
         /// <returns></returns>
-        protected abstract object Invoke(string interfaceName, string methodName, object[] arguments);
+        protected abstract String Invoke(string interfaceName, string methodName, object[] arguments);
 
         /// <summary>
         /// Convert return value of <see cref="Invoke"/> method to a specific type
@@ -22,6 +22,6 @@ namespace ProxyEmitter
         /// <typeparam name="TRet">Type of the return value</typeparam>
         /// <param name="returnValue">Return value of <see cref="Invoke"/> method</param>
         /// <returns></returns>
-        protected abstract TRet ConvertReturnValue<TRet>(object returnValue);
+        protected abstract TRet ConvertReturnValue<TRet>(String returnValue);
     }
 }

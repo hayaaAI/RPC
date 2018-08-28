@@ -3,20 +3,18 @@ package hayaa.rpc.common.protocol;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+  * @author hsieh
+ */
 public class ResultMessage implements Serializable {
+    private String msgID;
     private String interfaceName;
     private String method;
     private String result;
     private String errMsg;
-    private String msgID;
-    private Date createTime;
 
     public ResultMessage(){
-        this.createTime=new Date();
-    }
 
-    public Date getCreateTime() {
-        return createTime;
     }
 
     public String getMsgID() {
@@ -26,15 +24,6 @@ public class ResultMessage implements Serializable {
     public void setMsgID(String msgID) {
         this.msgID = msgID;
     }
-
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
-
 
     public String getInterfaceName() {
         return interfaceName;
@@ -60,7 +49,11 @@ public class ResultMessage implements Serializable {
         this.result = result;
     }
 
+    public String getErrMsg() {
+        return errMsg;
+    }
 
-
-
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
 }

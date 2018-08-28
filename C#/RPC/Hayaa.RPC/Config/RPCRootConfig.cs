@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hayaa.RPC.Common.Config
 {
-    class RPCRootConfig
+   public class RPCRootConfig
     {
     }
 }

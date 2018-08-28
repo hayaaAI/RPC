@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hayaa.NetNio.Service", "Hay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{4495D196-546E-4B76-94B9-2BBD26BEA905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyEmitter", "ProxyEmitter\ProxyEmitter.csproj", "{53B77633-41B7-44CA-B848-6186F050AC4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyEmitter", "ProxyEmitter\ProxyEmitter.csproj", "{53B77633-41B7-44CA-B848-6186F050AC4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NioServerTest", "NioServerTest\NioServerTest.csproj", "{A2891FA8-2B01-423B-98AE-AA9F874E47B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NioServerTest", "NioServerTest\NioServerTest.csproj", "{A2891FA8-2B01-423B-98AE-AA9F874E47B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
