@@ -87,7 +87,7 @@ namespace Hayaa.RPC.Service.Server
                 }
                 if (resultObj != null)
                 {
-                    resultMessage.Result=JsonHelper.SerializeObject(resultObj);
+                    resultMessage.Result=JsonHelper.SerializeObject(resultObj,true);
                 }
             }
             else

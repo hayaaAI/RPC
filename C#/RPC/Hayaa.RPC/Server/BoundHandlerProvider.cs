@@ -11,9 +11,9 @@ namespace Hayaa.RPC.Service.Server
     {
         public string Excute(string paramater)
         {
-            MethodMessage methodMessage = JsonHelper.Deserialize<MethodMessage>(paramater);
+            MethodMessage methodMessage = JsonHelper.Deserialize<MethodMessage>(paramater,true);
              var result= ProviderFactory.ExecuteMethod(methodMessage);
-            return JsonHelper.SerializeObject(result);
+            return JsonHelper.SerializeObject(result,true);
         }
     }
 }

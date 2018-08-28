@@ -18,7 +18,7 @@ namespace Hayaa.RPC.Service.Client
             result = RpcDataHelper.ParseValueTypeData<TRet>(returnValue, out isClass);
             if (isClass)
             {
-                result = JsonHelper.Deserialize<TRet>(returnValue);
+                result = JsonHelper.Deserialize<TRet>(returnValue,true);
             }
             return result;
         }

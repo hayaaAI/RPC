@@ -114,7 +114,7 @@ namespace Hayaa.RPC.Service.Client
         private void Transfer(MethodMessage methodMessage)
         {
             var tcp = g_ClientPool[methodMessage.InterfaceName];
-            String msg = JsonHelper.SerializeObject(methodMessage);
+            String msg = JsonHelper.SerializeObject(methodMessage,true);
             RpcProtocol rpcProtocol = new RpcProtocol(msg);           
            // if (!tcp.Connected) return;
             Console.WriteLine("rpc client send starting");
@@ -166,7 +166,7 @@ namespace Hayaa.RPC.Service.Client
             }
             try
             {
-                var resultData = JsonHelper.Deserialize<ResultMessage>(responseData);
+                var resultData = JsonHelper.Deserialize<ResultMessage>(responseData,true);
                 if (!g_ResultDic.ContainsKey(resultData.MsgID))
                 {
                     Console.WriteLine("put result");

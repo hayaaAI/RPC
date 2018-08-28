@@ -19,14 +19,13 @@ namespace Hayaa.RPC.Service.Util
             else
             return JsonConvert.DeserializeObject<T>(jsonData);
         }
-        public static Object DeserializeObject(String jsonData,Type type)
+        public static Object DeserializeObject(String jsonData,Type type, bool small = false)
         {
-            return JsonConvert.DeserializeObject(jsonData, type);
-        }
-        public static Object DeserializeObject(String jsonData)
-        {
-            return JsonConvert.DeserializeObject(jsonData);
-        }
+            if (small)
+                return JsonConvert.DeserializeObject(jsonData, type, settings);
+            else
+                return JsonConvert.DeserializeObject(jsonData, type);
+        }     
         /// <summary>
         /// json序列化,设定small选择驼峰形式
         /// </summary>
