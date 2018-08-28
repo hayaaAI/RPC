@@ -26,7 +26,7 @@ namespace Hayaa.RPC.Service.Client
                     Paramater = paramater,
                     MsgID = msgID
                 });
-                Console.WriteLine("result wait timeOut:" + timeOut);
+               // Console.WriteLine("result wait timeOut:" + timeOut);
                 while (time<timeOut)
                 {
                     Thread.SpinWait(5000);

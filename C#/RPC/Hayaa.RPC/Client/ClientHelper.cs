@@ -116,8 +116,8 @@ namespace Hayaa.RPC.Service.Client
             var tcp = g_ClientPool[methodMessage.InterfaceName];
             String msg = JsonHelper.SerializeObject(methodMessage,true);
             RpcProtocol rpcProtocol = new RpcProtocol(msg);           
-           // if (!tcp.Connected) return;
-            Console.WriteLine("rpc client send starting");
+            if (!tcp.Connected) return;
+            //Console.WriteLine("rpc client send starting");
             NetworkStream stream = tcp.GetStream();
             //写头部标识
             stream.Write(rpcProtocol.MessageFlag,0, rpcProtocol.MessageFlag.Length);
@@ -129,12 +129,12 @@ namespace Hayaa.RPC.Service.Client
             stream.Write(dataType, 0, dataType.Length);
             //写数据
             stream.Write(rpcProtocol.Data, 0, rpcProtocol.Data.Length);//UTF8字符串无需处理大小端
-            Console.WriteLine("rpc client send end");
+           // Console.WriteLine("rpc client send end");
             byte[] buffer = null;          
             try
             {
                 byte[] header = new byte[2];
-                Console.WriteLine("rpc client read starting");
+               // Console.WriteLine("rpc client read starting");
                 stream.ReadAsync(header, 0, header.Length);               
                 dataLength = new byte[4];
                 //长度是4个字节的数据长度,按照大端读取
@@ -152,7 +152,7 @@ namespace Hayaa.RPC.Service.Client
                 dataType[3] = (byte)stream.ReadByte();
                 buffer = new byte[contentLength];
                 stream.ReadAsync(buffer, 0, buffer.Length);
-                Console.WriteLine("rpc client read end");
+               // Console.WriteLine("rpc client read end");
             }
             catch(Exception ex)
             {

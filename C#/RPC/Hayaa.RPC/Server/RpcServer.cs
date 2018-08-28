@@ -10,6 +10,9 @@ using Hayaa.NetNio.Service;
 
 namespace Hayaa.RPC.Service.Server
 {
+    /// <summary>
+    /// 每个客户端第1--3次的请求由于程序加载会在3000超时设置下出现超时，所以最好做预请求处理
+    /// </summary>
   public  class RpcServer
     {
       
