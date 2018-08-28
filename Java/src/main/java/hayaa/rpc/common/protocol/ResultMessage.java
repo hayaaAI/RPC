@@ -4,57 +4,56 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 由于java的Gson序列化对于大小写敏感，所以字段命名和其他平台一致
- * @author hsieh
+  * @author hsieh
  */
 public class ResultMessage implements Serializable {
-    private String MsgID;
-    private String InterfaceName;
-    private String Method;
-    private String Result;
-    private String ErrMsg;
+    private String msgID;
+    private String interfaceName;
+    private String method;
+    private String result;
+    private String errMsg;
 
     public ResultMessage(){
 
     }
 
     public String getMsgID() {
-        return MsgID;
+        return msgID;
     }
 
     public void setMsgID(String msgID) {
-        MsgID = msgID;
+        this.msgID = msgID;
     }
 
     public String getInterfaceName() {
-        return InterfaceName;
+        return interfaceName;
     }
 
     public void setInterfaceName(String interfaceName) {
-        InterfaceName = interfaceName;
+        this.interfaceName = interfaceName;
     }
 
     public String getMethod() {
-        return Method;
+        return method;
     }
 
     public void setMethod(String method) {
-        Method = method;
+        this.method = method;
     }
 
     public String getResult() {
-        return Result;
+        return result;
     }
 
     public void setResult(String result) {
-        Result = result;
+        this.result = result;
     }
 
     public String getErrMsg() {
-        return ErrMsg;
+        return errMsg;
     }
 
     public void setErrMsg(String errMsg) {
-        ErrMsg = errMsg;
+        this.errMsg = errMsg;
     }
 }

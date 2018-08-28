@@ -9,40 +9,40 @@ import java.util.List;
  * @author hsieh
  */
 public class MethodMessage  implements Serializable {
-    private String MsgID;
-    private String InterfaceName;
-    private String Method;
-    private List<RpcDataValue> Paramater;
+    private String msgID;
+    private String interfaceName;
+    private String method;
+    private List<RpcDataValue> paramater;
 
     public String getMsgID() {
-        return MsgID;
+        return msgID;
     }
 
     public void setMsgID(String msgID) {
-        MsgID = msgID;
+        this.msgID = msgID;
     }
 
     public String getInterfaceName() {
-        return InterfaceName;
+        return interfaceName;
     }
 
     public void setInterfaceName(String interfaceName) {
-        InterfaceName = interfaceName;
+        this.interfaceName = interfaceName;
     }
 
     public String getMethod() {
-        return Method;
+        return method;
     }
 
     public void setMethod(String method) {
-        Method = method;
+        this.method = method;
     }
 
     public List<RpcDataValue> getParamater() {
-        return Paramater;
+        return paramater;
     }
 
     public void setParamater(List<RpcDataValue> paramater) {
-        Paramater = paramater;
+        this.paramater = paramater;
     }
 }
