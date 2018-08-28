@@ -6,7 +6,7 @@ import hayaa.rpc.common.RpcDataHelper;
 import java.io.Serializable;
 
 /**
- * 由于java的json序列化对于大小写敏感，所以字段命名和其他平台一致
+ * 由于java的Gson序列化对于大小写敏感，所以字段命名和其他平台一致
  * @author hsieh
  */
 public class RpcDataValue implements Serializable {
