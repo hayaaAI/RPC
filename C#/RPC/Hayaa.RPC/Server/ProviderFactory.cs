@@ -57,6 +57,10 @@ namespace Hayaa.RPC.Service.Server
                     }
                 });
             });
+            if ((g_services.Count == 0) || (g_ObjList.Count == 0))
+            {
+                Console.WriteLine("g_services:{0};g_ObjList:{1}.请检查待扫描程序集配置");
+            }
         }
         internal static Type GetType(String fullName)
         {

@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.0.0.0</Version>
+    <Version>1.0.0.1</Version>
     <Authors>HayaaAI</Authors>
     <Product>HayaaAI</Product>
     <Company>Hayaa</Company>
