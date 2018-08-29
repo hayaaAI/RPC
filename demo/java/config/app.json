@@ -1,0 +1,28 @@
+{
+  "code": 0,
+  "message": null,
+  "createTime": 1527103076000,
+  "updateTime": 1527103076000,
+  "appId": 8,
+  "appConfigId": 5,
+  "solutionID": "06a015f2-20dd-49bf-b305-c1b7a639d2cb",
+  "solutionName": "人员与协作",
+  "configContent": "{}",
+  "version": 1,
+  "components": [
+    {
+      "code": 0,
+      "message": null,
+      "createTime": 1527105201000,
+      "updateTime": 1527536518000,
+      "componentConfigId": 56,
+      "componentId": 10005,
+      "content": "{\"appSettings\":null,\"connectionStrings\":null,\"dbConfigs\":null,\"serviceRegUrl\":null,\"servicePubliceUrl\":\"publicurl\",\"keepUrl\":\"keepurl\",\"sessionTimeout\":3000,\"providerConfiguation\":null,\"consumerConfiguation\":{\"name\":\"defaultService\",\"services\":[{\"name\":\"default\",\"group\":\"group\",\"interfaceName\":\"demo.interfaceservice.IService\",\"assemblyName\":null,\"serverHost\":\"127.0.0.1\",\"serverPort\":8080}],\"messageSize\":1048576}}",
+      "version": 1,
+      "componentConfigTitle": "rpcConfig",
+      "isDefault": true
+    }
+  ]
+}
+//消费端: "content": "{\"appSettings\":null,\"connectionStrings\":null,\"dbConfigs\":null,\"serviceRegUrl\":null,\"servicePubliceUrl\":\"publicurl\",\"keepUrl\":\"keepurl\",\"sessionTimeout\":3000,\"providerConfiguation\":null,\"consumerConfiguation\":{\"name\":\"defaultService\",\"services\":[{\"name\":\"default\",\"group\":\"group\",\"interfaceName\":\"demo.interfaceservice.IService\",\"assemblyName\":null,\"serverHost\":\"127.0.0.1\",\"serverPort\":8080}],\"messageSize\":1048576}}",
+//服务端:"content": "{\"appSettings\":null,\"connectionStrings\":null,\"sessionTimeout\":3000,\"cpuCore\":1,\"serviceRegUrl\":\"rgul\",\"servicePubliceUrl\":\"puurl\",\"keepUrl\":\"keepurl\",\"providerConfiguation\":{\"name\":\"defaultService\",\"group\":\"defaultGroup\",\"port\":8080,\"messageSize\":1048576,\"packages\":\"demo.interfaceservice\",\"assemblyNames\":\"\"},\"consumerConfiguation\":null,\"code\":0,\"message\":\"\",\"createTime\":1527103076000,\"updateTime\":1527103076000}",

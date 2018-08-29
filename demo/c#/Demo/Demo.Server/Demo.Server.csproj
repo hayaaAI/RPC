@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hayaa.ConfigSeed.Netcore" Version="1.0.0.15" />
-    <PackageReference Include="Hayaa.RPC.Service" Version="1.0.0" />
+    <PackageReference Include="Hayaa.RPC.Service" Version="1.0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
