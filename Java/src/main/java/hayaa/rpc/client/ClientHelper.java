@@ -66,6 +66,11 @@ public class ClientHelper {
         initNetClient(g_ClientPool);
     }
 
+    /**
+     * 由于netty将用户进程发出的操作封装为task避免锁操作，此处数据发送不需要处理线程抢占Channel
+     * @param methodMessage
+     * @return
+     */
     public Boolean enQueue(MethodMessage methodMessage) {
         Boolean result = false;
         if (g_ClientPool.containsKey(methodMessage.getInterfaceName())) {
