@@ -1,0 +1,25 @@
+﻿{
+  "AppConfigId": 0,
+  "SolutionID": "06a015f2-20dd-49bf-b305-c1b7a639d2cb",
+  "SolutionName": "单元测试配置",
+  "ConfigContent": null,
+  "Version": 1,
+  "Components": [
+    {
+      "ComponentConfigId": 1,
+      "ComponentID": 10005,
+      "Content": "{\"AppSettings\":null,\"ConnectionStrings\":null,\"SessionTimeout\":3000,\"CpuCore\":1,\"ServiceRegUrl\":\"rgul\",\"ServicePubliceUrl\":\"puurl\",\"KeepUrl\":\"keepurl\",\"ProviderConfiguation\":null,\"ConsumerConfiguation\":{\"Name\":null,\"Services\":[{\"Name\":null,\"Group\":null,\"InterfaceName\":\"demo.interfaceservice.IService\",\"AssemblyName\":\"Demo.InterfaceService\",\"ServerHost\":\"127.0.0.1\",\"ServerPort\":8080}],\"MessageSize\":1048576},\"Code\":0,\"Message\":\"\",\"CreateTime\":\"2018-08-28T11:18:49.6719565+08:00\",\"UpdateTime\":\"2018-08-28T11:18:49.6720905+08:00\"}",
+      "Version": 1,
+      "ComponentConfigTitle": "配置组件",
+      "IsDefault": true,
+      "Code": 0,
+      "Message": null,
+      "CreateTime": "0001-01-01T00:00:00",
+      "UpdateTime": "0001-01-01T00:00:00"
+    }
+  ],
+  "Code": 0,
+  "Message": null,
+  "CreateTime": "0001-01-01T00:00:00",
+  "UpdateTime": "0001-01-01T00:00:00"
+}
