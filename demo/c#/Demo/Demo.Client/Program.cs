@@ -20,6 +20,7 @@ namespace Demo.Client
                      Title=msg,
                       Val= msg.Length
                 });
+                if(data!=null)
                 Console.WriteLine("服务返回:{0};长度:{1}", data.Title, data.Val);
             }
         }

@@ -58,6 +58,9 @@ class ProviderFactory {
                 });
             }
         });
+        if(services.size()==0){
+            System.out.println("services:"+services.size()+";请检查待扫描包配置");
+        }
     }
     /**
      * 通过反射执行目标接口的函数

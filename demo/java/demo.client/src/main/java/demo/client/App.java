@@ -27,10 +27,10 @@ public class App {
             System.out.println("Enter your value:");
             str = br.readLine();
             Paramater rpcParamater = new Paramater();
-            rpcParamater.setTitle("客户端发送");
+            rpcParamater.setTitle(str);
             rpcParamater.setVal(str.length());
             RpcData rpcData = service.DoRpc(rpcParamater);
-            System.out.println(rpcData);
+            System.out.println("content:"+rpcData.getTitle()+";val:"+rpcData.getVal());
         }
     }
 }

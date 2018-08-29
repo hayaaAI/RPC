@@ -22,6 +22,18 @@
             <artifactId>hayaa.rpc</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>Demo</groupId>
+            <artifactId>demo.interface.service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>Demo</groupId>
+            <artifactId>demo.interface.service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>demo.server</finalName>
