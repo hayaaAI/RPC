@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>HayaaAI</Authors>
+    <Product>HayaaAI</Product>
+    <Company>Hayaa</Company>
+    <Description>rpc框架</Description>
+    <Copyright>©2018 HayaaAI</Copyright>
+    <PackageLicenseUrl>http://l.xieqj.net/license/hayaaai.txt</PackageLicenseUrl>
+    <PackageIconUrl>http://r.xieqj.net/r/ico/hayaaia.ico</PackageIconUrl>
+    <PackageTags>RPC</PackageTags>
+    <RootNamespace>Hayaa.RPC.Service</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProxyEmitter\ProxyEmitter.csproj" />
+  </ItemGroup>
+
+</Project>

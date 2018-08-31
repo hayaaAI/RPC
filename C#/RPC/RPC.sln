@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hayaa.NetNio.Service", "Hay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyEmitter", "ProxyEmitter\ProxyEmitter.csproj", "{53B77633-41B7-44CA-B848-6186F050AC4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hayaa.RPC.Componet", "Hayaa.RPC.Componet\Hayaa.RPC.Componet.csproj", "{BE759950-4055-47D0-A490-C58158E7C741}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{53B77633-41B7-44CA-B848-6186F050AC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53B77633-41B7-44CA-B848-6186F050AC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53B77633-41B7-44CA-B848-6186F050AC4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE759950-4055-47D0-A490-C58158E7C741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE759950-4055-47D0-A490-C58158E7C741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE759950-4055-47D0-A490-C58158E7C741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE759950-4055-47D0-A490-C58158E7C741}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{4068E482-F20C-496F-8A6F-EE6C5C2084E8} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 		{724C5376-DBD7-4B37-A370-A3D337340E13} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 		{53B77633-41B7-44CA-B848-6186F050AC4A} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
+		{BE759950-4055-47D0-A490-C58158E7C741} = {5822EA27-96BD-4CF8-810F-8FEA2D4CD42E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADCE1FB6-60F1-45C6-A4B6-5D9B21500933}
