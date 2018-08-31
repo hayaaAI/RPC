@@ -46,9 +46,9 @@ namespace Hayaa.RPC.Service.Client
             return interfaceType;
         }
 
-        public static T CreateService<T>(String interfaceName)
+        public static T CreateService<T>(String interfaceFullName)
         {
-            if (g_service.ContainsKey(interfaceName)) return (T)g_service[interfaceName];
+            if (g_service.ContainsKey(interfaceFullName)) return (T)g_service[interfaceFullName];
             return default(T);
         }
     }
