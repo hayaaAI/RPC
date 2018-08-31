@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Hayaa.RPC.Service</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RPC\Hayaa.NetNio.Service\Hayaa.NetNio.Service.csproj" />
+    <ProjectReference Include="..\Hayaa.RPC.Common\Hayaa.RPC.Common.csproj" />
+  </ItemGroup>
+
+</Project>
