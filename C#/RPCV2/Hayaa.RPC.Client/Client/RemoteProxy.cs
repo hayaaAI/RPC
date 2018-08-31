@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Hayaa.RPC.Service.Client
 {
-    internal class RemoteProxy : ProxyBase
+    public class RemoteProxy : ProxyBase
     {
         protected override TRet ConvertReturnValue<TRet>(String returnValue)
         {
