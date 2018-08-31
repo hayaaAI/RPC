@@ -15,7 +15,7 @@ namespace Hayaa.RPC.Service.Client
         public void Run(RPCConfig config)
         {
             g_config = config;
-            ServiceFactory.initService(config.ConsumerConfiguation.Services);
+            RpcServiceFactory.initService(config.ConsumerConfiguation.Services);
             ClientHelper.Instance.Init(config.ConsumerConfiguation.Services);
         }
         internal static RPCConfig GetConfig()

@@ -7,7 +7,7 @@ using static Hayaa.RPC.Common.Config.RPCConfig;
 
 namespace Hayaa.RPC.Service.Client
 {
-    public class ServiceFactory
+    public class RpcServiceFactory
     {
         /// <summary>
         /// key:接口全名称
