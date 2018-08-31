@@ -31,6 +31,10 @@ namespace Hayaa.RPC.Service.Client
                     g_service.GetOrAdd(service.InterfaceName, serviceImplType);
                 }
             });
+            if (g_service.IsEmpty)
+            {
+                throw new Exception("服务对象为空");
+            }
 
         }
 
