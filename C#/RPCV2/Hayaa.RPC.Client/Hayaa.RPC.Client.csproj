@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Hayaa.RPC.Service</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>HayaaAI</Authors>
+    <Product>HayaaAI</Product>
+    <Company>Hayaa</Company>
+    <Description>RPC的客户端</Description>
+    <Copyright>©2018 HayaaAI</Copyright>
+    <PackageLicenseUrl>http://l.xieqj.net/license/hayaaai.txt</PackageLicenseUrl>
+    <PackageIconUrl>http://r.xieqj.net/r/ico/hayaaai.ico</PackageIconUrl>
+    <PackageTags>RPC</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
