@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Hayaa.RPC.Service.Protocol
+namespace Hayaa.RPC.Componet
 {
     [Serializable]
    public class ResultMessage

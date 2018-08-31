@@ -1,11 +1,10 @@
-﻿using Hayaa.RPC.Service.Protocol;
-using Hayaa.RPC.Service.Util;
+﻿using Hayaa.RPC.Componet.Util;
 using ProxyEmitter;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Hayaa.RPC.Service.Client
+
+namespace Hayaa.RPC.Componet
 {
     internal class RemoteProxy : ProxyBase
     {

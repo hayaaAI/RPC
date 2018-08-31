@@ -12,7 +12,8 @@
     <PackageLicenseUrl>http://l.xieqj.net/license/hayaaai.txt</PackageLicenseUrl>
     <PackageIconUrl>http://r.xieqj.net/r/ico/hayaaia.ico</PackageIconUrl>
     <PackageTags>RPC</PackageTags>
-    <RootNamespace>Hayaa.RPC.Service</RootNamespace>
+    <RootNamespace>Hayaa.RPC.Componet</RootNamespace>
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

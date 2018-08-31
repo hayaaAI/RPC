@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hayaa.RPC.Service.Util
+namespace Hayaa.RPC.Componet.Util
 {
     internal class IntHelper
     {

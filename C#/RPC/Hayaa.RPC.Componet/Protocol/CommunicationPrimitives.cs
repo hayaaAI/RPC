@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hayaa.RPC.Common.Protocol
+namespace Hayaa.RPC.Componet
 {
     /// <summary>
     /// 通讯原语

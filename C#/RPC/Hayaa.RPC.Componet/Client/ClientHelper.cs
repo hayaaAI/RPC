@@ -1,17 +1,13 @@
-﻿using Hayaa.RPC.Common.Config;
-using Hayaa.RPC.Service.Protocol;
+﻿using Hayaa.RPC.Componet.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Hayaa.RPC.Common.Protocol;
-using Hayaa.RPC.Service.Util;
-using static Hayaa.RPC.Common.Config.RPCConfig;
+using static Hayaa.RPC.Componet.RPCConfig;
 
-namespace Hayaa.RPC.Service.Client
+namespace Hayaa.RPC.Componet
 {
     /// <summary>
     /// 数据编码以网络通信的大端为准

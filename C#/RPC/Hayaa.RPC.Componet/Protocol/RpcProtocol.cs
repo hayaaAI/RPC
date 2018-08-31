@@ -1,9 +1,7 @@
-﻿using Hayaa.RPC.Common.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace Hayaa.RPC.Service.Protocol
+
+namespace Hayaa.RPC.Componet
 {
     /// <summary>
     /// 自定义的协议

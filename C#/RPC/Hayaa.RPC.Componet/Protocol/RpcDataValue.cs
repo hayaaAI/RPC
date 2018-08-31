@@ -1,9 +1,7 @@
-﻿using Hayaa.RPC.Service.Util;
+﻿using Hayaa.RPC.Componet.Util;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Hayaa.RPC.Service.Protocol
+namespace Hayaa.RPC.Componet
 {
     [Serializable]
     public class RpcDataValue

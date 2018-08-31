@@ -1,13 +1,8 @@
-﻿using Hayaa.RPC.Common.Config;
-using Hayaa.RPC.Service.Protocol;
-using Hayaa.RPC.Service.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
-namespace Hayaa.RPC.Service.Client
+namespace Hayaa.RPC.Componet
 {
     public class ServiceMethdoProxy
     {
@@ -19,7 +14,7 @@ namespace Hayaa.RPC.Service.Client
                 String msgID = Guid.NewGuid().ToString("N");               
                 int timeOut = RpcClient.GetConfig().SessionTimeout;
                 int time = 0;               
-                 ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
+                 ClientHelper.Instance.EnQueue(new MethodMessage()
                 {
                     InterfaceName = interfaceName,
                     Method = methodName,

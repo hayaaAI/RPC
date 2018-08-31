@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using static Hayaa.RPC.Common.Config.RPCConfig;
+using static Hayaa.RPC.Componet.RPCConfig;
 
-namespace Hayaa.RPC.Service.Client
+namespace Hayaa.RPC.Componet
 {
     public class ServiceFactory
     {

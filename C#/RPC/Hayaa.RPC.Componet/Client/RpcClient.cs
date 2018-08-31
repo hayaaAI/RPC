@@ -1,10 +1,5 @@
-﻿using Hayaa.RPC.Common.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-
-namespace Hayaa.RPC.Service.Client
+﻿
+namespace Hayaa.RPC.Componet
 {
     /// <summary>
     /// rpc客户端主类

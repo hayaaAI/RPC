@@ -1,10 +1,7 @@
-﻿using Hayaa.RPC.Common.Protocol;
-using Hayaa.RPC.Service.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace Hayaa.RPC.Service.Util
+
+namespace Hayaa.RPC.Componet.Util
 {
   public  class RpcDataHelper
     {

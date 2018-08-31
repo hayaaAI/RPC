@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hayaa.RPC.Common.Config
+namespace Hayaa.RPC.Componet
 {
     class DefineTable
     {
