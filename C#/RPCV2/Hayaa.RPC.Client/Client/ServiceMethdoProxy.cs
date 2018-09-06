@@ -18,8 +18,8 @@ namespace Hayaa.RPC.Service.Client
             ResultMessage result = null;
             try
             {
-                String msgID = Guid.NewGuid().ToString("N"); 
-                int time = 0;               
+                String msgID = Guid.NewGuid().ToString("N");
+                int time = 0, vTimeout = timeOut + initTotal * 1000;
                  ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
                 {
                     InterfaceName = interfaceName,
@@ -29,7 +29,7 @@ namespace Hayaa.RPC.Service.Client
                 });
                 // Console.WriteLine("result wait timeOut:" + timeOut);
                
-                while (time<timeOut)
+                while (time< vTimeout)
                 {
                     Thread.SpinWait(5000);
                     result = ClientHelper.Instance.GetResult(msgID);
@@ -37,16 +37,12 @@ namespace Hayaa.RPC.Service.Client
                     {
                         Console.WriteLine("time enough");
                     }                    
-                    if (time < timeOut)
+                    if (time < vTimeout)
                         Thread.SpinWait(1);
-                    time = time+3;//考虑代码操作时间增量
-                    if ((initTotal > 0)&& (time >= timeOut))
-                    {
-                        time =2000-(initTotal-1)*1000;//3-0,2-1000,1-2000
-                    }
+                    time = time+3;//考虑代码操作时间增量                    
                     if (result != null)
                     {
-                        time = timeOut + 1;
+                        time = vTimeout + 1;
                     }
                 }
                 if (initTotal > 0)
