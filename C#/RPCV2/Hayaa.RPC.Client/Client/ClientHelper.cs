@@ -141,7 +141,8 @@ namespace Hayaa.RPC.Service.Client
                 byte[] header = new byte[2];
                 Console.WriteLine("Transfer 读取服务数据");
                 // Console.WriteLine("rpc client read starting");
-                stream.ReadAsync(header, 0, header.Length);               
+                //stream.ReadAsync(header, 0, header.Length);    
+                stream.Read(header, 0, header.Length);
                 dataLength = new byte[4];
                 //长度是4个字节的数据长度,按照大端读取
                 dataLength[0]=(byte)stream.ReadByte();
@@ -157,8 +158,9 @@ namespace Hayaa.RPC.Service.Client
                 dataType[2] = (byte)stream.ReadByte();
                 dataType[3] = (byte)stream.ReadByte();
                 buffer = new byte[contentLength];
-                stream.ReadAsync(buffer, 0, buffer.Length);
-               // Console.WriteLine("rpc client read end");
+                // stream.ReadAsync(buffer, 0, buffer.Length);
+                stream.Read(buffer, 0, buffer.Length);
+                // Console.WriteLine("rpc client read end");
             }
             catch(Exception ex)
             {
