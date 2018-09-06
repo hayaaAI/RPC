@@ -9,6 +9,10 @@ namespace Hayaa.RPC.Service.Client
 {
     public class RemoteProxy : ProxyBase
     {
+        public RemoteProxy()
+        {
+
+        }
         protected override TRet ConvertReturnValue<TRet>(String returnValue)
         {
             TRet result = default(TRet);

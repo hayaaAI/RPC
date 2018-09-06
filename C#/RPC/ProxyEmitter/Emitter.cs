@@ -29,7 +29,7 @@ namespace ProxyEmitter
         public static AssemblyBuilder GetAssemblyBuilder(AssemblyBuilderAccess access = AssemblyBuilderAccess.Run)
         {
             var aname = new AssemblyName("Hayaa.RPCProxy");
-            AppDomain currentDomain = AppDomain.CurrentDomain;
+            //AppDomain currentDomain = AppDomain.CurrentDomain;
             AssemblyBuilder builder = AssemblyBuilder.DefineDynamicAssembly(aname, access);
             return builder;
         }
@@ -42,7 +42,7 @@ namespace ProxyEmitter
         /// <returns></returns>
         public static ModuleBuilder GetModule(AssemblyBuilder asmBuilder)
         {
-            ModuleBuilder builder = asmBuilder.DefineDynamicModule("RPCProxy_RemoteServic");
+            ModuleBuilder builder = asmBuilder.DefineDynamicModule("RemoteServicRPCProxy");
             return builder;
         }
 
@@ -70,7 +70,7 @@ namespace ProxyEmitter
         {
             if (parent == null)
                 parent = typeof(Object);
-            TypeBuilder builder = modBuilder.DefineType(className, TypeAttributes.Public, parent, interfaces);
+            TypeBuilder builder = modBuilder.DefineType(className, TypeAttributes.Class | TypeAttributes.Public, parent, interfaces);
             return builder;
         }
 

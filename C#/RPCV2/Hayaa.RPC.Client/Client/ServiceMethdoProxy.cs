@@ -11,13 +11,14 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceMethdoProxy
     {
+        private static int initTotal = 3;
+        private static int timeOut = RpcClient.GetConfig().SessionTimeout;
         public static ResultMessage Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
         {
             ResultMessage result = null;
             try
             {
-                String msgID = Guid.NewGuid().ToString("N");               
-                int timeOut = RpcClient.GetConfig().SessionTimeout;
+                String msgID = Guid.NewGuid().ToString("N"); 
                 int time = 0;               
                  ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
                 {
@@ -26,7 +27,8 @@ namespace Hayaa.RPC.Service.Client
                     Paramater = paramater,
                     MsgID = msgID
                 });
-               // Console.WriteLine("result wait timeOut:" + timeOut);
+                // Console.WriteLine("result wait timeOut:" + timeOut);
+               
                 while (time<timeOut)
                 {
                     Thread.SpinWait(5000);
@@ -34,14 +36,22 @@ namespace Hayaa.RPC.Service.Client
                     if (result != null)
                     {
                         Console.WriteLine("time enough");
-                    }
-                    if (result != null)
-                    {
-                        time= timeOut+1;
-                    }
+                    }                    
                     if (time < timeOut)
                         Thread.SpinWait(1);
                     time = time+3;//考虑代码操作时间增量
+                    if ((initTotal > 0)&& (time >= timeOut))
+                    {
+                        time =2000-(initTotal-1)*1000;//3-0,2-1000,1-2000
+                    }
+                    if (result != null)
+                    {
+                        time = timeOut + 1;
+                    }
+                }
+                if (initTotal > 0)
+                {
+                    initTotal--;
                 }
                 if (result == null)
                 {

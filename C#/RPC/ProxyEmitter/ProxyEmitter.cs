@@ -119,7 +119,7 @@ namespace ProxyEmitter
         /// <returns>Instance of Proxy class that drived from both <paramref name="baseType"/> and <paramref name="interfaceType"/></returns>
         public static object CreateProxy(Type baseType, Type interfaceType, params object[] args)
         {
-            var type = CreateType(baseType, interfaceType);
+            var type = CreateType(baseType, interfaceType);        
             return Activator.CreateInstance(type, args);
         }
 
@@ -151,7 +151,7 @@ namespace ProxyEmitter
         {
             AssemblyBuilder asmBuilder = Emitter.GetAssemblyBuilder();
             ModuleBuilder mBuilder = Emitter.GetModule(asmBuilder);
-            TypeBuilder tBuilder = Emitter.GetType(mBuilder, String.Format("{0}{1}Hayaa_ProxyClass", baseType.FullName, interfaceType), baseType, new[] { interfaceType });
+            TypeBuilder tBuilder = Emitter.GetType(mBuilder, String.Format("{0}Proxy",interfaceType), baseType, new Type[] { interfaceType });
 
             // Emit parametrized ctor
             var constructors = baseType.GetConstructors();

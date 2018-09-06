@@ -24,7 +24,7 @@ namespace Hayaa.RPC.Service.Protocol
         {
             this.DataType = RpcDataHelper.ParseDataType(dataType);
             this.ClassName = dataType.FullName;
-            this.ValContainer = JsonHelper.SerializeObject(arg,true);
+            this.ValContainer =(this.DataType == Common.Protocol.CommunicationPrimitives.CLASS)?JsonHelper.SerializeObject(arg,true): arg.ToString();
             this.ArgIndex = argIndex;
         }
         /// <summary>

@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Hayaa.RPC.Service</RootNamespace>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Version>1.0.0.1</Version>
+    <Authors>HayaaAI</Authors>
+    <Company>HayaaAI</Company>
+    <Product>HayaaAI</Product>
   </PropertyGroup>
 
   <ItemGroup>

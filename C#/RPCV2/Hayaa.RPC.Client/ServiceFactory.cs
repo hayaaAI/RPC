@@ -16,9 +16,11 @@ namespace Hayaa.RPC.Service.Client
         private static ConcurrentDictionary<String, Object> g_service = new ConcurrentDictionary<String, Object>();
         public static T CreateService<T>(String interfaceName)
         {
-            if (g_service.ContainsKey(interfaceName)) return (T)g_service[interfaceName];
-            return default(T);
+            T t= default(T);
+            if (g_service.ContainsKey(interfaceName)) t= (T)g_service[interfaceName];
+            return t;
         }
+        
         internal static void initService(List<ServiceConfig> interfaces)
         {
 
@@ -41,6 +43,7 @@ namespace Hayaa.RPC.Service.Client
         private static Type GetInterfaceType(string assemblyName, string interfaceName)
         {
             var assemblyList = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            String basePath = AppDomain.CurrentDomain.BaseDirectory;
             Assembly interfaceAssembly = null;
             assemblyList.ForEach(a =>
             {
@@ -49,7 +52,10 @@ namespace Hayaa.RPC.Service.Client
                     interfaceAssembly = a;
                 }
             });
-            if (interfaceAssembly == null) interfaceAssembly = Assembly.LoadFrom(assemblyName);
+            if (interfaceAssembly == null) {
+                
+                interfaceAssembly = Assembly.LoadFile(basePath + "/" + assemblyName+".dll");               
+            }
             if (interfaceAssembly == null) return null;
             Type interfaceType = interfaceAssembly.GetType(interfaceName);
             return interfaceType;
