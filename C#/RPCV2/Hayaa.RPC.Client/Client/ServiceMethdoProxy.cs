@@ -11,8 +11,8 @@ namespace Hayaa.RPC.Service.Client
 {
     public class ServiceMethdoProxy
     {
-        private static int initTotal = 3;
-        private static int timeOut = RpcClient.GetConfig().SessionTimeout;
+        private static volatile int initTotal = 3;
+        private static readonly int timeOut = RpcClient.GetConfig().SessionTimeout;
         public static ResultMessage Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
         {
             ResultMessage result = null;
