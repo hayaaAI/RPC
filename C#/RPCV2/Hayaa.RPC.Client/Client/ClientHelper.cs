@@ -110,12 +110,14 @@ namespace Hayaa.RPC.Service.Client
         }       
         private void Transfer(MethodMessage methodMessage)
         {
+            Console.WriteLine("Transfer-in");
             var tcp = g_ClientPool[methodMessage.InterfaceName];
             String msg = JsonHelper.SerializeObject(methodMessage,true);
             RpcProtocol rpcProtocol = new RpcProtocol(msg);           
             if (!tcp.Connected) return;
             //Console.WriteLine("rpc client send starting");
             NetworkStream stream = tcp.GetStream();
+            Console.WriteLine("Transfer 发送请求");
             //写头部标识
             stream.Write(rpcProtocol.MessageFlag,0, rpcProtocol.MessageFlag.Length);
             byte[] dataLength =  IntHelper.IntToByteArray(rpcProtocol.ContentLength);//按照大端数据编码发送
@@ -131,7 +133,8 @@ namespace Hayaa.RPC.Service.Client
             try
             {
                 byte[] header = new byte[2];
-               // Console.WriteLine("rpc client read starting");
+                Console.WriteLine("Transfer 读取服务数据");
+                // Console.WriteLine("rpc client read starting");
                 stream.ReadAsync(header, 0, header.Length);               
                 dataLength = new byte[4];
                 //长度是4个字节的数据长度,按照大端读取
@@ -173,6 +176,7 @@ namespace Hayaa.RPC.Service.Client
             {
                 Console.WriteLine(ex.Message);
             }
+            Console.WriteLine("Transfer-out");
         }
         public void EnQueue(MethodMessage methodMessage)
         {
