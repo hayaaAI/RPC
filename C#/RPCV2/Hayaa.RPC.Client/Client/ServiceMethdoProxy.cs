@@ -19,7 +19,7 @@ namespace Hayaa.RPC.Service.Client
             try
             {
                 String msgID = Guid.NewGuid().ToString("N");
-                int time = 0, vTimeout = timeOut + initTotal * 2000;
+                int time = 0, vTimeout = timeOut + initTotal * 10000;
                  ClientHelper.Instance.EnQueue(new Protocol.MethodMessage()
                 {
                     InterfaceName = interfaceName,
