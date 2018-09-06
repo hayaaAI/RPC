@@ -29,7 +29,8 @@ namespace Hayaa.RPC.Service.Client
 
         protected override String Invoke(string interfaceName, string methodName, object[] arguments)
         {
-            List<RpcDataValue> argDic =null;
+            Console.WriteLine("RemoteProxy.Invoke");
+            List <RpcDataValue> argDic =null;
             if (arguments != null)
             {
                 argDic = new List<RpcDataValue>();
