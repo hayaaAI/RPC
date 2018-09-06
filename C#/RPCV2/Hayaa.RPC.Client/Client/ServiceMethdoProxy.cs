@@ -31,7 +31,7 @@ namespace Hayaa.RPC.Service.Client
                 Console.WriteLine("ServiceMethdoProxy.Invoke:in while");
                 while (time< vTimeout)
                 {
-                    Thread.SpinWait(5000);
+                    //Thread.SpinWait(5000);
                     result = ClientHelper.Instance.GetResult(msgID);
                     if (result != null)
                     {
