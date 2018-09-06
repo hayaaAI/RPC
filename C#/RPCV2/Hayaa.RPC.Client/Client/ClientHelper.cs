@@ -71,7 +71,13 @@ namespace Hayaa.RPC.Service.Client
                     }
                 }
             });
-            ThreadPool.SetMaxThreads(cpuCoreTotal, g_Config.Count);
+            int workThreads = 0, ioThreads = 0;
+            ThreadPool.GetMinThreads(out workThreads,out ioThreads);
+            if(workThreads> cpuCoreTotal)
+            {
+                workThreads = workThreads + cpuCoreTotal;
+            }           
+            ThreadPool.SetMaxThreads(cpuCoreTotal, ioThreads);
             ThreadPool.QueueUserWorkItem(Consume);
         }
 
