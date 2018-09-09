@@ -30,8 +30,9 @@ namespace Hayaa.NetNio.Service
         /// <param name="requestQueueMax">最大响应队列,默认1000</param>
         public void Run(String ip, int port, int requestQueueMax = 1000)
         {
+            ip = ip.Trim();
             IPAddress iPAddress = IPAddress.Parse(ip);
-            IPEndPoint ipe = new IPEndPoint(iPAddress, port);
+            IPEndPoint ipe = (ip=="0.0.0.0")? new IPEndPoint(IPAddress.Any, port) : new IPEndPoint(iPAddress, port);
             Socket rootSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {                
