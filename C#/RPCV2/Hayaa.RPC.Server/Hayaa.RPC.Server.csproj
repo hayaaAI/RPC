@@ -13,11 +13,10 @@
     <PackageLicenseUrl>http://l.xieqj.net/license/hayaaai.txt</PackageLicenseUrl>
     <PackageIconUrl>http://r.xieqj.net/r/ico/hayaaai.ico</PackageIconUrl>
     <PackageTags>RPC</PackageTags>
-    <Version>1.0.0.6</Version>
+    <Version>1.0.0.7</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RPC\Hayaa.NetNio.Service\Hayaa.NetNio.Service.csproj" />
     <ProjectReference Include="..\Hayaa.RPC.Common\Hayaa.RPC.Common.csproj" />
   </ItemGroup>
 
