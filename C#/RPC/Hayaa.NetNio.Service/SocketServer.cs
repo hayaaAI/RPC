@@ -54,6 +54,7 @@ namespace Hayaa.NetNio.Service
                 allDone.Reset();
                 try
                 {
+                    Console.WriteLine("listenLoop");
                     rootSocket.BeginAccept(new AsyncCallback(AcceptCallback), rootSocket);
                 }
                 catch (Exception ex)
