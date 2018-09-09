@@ -43,7 +43,9 @@ namespace Hayaa.NetNio.Service
             {
                 Console.WriteLine(ex.Message);
             }
-            ThreadPool.SetMaxThreads(1, 4);
+            int workThreads = 0, ioThreads = 0;
+            ThreadPool.GetMinThreads(out workThreads, out ioThreads);           
+            ThreadPool.SetMaxThreads(workThreads, ioThreads);
             ThreadPool.QueueUserWorkItem(SocketWait);
             Console.WriteLine("Listen on:" + port);
             Boolean listenLoop = true;
