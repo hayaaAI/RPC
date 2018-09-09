@@ -76,16 +76,9 @@ namespace Hayaa.NetNio.Service
                     if(socketListeningList.TryPeek(out temp)) {
                        if(temp.Poll(3, SelectMode.SelectRead))
                         {
-                            if (temp.Connected)
-                            {
-                                Console.WriteLine("Connected：true,可执行ReadSocket");
+                           
+                                Console.WriteLine("Connected："+ temp.Connected);
                                 ReadSocket(temp);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Connected：false,移除socket");
-                                socketListeningList.TryTake(out temp);
-                            }
                         }
                     }
                 }
