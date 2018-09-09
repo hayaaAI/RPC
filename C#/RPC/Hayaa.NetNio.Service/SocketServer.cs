@@ -32,7 +32,8 @@ namespace Hayaa.NetNio.Service
         {
             ip = ip.Trim();
             IPAddress iPAddress = IPAddress.Parse(ip);
-            IPEndPoint ipe = (ip=="0.0.0.0")? new IPEndPoint(IPAddress.Any, port) : new IPEndPoint(iPAddress, port);
+            // IPEndPoint ipe = (ip=="0.0.0.0")? new IPEndPoint(IPAddress.Any, port) : new IPEndPoint(iPAddress, port);
+            IPEndPoint ipe = new IPEndPoint(IPAddress.Any, port);
             Socket rootSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {                
@@ -46,15 +47,16 @@ namespace Hayaa.NetNio.Service
             int workThreads = 0, ioThreads = 0;
             ThreadPool.GetMinThreads(out workThreads, out ioThreads);           
             ThreadPool.SetMaxThreads(workThreads, ioThreads);
-            ThreadPool.QueueUserWorkItem(SocketWait);
-            Console.WriteLine("Listen on:" + port);
+            ThreadPool.QueueUserWorkItem(SocketWait);            
+            Console.WriteLine("Listen on IP:"+ ((IPEndPoint)rootSocket.LocalEndPoint).Address.MapToIPv4() +"---port:"+ ((IPEndPoint)rootSocket.LocalEndPoint).Port);
             Boolean listenLoop = true;
             while (listenLoop)
             {
                 allDone.Reset();
+                Console.WriteLine("listenLoop");
                 try
                 {
-                    Console.WriteLine("listenLoop");
+                   
                     rootSocket.BeginAccept(new AsyncCallback(AcceptCallback), rootSocket);
                 }
                 catch (Exception ex)
