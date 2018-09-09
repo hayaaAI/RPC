@@ -72,7 +72,10 @@ namespace Hayaa.NetNio.Service
                     if(socketListeningList.TryPeek(out temp)) {
                        if(temp.Poll(3, SelectMode.SelectRead))
                         {
-                            ReadSocket(temp);
+                            if (temp.Connected)
+                                ReadSocket(temp);
+                            else
+                                socketListeningList.TryTake(out temp);
                         }
                     }
                 }
@@ -94,7 +97,7 @@ namespace Hayaa.NetNio.Service
         }
         private void DelSocket(Socket socket)
         {
-            
+            Console.WriteLine("DelSocket");
             socket.Close();
             socket.Dispose();
             socketListeningList.TryTake(out socket);
