@@ -119,8 +119,10 @@ namespace Hayaa.RPC.Service.Client
             Console.WriteLine("Transfer-in");
             var tcp = g_ClientPool[methodMessage.InterfaceName];
             String msg = JsonHelper.SerializeObject(methodMessage,true);
-            RpcProtocol rpcProtocol = new RpcProtocol(msg);           
-            if (!tcp.Connected) return;
+            RpcProtocol rpcProtocol = new RpcProtocol(msg);
+            if (!tcp.Connected) {
+                Console.WriteLine("tcp.Connected:false");
+                return; }
             //Console.WriteLine("rpc client send starting");
             NetworkStream stream = tcp.GetStream();
             Console.WriteLine("Transfer 发送请求");
