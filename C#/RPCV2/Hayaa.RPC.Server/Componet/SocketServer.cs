@@ -32,7 +32,6 @@ namespace Hayaa.NetNio.Service
         {
             ip = ip.Trim();
             IPAddress iPAddress = IPAddress.Parse(ip);
-            // IPEndPoint ipe = (ip=="0.0.0.0")? new IPEndPoint(IPAddress.Any, port) : new IPEndPoint(iPAddress, port);
             IPEndPoint ipe = new IPEndPoint(IPAddress.Any, port);
             Socket rootSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -78,7 +77,6 @@ namespace Hayaa.NetNio.Service
                     if(socketListeningList.TryPeek(out temp)) {
                        if(temp.Poll(3, SelectMode.SelectRead))
                         {
-                           
                                 Console.WriteLine("Connected："+ temp.Connected);
                                 ReadSocket(temp);
                         }
