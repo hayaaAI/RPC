@@ -16,4 +16,8 @@
     <Version>1.0.0.7</Version>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hayaa.RPC.Common\Hayaa.RPC.Common.csproj" />
+  </ItemGroup>
+
 </Project>
