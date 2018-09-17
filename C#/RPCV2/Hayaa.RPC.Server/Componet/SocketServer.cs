@@ -80,6 +80,7 @@ namespace Hayaa.NetNio.Service
                         }
                     }
                 }
+                //放弃剩余时间片
                 Thread.Sleep(1);
             }
         }
