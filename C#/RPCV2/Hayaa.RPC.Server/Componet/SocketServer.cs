@@ -43,11 +43,9 @@ namespace Hayaa.NetNio.Service
             {
                 Console.WriteLine(ex.Message);
             }
-            int workThreads = 0, ioThreads = 0;
-            ThreadPool.GetMinThreads(out workThreads, out ioThreads);           
-            ThreadPool.SetMaxThreads(workThreads, ioThreads);
-            ThreadPool.QueueUserWorkItem(SocketWait);            
+            Thread thread = new Thread(new ThreadStart(SocketWait));         
             Console.WriteLine("Listen on IP:"+ ((IPEndPoint)rootSocket.LocalEndPoint).Address.MapToIPv4() +"---port:"+ ((IPEndPoint)rootSocket.LocalEndPoint).Port);
+            thread.Start();
             Boolean listenLoop = true;
             while (listenLoop)
             {
@@ -66,7 +64,7 @@ namespace Hayaa.NetNio.Service
             }
 
         }
-        private void SocketWait(Object param)
+        private void SocketWait()
         {
             while (true)
             {
@@ -82,7 +80,7 @@ namespace Hayaa.NetNio.Service
                         }
                     }
                 }
-
+                Thread.Sleep(1);
             }
         }
         public void AcceptCallback(IAsyncResult ar)
