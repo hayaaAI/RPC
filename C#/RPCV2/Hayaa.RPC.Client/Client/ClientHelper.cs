@@ -72,14 +72,8 @@ namespace Hayaa.RPC.Service.Client
                     }
                 }
             });
-            int workThreads = 0, ioThreads = 0;
-            ThreadPool.GetMinThreads(out workThreads,out ioThreads);
-            if(workThreads> cpuCoreTotal)
-            {
-                workThreads = workThreads + cpuCoreTotal;
-            }           
-            ThreadPool.SetMaxThreads(cpuCoreTotal, ioThreads);
-            ThreadPool.QueueUserWorkItem(Consume);
+            Thread thread = new Thread(new ThreadStart(Consume));
+            thread.Start();
         }
 
         internal void DelTimeoutMsgID(string msgID)
@@ -88,11 +82,13 @@ namespace Hayaa.RPC.Service.Client
             g_ResultDicTag.TryRemove(msgID, out t);
         }
 
-        private  void Consume(Object param)
+        private  void Consume()
         {
+           // Console.WriteLine("Consume");
             while (true)
             {
-                allDone.Reset();
+               allDone.Reset();
+                // Console.WriteLine("Consume--in");
                 if (cpuCoreTotal > 1)//支持多线程处理
                 {
                     Parallel.For(0, cpuCoreTotal, i => ConsumenQueue(i));
@@ -106,9 +102,13 @@ namespace Hayaa.RPC.Service.Client
         }
         private void ConsumenQueue(int index)
         {
+            Console.WriteLine("ConsumenQueue");
             var queue = g_MethodQueue[index];
-            if (queue == null) return;
-            MethodMessage methodMessage;
+            if (queue == null) {
+                Console.WriteLine("queue null");
+                return;
+            }
+            MethodMessage methodMessage;           
             while (!queue.IsEmpty)
             {
                 if (queue.TryDequeue(out methodMessage))
@@ -119,7 +119,7 @@ namespace Hayaa.RPC.Service.Client
         }       
         private void Transfer(MethodMessage methodMessage)
         {
-            Console.WriteLine("Transfer-in");
+           // Console.WriteLine("Transfer-in");
             var tcp = g_ClientPool[methodMessage.InterfaceName];
             String msg = JsonHelper.SerializeObject(methodMessage,true);
             RpcProtocol rpcProtocol = new RpcProtocol(msg);
@@ -128,7 +128,7 @@ namespace Hayaa.RPC.Service.Client
                 return; }
             //Console.WriteLine("rpc client send starting");
             NetworkStream stream = tcp.GetStream();
-            Console.WriteLine("Transfer 发送请求");
+          //  Console.WriteLine("Transfer 发送请求");
             //写头部标识
             stream.Write(rpcProtocol.MessageFlag,0, rpcProtocol.MessageFlag.Length);
             byte[] dataLength =  IntHelper.IntToByteArray(rpcProtocol.ContentLength);//按照大端数据编码发送
@@ -144,7 +144,7 @@ namespace Hayaa.RPC.Service.Client
             try
             {
                 byte[] header = new byte[2];
-                Console.WriteLine("Transfer 读取服务数据");
+           //     Console.WriteLine("Transfer 读取服务数据");
                 // Console.WriteLine("rpc client read starting");
                 //stream.ReadAsync(header, 0, header.Length); //使用此方法在存在奇怪的本地IO抢夺引起延迟   
                 stream.Read(header, 0, header.Length);
@@ -182,18 +182,19 @@ namespace Hayaa.RPC.Service.Client
                 var resultData = JsonHelper.Deserialize<ResultMessage>(responseData,true);
                 if (!g_ResultDic.ContainsKey(resultData.MsgID))
                 {
-                    Console.WriteLine("put result");
+                  //  Console.WriteLine("put result");
                     g_ResultDic.TryAdd(resultData.MsgID, resultData);
                 }
             }catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            Console.WriteLine("Transfer-out");
+           // Console.WriteLine("Transfer-out");
         }
         public void EnQueue(MethodMessage methodMessage)
         {
             allDone.Set();
+           // Console.WriteLine("EnQueue");
             int index = methodMessage.InterfaceName.GetHashCode() % cpuCoreTotal;
             g_MethodQueue[index].Enqueue(methodMessage);
             g_ResultDicTag.TryAdd(methodMessage.MsgID, true);

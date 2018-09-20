@@ -15,7 +15,7 @@ namespace Hayaa.RPC.Service.Client
         private static readonly int timeOut = RpcClient.GetConfig().SessionTimeout;
         public static ResultMessage Invoke(String interfaceName, String methodName, List<RpcDataValue> paramater)
         {
-            Console.WriteLine("ServiceMethdoProxy.Invoke");
+           // Console.WriteLine("ServiceMethdoProxy.Invoke");
             ResultMessage result = null;
             try
             {
@@ -28,9 +28,10 @@ namespace Hayaa.RPC.Service.Client
                     Paramater = paramater,
                     MsgID = msgID
                 });
-                Console.WriteLine("ServiceMethdoProxy.Invoke:in while");
+               // Console.WriteLine("ServiceMethdoProxy.Invoke:in while");
                 while (time< vTimeout)
                 {
+                   // Console.WriteLine("ServiceMethdoProxy.Invoke:{0}", time);
                     Thread.SpinWait(5000);
                     result = ClientHelper.Instance.GetResult(msgID);
                     if (result != null)
