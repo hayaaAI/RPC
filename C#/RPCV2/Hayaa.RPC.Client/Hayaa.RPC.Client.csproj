@@ -13,7 +13,7 @@
     <PackageLicenseUrl>http://l.xieqj.net/license/hayaaai.txt</PackageLicenseUrl>
     <PackageIconUrl>http://r.xieqj.net/r/ico/hayaaai.ico</PackageIconUrl>
     <PackageTags>RPC</PackageTags>
-    <Version>1.0.0.16</Version>
+    <Version>1.0.0.17</Version>
   </PropertyGroup>
 
   <ItemGroup>

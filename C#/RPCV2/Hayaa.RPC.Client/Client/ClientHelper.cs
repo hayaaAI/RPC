@@ -38,6 +38,7 @@ namespace Hayaa.RPC.Service.Client
         private ConcurrentDictionary<String,ResultMessage> g_ResultDic = null;
         private ConcurrentDictionary<String, Boolean> g_ResultDicTag = null;
         private List<ServiceConfig> g_Config;
+        public ManualResetEvent allDone = new ManualResetEvent(false);
         internal void Init(List<ServiceConfig> config)
         {
             g_Config = config;
@@ -91,6 +92,7 @@ namespace Hayaa.RPC.Service.Client
         {
             while (true)
             {
+                allDone.Reset();
                 if (cpuCoreTotal > 1)//支持多线程处理
                 {
                     Parallel.For(0, cpuCoreTotal, i => ConsumenQueue(i));
@@ -99,6 +101,7 @@ namespace Hayaa.RPC.Service.Client
                 {
                     ConsumenQueue(0);
                 }
+                allDone.WaitOne();
             }
         }
         private void ConsumenQueue(int index)
@@ -190,6 +193,7 @@ namespace Hayaa.RPC.Service.Client
         }
         public void EnQueue(MethodMessage methodMessage)
         {
+            allDone.Set();
             int index = methodMessage.InterfaceName.GetHashCode() % cpuCoreTotal;
             g_MethodQueue[index].Enqueue(methodMessage);
             g_ResultDicTag.TryAdd(methodMessage.MsgID, true);
