@@ -38,7 +38,7 @@ namespace Hayaa.RPC.Service.Client
         private ConcurrentDictionary<String,ResultMessage> g_ResultDic = null;
         private ConcurrentDictionary<String, Boolean> g_ResultDicTag = null;
         private List<ServiceConfig> g_Config;
-        public ManualResetEvent allDone = new ManualResetEvent(false);
+        public SemaphoreSlim lockObj = new SemaphoreSlim(1);
         internal void Init(List<ServiceConfig> config)
         {
             g_Config = config;
@@ -87,7 +87,7 @@ namespace Hayaa.RPC.Service.Client
            // Console.WriteLine("Consume");
             while (true)
             {
-               allDone.Reset();
+              
                 // Console.WriteLine("Consume--in");
                 if (cpuCoreTotal > 1)//支持多线程处理
                 {
@@ -97,7 +97,7 @@ namespace Hayaa.RPC.Service.Client
                 {
                     ConsumenQueue(0);
                 }
-                allDone.WaitOne();
+                lockObj.Wait();
             }
         }
         private void ConsumenQueue(int index)
@@ -193,12 +193,12 @@ namespace Hayaa.RPC.Service.Client
         }
         public void EnQueue(MethodMessage methodMessage)
         {
-            allDone.Set();
+           
            // Console.WriteLine("EnQueue");
             int index = methodMessage.InterfaceName.GetHashCode() % cpuCoreTotal;
             g_MethodQueue[index].Enqueue(methodMessage);
             g_ResultDicTag.TryAdd(methodMessage.MsgID, true);
-
+            lockObj.Release();
         }
         public ResultMessage GetResult(String msgID)
         {
