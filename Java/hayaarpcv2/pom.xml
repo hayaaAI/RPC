@@ -12,33 +12,13 @@
         <module>hayaa.rpc.common</module>
         <module>hayaa.rpc.client</module>
         <module>hayaa.rpc.server</module>
-        <module>hayaa.rpc.t1</module>
-        <module>hayaa.rpctest</module>
     </modules>
     <dependencies>
-        <dependency>
-            <groupId>hayaaAI</groupId>
-            <artifactId>hayaa.configseed</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.23.1-GA</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.26.Final</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <repositories>
