@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>HayaaAI</groupId>
+    <artifactId>hayaarpc</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <modules>
+        <module>hayaa.rpc.common</module>
+        <module>hayaa.rpc.client</module>
+        <module>hayaa.rpc.server</module>
+    </modules>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.26.Final</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>hayaa-group</id>
+            <url>http://nexus.xieqj.net/repository/hayaa-group/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>hayaa-releases</id>
+            <url>http://nexus.xieqj.net/repository/hayaa-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>hayaa-snapshots</id>
+            <url>http://nexus.xieqj.net/repository/hayaa-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>
