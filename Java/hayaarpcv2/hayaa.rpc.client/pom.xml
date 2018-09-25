@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>hayaa.rpc.client</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <build>
         <finalName>hayaa.rpc.client</finalName>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>HayaaAI</groupId>
             <artifactId>hayaa.rpc.common</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->

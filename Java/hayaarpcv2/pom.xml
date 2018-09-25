@@ -24,7 +24,10 @@
     <repositories>
         <repository>
             <id>hayaa-group</id>
-            <url>http://nexus.xieqj.net/repository/hayaa-group/</url>
+            <url>http://nexus.xieqj.cn:10001/repository/hayaa-group/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
