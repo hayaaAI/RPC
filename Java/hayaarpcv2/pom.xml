@@ -13,6 +13,7 @@
         <module>hayaa.rpc.client</module>
         <module>hayaa.rpc.server</module>
         <module>hayaa.rpc.t1</module>
+        <module>hayaa.rpctest</module>
     </modules>
     <dependencies>
         <dependency>
