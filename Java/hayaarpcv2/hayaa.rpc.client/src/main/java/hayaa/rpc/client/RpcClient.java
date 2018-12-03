@@ -17,7 +17,7 @@ public class RpcClient {
     public synchronized void run(RpcConfig config) {
         g_config = config;
         List<String> interfaceNameList =config.getConsumerConfiguation().getServices().stream().map(RpcConfig.ServiceConfig::getInterfaceName).collect(Collectors.toList());
-        ServiceFactory.initService(interfaceNameList);
+        RpcServiceFactory.initService(interfaceNameList);
         ClientHelper.get_instance().init(config.getConsumerConfiguation());
     }
     public static RpcConfig GetConfig()

@@ -3,7 +3,7 @@ package hayaa.rpc.client;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ServiceFactory {
+public class RpcServiceFactory {
     private static ConcurrentHashMap<String, Object> g_service = new ConcurrentHashMap<>();
 
     public static synchronized void initService(List<String> interfaces) {
