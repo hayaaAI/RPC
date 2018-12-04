@@ -1,7 +1,9 @@
 package hayaa.rpc.client;
 
 import hayaa.common.JsonHelper;
+import hayaa.rpc.common.config.ConsumerConfig;
 import hayaa.rpc.common.config.RpcConfig;
+import hayaa.rpc.common.config.ServiceConfig;
 import hayaa.rpc.common.protocol.MethodMessage;
 import hayaa.rpc.common.protocol.ResultMessage;
 import hayaa.rpc.common.protocol.RpcProtocol;
@@ -50,12 +52,12 @@ public class ClientHelper {
      * cpu核心数,按照最小计算能力默认
      */
     private int cpuCoreTotal = 1;
-    private RpcConfig.ConsumerConfig config;
+    private ConsumerConfig config;
 
     /**
      * 通信初始化
      */
-    public synchronized void init(RpcConfig.ConsumerConfig config) {
+    public synchronized void init(ConsumerConfig config) {
         this.config=config;
         int serviceTotal = config.getServices().size();
         g_ClientPool = new Hashtable<>(serviceTotal);
@@ -135,7 +137,7 @@ public class ClientHelper {
      * @param interfaceName
      */
     private synchronized void resetServiceClient(String interfaceName) {
-        RpcConfig.ServiceConfig serviceConfig = this.config.getServices().stream().
+        ServiceConfig serviceConfig = this.config.getServices().stream().
                 filter(a -> a.getInterfaceName().equals(interfaceName)).collect(Collectors.toList()).get(0);
         if(serviceConfig==null) {
             System.out.println(interfaceName + " can not reset");
@@ -181,7 +183,7 @@ public class ClientHelper {
                     pipeline.addLast(new ClientInHandler());
                 }
             });
-            List<RpcConfig.ServiceConfig> serviceList = config.getServices();
+            List<ServiceConfig> serviceList = config.getServices();
             serviceList.forEach(s -> {
                 ChannelFuture futrue = null;
                 try {
