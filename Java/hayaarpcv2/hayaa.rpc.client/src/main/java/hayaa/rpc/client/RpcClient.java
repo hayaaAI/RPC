@@ -2,6 +2,7 @@ package hayaa.rpc.client;
 
 
 import hayaa.rpc.common.config.RpcConfig;
+import hayaa.rpc.common.config.ServiceConfig;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ public class RpcClient {
      */
     public synchronized void run(RpcConfig config) {
         g_config = config;
-        List<String> interfaceNameList =config.getConsumerConfiguation().getServices().stream().map(RpcConfig.ServiceConfig::getInterfaceName).collect(Collectors.toList());
+        List<String> interfaceNameList =config.getConsumerConfiguation().getServices().stream().map(ServiceConfig::getInterfaceName).collect(Collectors.toList());
         RpcServiceFactory.initService(interfaceNameList);
         ClientHelper.get_instance().init(config.getConsumerConfiguation());
     }
