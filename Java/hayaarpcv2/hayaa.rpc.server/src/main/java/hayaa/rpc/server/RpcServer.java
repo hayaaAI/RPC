@@ -1,6 +1,6 @@
 package hayaa.rpc.server;
 
-import hayaa.common.StringUtil;
+import hayaa.rpc.common.config.ProviderConfig;
 import hayaa.rpc.common.config.RpcConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -8,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.util.internal.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +25,13 @@ public class RpcServer {
       * @throws Exception
      */
     public void run(RpcConfig rpcConfig) throws Exception {
-        RpcConfig.ProviderConfig providerConfig= rpcConfig.getProviderConfiguation();
+        ProviderConfig providerConfig= rpcConfig.getProviderConfiguation();
         if(providerConfig==null){
             System.out.println("配置文件中ProviderConfig节点未配置");
             return;
         }
       String packages=providerConfig.getPackages();
-      if(!StringUtil.IsNullOrEmpty(packages)){
+      if(!StringUtil.isNullOrEmpty(packages)){
           List<String> packageList= Arrays.stream(packages.split(",")).collect(Collectors.toList());
           ProviderFactory.scanServices(packageList);
           initNetty(providerConfig.getMessageSize(),providerConfig.getPort());
